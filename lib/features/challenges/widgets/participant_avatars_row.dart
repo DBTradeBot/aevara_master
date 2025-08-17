@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class ParticipantAvatarsRow extends StatelessWidget {
   final Iterable<String> names;
@@ -30,7 +30,7 @@ class ParticipantAvatarsRow extends StatelessWidget {
           const SizedBox(width: 6),
           CircleAvatar(
             radius: 12,
-            backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
             child: Text(
               '+$overflow',
               style: Theme.of(context).textTheme.labelSmall,

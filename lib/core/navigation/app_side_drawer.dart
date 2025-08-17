@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart'; import '../../app_routes.dart';
+﻿import 'package:aevara_app/core/navigation/routes.dart';
+import 'package:flutter/material.dart'; import '../../app_routes.dart';
 class AppSideDrawer extends StatelessWidget{ const AppSideDrawer({super.key});
   @override Widget build(BuildContext c)=>Drawer(child: SafeArea(child: ListView(children: [
     const UserAccountsDrawerHeader(accountName: Text('Aevara User'), accountEmail: Text('@username'), currentAccountPicture: CircleAvatar(child: Icon(Icons.person))),

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../widgets/layout/auth_scaffold.dart';
 import '../../widgets/atoms/aev_text_field.dart';
 import '../../widgets/atoms/aev_button.dart';
@@ -65,7 +65,7 @@ class _SignInPageState extends State<SignInPage> {
                   }
                 }),
                 const SizedBox(height: 12),
-                Row(children: const [
+                const Row(children: [
                   Expanded(child: Divider()),
                   Padding(padding: EdgeInsets.symmetric(horizontal: 8), child: Text('OR')),
                   Expanded(child: Divider()),

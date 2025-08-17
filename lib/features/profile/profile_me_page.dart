@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../widgets/atoms/aev_text_field.dart';
 import '../../widgets/atoms/aev_button.dart';
 import '../../state/stubs.dart';
@@ -48,7 +48,7 @@ class _ProfileMePageState extends State<ProfileMePage> {
           const SizedBox(height: 24),
           Text('Demographics', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
-          Wrap(spacing: 8, children: const [
+          const Wrap(spacing: 8, children: [
             Chip(label: Text('Gender: edit from Settings')),
             Chip(label: Text('Height/Weight: edit from Settings')),
           ]),

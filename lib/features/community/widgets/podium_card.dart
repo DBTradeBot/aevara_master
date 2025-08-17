@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../models.dart';
 
 class PodiumCard extends StatelessWidget {
@@ -47,9 +47,9 @@ class PodiumCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gold = const Color(0xFFFFD54F);
-    final silver = const Color(0xFFB0BEC5);
-    final bronze = const Color(0xFFBCAAA4);
+    const gold = Color(0xFFFFD54F);
+    const silver = Color(0xFFB0BEC5);
+    const bronze = Color(0xFFBCAAA4);
 
     final byRank = List<UserRank>.from(top3)..sort((a,b)=>a.rank.compareTo(b.rank));
     if (byRank.length < 3) {

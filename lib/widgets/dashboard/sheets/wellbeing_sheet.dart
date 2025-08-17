@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../theme/aevara_theme.dart';
 import 'metric_info_sheet.dart';
@@ -119,7 +119,7 @@ class _WellbeingSheetBodyState extends State<_WellbeingSheetBody> {
           borderRadius: BorderRadius.vertical(top: Radius.circular(a.radius)),
           boxShadow: [BoxShadow(color: a.shadow, blurRadius: 20, offset: const Offset(0, -4))],
         ),
-        child: MetricInfoSheet(
+        child: const MetricInfoSheet(
           metricName: 'Wellbeing',
           whatItIs:
           'Your self-rated mental and emotional state today, on a scale from 1 (very poor) to 5 (excellent). '
@@ -308,7 +308,7 @@ class _WellbeingDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final a = context.aevara;
-    final items = _WellbeingSheetBodyState._items;
+    const items = _WellbeingSheetBodyState._items;
 
     return PopupMenuButton<int>(
       tooltip: 'Select state',

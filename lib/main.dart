@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:aevara_app/theme/aevara_theme.dart';
 
 // App shell (bottom nav + settings bar)
 import 'features/home/dashboard_placeholder.dart';
@@ -49,13 +50,19 @@ class AevaraApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Build a ColorScheme so we can also seed the AevaraTheme extension from the same seed.
+    final scheme = ColorScheme.fromSeed(seedColor: const Color(0xFF5B6CFF));
+
     return MaterialApp(
       title: 'Aevara',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: const Color(0xFF5B6CFF),
+        colorScheme: scheme,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        extensions: <ThemeExtension<dynamic>>[
+          AevaraTheme.fromScheme(scheme),
+        ],
       ),
 
       // Start in the app shell

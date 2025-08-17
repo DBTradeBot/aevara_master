@@ -11,9 +11,9 @@ class RecentBadgePill extends StatelessWidget {
         color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(999),
       ),
-      child: Row(
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
-        children: const [
+        children: [
           Icon(Icons.emoji_events, size: 20, color: Colors.amber),
           SizedBox(width: 8),
           Text("Congrats! You earned a badge"),

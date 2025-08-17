@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../state/stubs.dart';
 
 class UsernamePage extends StatefulWidget {
@@ -68,7 +68,7 @@ class _UsernamePageState extends State<UsernamePage> {
             const SizedBox(height: 24),
 
             // Navigation (use ButtonBar instead of Row to avoid layout traps)
-            ButtonBar(
+            OverflowBar(
               alignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(

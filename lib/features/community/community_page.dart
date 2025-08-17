@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class CommunityPage extends StatefulWidget {
   const CommunityPage({super.key});
@@ -98,7 +98,7 @@ class _LeaderboardsTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Wrap(spacing: 8, children: const [Chip(label: Text('Global')), Chip(label: Text('Friends')), Chip(label: Text('Group'))]),
+        const Wrap(spacing: 8, children: [Chip(label: Text('Global')), Chip(label: Text('Friends')), Chip(label: Text('Group'))]),
         const SizedBox(height: 12),
         Card(child: Column(children: [for (final r in rows) ListTile(leading: Text(r.$1), title: Text(r.$2), trailing: Text(r.$3))])),
       ],
@@ -115,7 +115,7 @@ class _FriendsTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        TextField(decoration: const InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Search users')), const SizedBox(height: 12),
+        const TextField(decoration: InputDecoration(prefixIcon: Icon(Icons.search), hintText: 'Search users')), const SizedBox(height: 12),
         Card(child: Column(children: [for (final f in friends) ListTile(leading: const CircleAvatar(child: Icon(Icons.person_outline)), title: Text(f), trailing: Wrap(spacing: 8, children: [OutlinedButton(onPressed: (){}, child: const Text('Cheer')), OutlinedButton(onPressed: (){}, child: const Text('Invite'))]))])),
       ],
     );

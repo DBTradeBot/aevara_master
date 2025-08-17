@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class ExperimentsHomePage extends StatelessWidget {
   const ExperimentsHomePage({super.key});
@@ -21,11 +21,11 @@ class ExperimentsHomePage extends StatelessWidget {
         children: [
           Text('My Experiments', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
-          Card(
+          const Card(
             child: ListTile(
-              leading: const Icon(Icons.flag),
-              title: const Text('None active'),
-              subtitle: const Text('Start one below'),
+              leading: Icon(Icons.flag),
+              title: Text('None active'),
+              subtitle: Text('Start one below'),
             ),
           ),
           const SizedBox(height: 16),

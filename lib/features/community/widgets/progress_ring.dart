@@ -1,4 +1,4 @@
-﻿import 'dart:math' as math;
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class ProgressRing extends StatelessWidget {
@@ -28,7 +28,7 @@ class _RingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final stroke = 8.0;
+    const stroke = 8.0;
     final rect = Offset.zero & size;
     final center = rect.center;
     final radius = (size.shortestSide - stroke) / 2;

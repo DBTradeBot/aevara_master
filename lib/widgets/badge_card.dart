@@ -1,4 +1,4 @@
-﻿
+
 import 'package:flutter/material.dart';
 import '../data/mock_community_data.dart';
 
@@ -32,7 +32,7 @@ class BadgeCard extends StatelessWidget {
                     value: earned ? 1 : (badge.progress.clamp(0, 1)),
                     strokeWidth: 6,
                     color: ringColor,
-                    backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                    backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                   ),
                 ),
                 Text(badge.emoji, style: const TextStyle(fontSize: 22)),

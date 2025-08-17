@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 // Data tab: simple hub that links to your data subpages
 import '../data/daily_snapshot_page.dart';
@@ -168,9 +168,9 @@ class _SettingsDrawer extends StatelessWidget {
                   child: const Text('ðŸ˜Ž', style: TextStyle(fontSize: 20)),
                 ),
                 const SizedBox(width: 12),
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text('Your Account', style: TextStyle(fontWeight: FontWeight.w600)),
                     Text('@username', style: TextStyle(color: Colors.black54)),
                   ],

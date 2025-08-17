@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../theme/aevara_theme.dart';
@@ -108,7 +108,7 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
   void _finalizeFromText() {
     final raw = _c.text.trim();
     double? parsed = double.tryParse(raw.replaceAll(',', '.'));
-    if (parsed == null) parsed = _v;
+    parsed ??= _v;
     final next = _roundToStep(parsed).clamp(widget.min, widget.max);
     setState(() {
       _v = next;

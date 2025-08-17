@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart'; import '../../app_routes.dart'; import '../../core/tiles/setting_tile.dart';
+﻿import 'package:aevara_app/core/navigation/routes.dart';
+import 'package:flutter/material.dart'; import '../../app_routes.dart'; import '../../core/tiles/setting_tile.dart';
 class SettingsPanelSheetPage extends StatelessWidget{ const SettingsPanelSheetPage({super.key});
   void _open(BuildContext c){
     showModalBottomSheet(context:c, isScrollControlled:true, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))), builder: (_){

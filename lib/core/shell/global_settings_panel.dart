@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../widgets/avatar.dart';
 import '../../app_routes.dart';
 class GlobalSettingsPanel extends StatelessWidget{
@@ -14,8 +14,8 @@ class GlobalSettingsPanel extends StatelessWidget{
       ]),
       const SizedBox(height:12),
       Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: cs.secondaryContainer, borderRadius: BorderRadius.circular(16)),
-        child: Row(children:[Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children:[
-          const Text('Streak: 5 days'), const SizedBox(height:4), const Text('Badges: 8 â€¢ XP: 1240')
+        child: Row(children:[const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children:[
+          Text('Streak: 5 days'), SizedBox(height:4), Text('Badges: 8 â€¢ XP: 1240')
         ])), FilledButton(onPressed: ()=>Navigator.pushNamed(c, Routes.badges), child: const Text('View badges'))])),
       const SizedBox(height:16), const Divider(),
       ListTile(leading: const Icon(Icons.person), title: const Text('Account'), onTap: ()=>Navigator.pushNamed(c, Routes.account)),

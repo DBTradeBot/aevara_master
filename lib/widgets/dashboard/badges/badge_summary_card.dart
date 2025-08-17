@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../data/mock_community_data.dart';
 
 /// Compact Community Home summary:
@@ -137,7 +137,7 @@ class BadgeThumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = Theme.of(context).colorScheme.surfaceVariant;
+    final bg = Theme.of(context).colorScheme.surfaceContainerHighest;
 
     Widget inner;
 

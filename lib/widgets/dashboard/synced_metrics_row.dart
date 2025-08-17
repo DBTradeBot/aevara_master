@@ -1,4 +1,4 @@
-﻿// lib/widgets/dashboard/synced_metrics_row.dart
+// lib/widgets/dashboard/synced_metrics_row.dart
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:aevara_app/theme/aevara_theme.dart';
@@ -165,7 +165,7 @@ class _SyncedMetricCard extends StatelessWidget {
     final aev = context.aevara;
 
     // Consistent card height with comfortable internal spacing
-    final h = 78.0;
+    const h = 78.0;
 
     // Fixed-width slot for the value+sublabel so all four cards render uniformly.
     const double kValueSlotWidth = 72.0;

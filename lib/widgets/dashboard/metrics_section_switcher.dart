@@ -1,4 +1,4 @@
-﻿// lib/widgets/dashboard/metrics_section_switcher.dart
+// lib/widgets/dashboard/metrics_section_switcher.dart
 import 'package:flutter/material.dart';
 
 /// Pure logic switcher: decides whether to show the manual MetricsRow
@@ -40,27 +40,27 @@ class MetricsSectionSwitcher extends StatelessWidget {
     const dailyStaleHrs = 48;   // revert threshold
     const cardioFreshDays = 7;  // VO2max/Fitness Age
 
-    bool _isFresh(DateTime? t, Duration maxAge) =>
+    bool isFresh(DateTime? t, Duration maxAge) =>
         t != null && now.difference(t) <= maxAge;
 
     // Per-metric freshness
-    final sleepFresh    = _isFresh(sleepUpdatedUtc, const Duration(hours: dailyFreshHrs));
-    final recoveryFresh = _isFresh(recoveryUpdatedUtc, const Duration(hours: dailyFreshHrs));
-    final activityFresh = _isFresh(activityUpdatedUtc, const Duration(hours: dailyFreshHrs));
-    final cardioFresh   = _isFresh(cardioUpdatedUtc, const Duration(days: cardioFreshDays));
+    final sleepFresh    = isFresh(sleepUpdatedUtc, const Duration(hours: dailyFreshHrs));
+    final recoveryFresh = isFresh(recoveryUpdatedUtc, const Duration(hours: dailyFreshHrs));
+    final activityFresh = isFresh(activityUpdatedUtc, const Duration(hours: dailyFreshHrs));
+    final cardioFresh   = isFresh(cardioUpdatedUtc, const Duration(days: cardioFreshDays));
 
     final dailyFreshCount = [sleepFresh, recoveryFresh, activityFresh].where((b) => b).length;
 
     // Count how many daily metrics are beyond stale threshold (>= 48h)
-    int _staleDailyCount() {
+    int staleDailyCount() {
       int c = 0;
-      if (!_isFresh(sleepUpdatedUtc, const Duration(hours: dailyStaleHrs))) c++;
-      if (!_isFresh(recoveryUpdatedUtc, const Duration(hours: dailyStaleHrs))) c++;
-      if (!_isFresh(activityUpdatedUtc, const Duration(hours: dailyStaleHrs))) c++;
+      if (!isFresh(sleepUpdatedUtc, const Duration(hours: dailyStaleHrs))) c++;
+      if (!isFresh(recoveryUpdatedUtc, const Duration(hours: dailyStaleHrs))) c++;
+      if (!isFresh(activityUpdatedUtc, const Duration(hours: dailyStaleHrs))) c++;
       return c;
     }
 
-    final twoDailyStaleOrMore = _staleDailyCount() >= 2;
+    final twoDailyStaleOrMore = staleDailyCount() >= 2;
 
     // Show synced when:
     // - device connected
@@ -70,7 +70,7 @@ class MetricsSectionSwitcher extends StatelessWidget {
     final canShowSynced =
         hasPrimaryConnected &&
             dailyFreshCount >= 3 &&
-            (lastFullSyncUtc != null && _isFresh(lastFullSyncUtc, const Duration(hours: dailyFreshHrs))) &&
+            (lastFullSyncUtc != null && isFresh(lastFullSyncUtc, const Duration(hours: dailyFreshHrs))) &&
             cardioFresh;
 
     // Revert if:

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../services/reaction_store.dart';
 
 /// Compact emoji reactions row. Use only on Friends tab.
@@ -77,7 +77,7 @@ class _EmojiChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(999),
-          color: selected ? cs.primaryContainer : cs.surfaceVariant,
+          color: selected ? cs.primaryContainer : cs.surfaceContainerHighest,
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Text(emoji, style: const TextStyle(fontSize: 16)),
@@ -115,7 +115,7 @@ class _AddEmojiChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(999),
-          color: cs.surfaceVariant,
+          color: cs.surfaceContainerHighest,
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           const Icon(Icons.add_reaction, size: 18),
@@ -148,7 +148,7 @@ class _EmojiPickerSheet extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 ),
                 child: Text(e, style: const TextStyle(fontSize: 22)),
               ),

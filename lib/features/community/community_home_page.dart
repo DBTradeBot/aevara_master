@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../data/mock_community_data.dart';
 import '../../widgets/next_milestone_card.dart';
 import '../../widgets/section.dart';
@@ -37,12 +37,12 @@ class CommunityHomePage extends StatelessWidget {
           ),
 
           // quick links
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Wrap(
               spacing: 12,
               runSpacing: 12,
-              children: const [
+              children: [
                 _QuickLink(icon: Icons.military_tech, label: 'Badges', route: '/community/badges'),
                 _QuickLink(icon: Icons.emoji_events, label: 'Leaderboards', route: '/community/leaderboards'),
                 _QuickLink(icon: Icons.flag, label: 'Challenges', route: '/community/challenges'),

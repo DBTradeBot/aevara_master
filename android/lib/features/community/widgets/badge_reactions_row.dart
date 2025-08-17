@@ -72,7 +72,7 @@ class _EmojiChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(999),
-          color: selected ? cs.primaryContainer : cs.surfaceVariant,
+          color: selected ? cs.primaryContainer : cs.surfaceContainerHighest,
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Text(emoji, style: const TextStyle(fontSize: 16)),
@@ -106,9 +106,9 @@ class _AddEmojiChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(999),
-          color: cs.surfaceVariant,
+          color: cs.surfaceContainerHighest,
         ),
-        child: Row(mainAxisSize: MainAxisSize.min, children: const [
+        child: const Row(mainAxisSize: MainAxisSize.min, children: [
           Icon(Icons.add_reaction, size: 18),
           SizedBox(width: 6),
           Text('React'),

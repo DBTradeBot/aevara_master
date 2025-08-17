@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 class MetricDetailsSheet extends StatelessWidget{
   final String metric;
   const MetricDetailsSheet({super.key, required this.metric});
@@ -22,7 +22,7 @@ class MetricDetailsSheet extends StatelessWidget{
           Padding(padding: const EdgeInsets.all(6), child: Text(p)),
           const Padding(padding: EdgeInsets.all(6), child: Text('--')),
           const Padding(padding: EdgeInsets.all(6), child: Text('Today 07:10')),
-        ])).toList()
+        ]))
       ]),
       const SizedBox(height:8),
       const ExpansionTile(title: Text('Why this value?'), children:[ListTile(title: Text('Priority rule: Oura > Apple > Fitbit'))]),

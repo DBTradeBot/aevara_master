@@ -1,1 +1,1 @@
-﻿import 'package:flutter/material.dart'; class TrendLine extends StatelessWidget{final List<double> values; const TrendLine({super.key, required this.values}); @override Widget build(BuildContext c)=>SizedBox(height:80, child: Center(child: Text('Trend ('+values.length.toString()+')')));}
+import 'package:flutter/material.dart'; class TrendLine extends StatelessWidget{final List<double> values; const TrendLine({super.key, required this.values}); @override Widget build(BuildContext c)=>SizedBox(height:80, child: Center(child: Text('Trend (${values.length})')));}
