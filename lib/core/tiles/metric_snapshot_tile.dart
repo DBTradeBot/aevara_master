@@ -1,0 +1,1 @@
+import 'package:flutter/material.dart'; class MetricSnapshotTile extends StatelessWidget{final String title; final String value; final VoidCallback? onTap; const MetricSnapshotTile({super.key, required this.title, required this.value, this.onTap}); @override Widget build(BuildContext c)=>Card(child: ListTile(title: Text(title), subtitle: Text(value), onTap: onTap));}

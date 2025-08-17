@@ -1,0 +1,7 @@
+import 'package:flutter/material.dart';
+class ChallengesPage extends StatelessWidget{ const ChallengesPage({super.key});
+  @override Widget build(BuildContext c)=>Scaffold(appBar: AppBar(title: const Text('Challenges')), body: ListView(children:[
+    Card(child: ListTile(title: const Text('10% Steps (Friends)'), subtitle: const Text('7 days • Join now'), trailing: FilledButton(onPressed: (){}, child: const Text('Join')))),
+    Card(child: ListTile(title: const Text('+30 min Sleep'), subtitle: const Text('14 days • Starts Monday'), trailing: FilledButton(onPressed: (){}, child: const Text('Notify')))),
+  ]));
+}

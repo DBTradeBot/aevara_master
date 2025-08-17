@@ -1,0 +1,1 @@
+import 'package:flutter/material.dart'; class Avatar extends StatelessWidget{final double size; const Avatar({super.key, this.size=40}); @override Widget build(BuildContext c)=>CircleAvatar(radius: size/2, child: const Icon(Icons.person));}

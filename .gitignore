@@ -1,0 +1,11 @@
+.dart_tool/
+.packages
+.pub/
+build/
+**/GeneratedPluginRegistrant.*
+.idea/
+.vscode/
+*.iml
+android/.gradle/
+android/local.properties
+ios/Pods/
