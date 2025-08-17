@@ -1,5 +1,4 @@
-﻿export 'aevara_theme_shims.dart';
-// lib/theme/aevara_theme.dart
+﻿// lib/theme/aevara_theme.dart
 import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 
