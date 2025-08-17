@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../navigation/routes.dart';
 class SignUpPage extends StatefulWidget{ const SignUpPage({super.key}); @override State<SignUpPage> createState()=>_SignUpPageState();}
 class _SignUpPageState extends State<SignUpPage>{ final name=TextEditingController(); final email=TextEditingController(); final pass=TextEditingController(); final confirm=TextEditingController();

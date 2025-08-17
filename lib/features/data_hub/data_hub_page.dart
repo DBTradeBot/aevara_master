@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../widgets/layout/page_header.dart';
 import '../../widgets/atoms/aev_status_dot.dart';
 
@@ -61,7 +61,7 @@ class DataHubPage extends StatelessWidget {
               ],
             ),
           ),
-          const PageHeader(title: 'Today’s snapshots'),
+          const PageHeader(title: 'Todayâ€™s snapshots'),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Wrap(
@@ -170,13 +170,13 @@ class _MetricDetails extends StatelessWidget {
           children: [
             Text(metric, style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 8),
-            Text('Today: $value  •  Source: $source'),
+            Text('Today: $value  â€¢  Source: $source'),
             const SizedBox(height: 12),
             const Text('Why this value?'),
             const SizedBox(height: 4),
             const Text('Merged from available providers using Aevara priority rules (stub for now).'),
             const SizedBox(height: 12),
-            const Text('History (14 days) – chart placeholder'),
+            const Text('History (14 days) â€“ chart placeholder'),
             const SizedBox(height: 12),
             FilledButton(onPressed: ()=> Navigator.pop(context), child: const Text('Close')),
             const SizedBox(height: 12),

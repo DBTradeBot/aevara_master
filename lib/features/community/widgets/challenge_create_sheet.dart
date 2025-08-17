@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Bottom sheet to create a new challenge (mock/local only).
 /// Returns a Map with: { title, category, days, friendsOnly }

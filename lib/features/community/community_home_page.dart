@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../data/mock_community_data.dart';
 import '../../widgets/next_milestone_card.dart';
 import '../../widgets/section.dart';
@@ -122,7 +122,7 @@ class _QuickLink extends StatelessWidget {
       onTap: () => Navigator.pushNamed(context, route),
       child: Container(
         width: 150,
-        height: 56, // was 64 → tighter without feeling cramped
+        height: 56, // was 64 â†’ tighter without feeling cramped
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),

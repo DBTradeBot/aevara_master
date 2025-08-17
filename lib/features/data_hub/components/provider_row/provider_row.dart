@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'provider_card.dart';
 class ProviderRow extends StatelessWidget{
   const ProviderRow({super.key});

@@ -1,4 +1,4 @@
-// lib/widgets/dashboard/metrics_section_switcher.dart
+﻿// lib/widgets/dashboard/metrics_section_switcher.dart
 import 'package:flutter/material.dart';
 
 /// Pure logic switcher: decides whether to show the manual MetricsRow

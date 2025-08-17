@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class FilterChipsBar extends StatelessWidget {
   final List<String> options;

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Minimal app state stubs (no backend). Replace later with real providers/BLoC/etc.
 class AppState extends ChangeNotifier {

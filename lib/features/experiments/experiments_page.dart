@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../widgets/layout/page_header.dart';
 
 class ExperimentsPage extends StatelessWidget {
@@ -10,7 +10,7 @@ class ExperimentsPage extends StatelessWidget {
       ('5-min Breathing', 'Recovery', '7 days', ['HRV','Healthy Days']),
       ('+30 min Sleep', 'Sleep', '14 days', ['Sleep','HRV']),
       ('+10% Steps', 'Activity', '14 days', ['Steps','Healthy Days']),
-      ('Zone 2 3x/week', 'Cardio', '21 days', ['VO₂max','HRV']),
+      ('Zone 2 3x/week', 'Cardio', '21 days', ['VOâ‚‚max','HRV']),
     ];
 
     return Scaffold(
@@ -79,10 +79,10 @@ class _ExperimentDetail extends StatelessWidget {
             const SizedBox(height: 6),
             Text('Default duration: $duration'),
             const SizedBox(height: 12),
-            const Text('What you’ll do'),
-            const Text('• Daily practice with reminders (stub).'),
+            const Text('What youâ€™ll do'),
+            const Text('â€¢ Daily practice with reminders (stub).'),
             const SizedBox(height: 12),
-            const Text('Metrics we’ll track'),
+            const Text('Metrics weâ€™ll track'),
             Wrap(spacing: 8, children: [for (final t in tracks) Chip(label: Text(t))]),
             const Spacer(),
             FilledButton(onPressed: (){

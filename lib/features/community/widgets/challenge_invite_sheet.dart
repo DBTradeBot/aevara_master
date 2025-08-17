@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Returns the list of picked handles (e.g. ['@mia', '@sam']) or null if canceled.
 Future<List<String>?> showChallengeInviteSheet(
     BuildContext context, {
       String? challengeTitle,
     }) {
-  // Simple mock list — swap with your friends list later
+  // Simple mock list â€” swap with your friends list later
   final friends = const [
     '@alex', '@mia', '@sam', '@li', '@ron', '@jordan', '@kira'
   ];
@@ -36,7 +36,7 @@ Future<List<String>?> showChallengeInviteSheet(
           ),
           const SizedBox(height: 12),
           Text(
-            challengeTitle == null ? 'Invite friends' : 'Invite friends to “$challengeTitle”',
+            challengeTitle == null ? 'Invite friends' : 'Invite friends to â€œ$challengeTitleâ€',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),

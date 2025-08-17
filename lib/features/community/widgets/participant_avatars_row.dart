@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class ParticipantAvatarsRow extends StatelessWidget {
   final List<String> names;
@@ -31,7 +31,7 @@ class ParticipantAvatarsRow extends StatelessWidget {
   }
 
   String _initials(String handleOrName) {
-    // handle like “@alex” -> A, “Alex Kim” -> AK
+    // handle like â€œ@alexâ€ -> A, â€œAlex Kimâ€ -> AK
     final s = handleOrName.replaceAll('@', '').trim();
     if (s.isEmpty) return '?';
     final parts = s.split(RegExp(r'\s+'));

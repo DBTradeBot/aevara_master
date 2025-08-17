@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../widgets/leaderboard_switcher.dart';
 import '../../data/mock_community_data.dart'; // for demoLeaderboard list
 import 'widgets/rank_tile.dart' as community;

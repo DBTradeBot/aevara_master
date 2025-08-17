@@ -1,4 +1,4 @@
-// lib/features/sync/sync_connect.dart
+﻿// lib/features/sync/sync_connect.dart
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../theme/aevara_theme.dart';
@@ -90,7 +90,7 @@ Future<SyncConnectResult?> showSyncConnectSheet(
 
               const SizedBox(height: 8),
 
-              // consent row — inline link, aligned, non-breaking "metrics"
+              // consent row â€” inline link, aligned, non-breaking "metrics"
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

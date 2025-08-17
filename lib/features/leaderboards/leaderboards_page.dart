@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; import '../../core/navigation/app_shell.dart'; import '../../core/tiles/leaderboard_row.dart';
+﻿import 'package:flutter/material.dart'; import '../../core/navigation/app_shell.dart'; import '../../core/tiles/leaderboard_row.dart';
 class LeaderboardsPage extends StatefulWidget{ const LeaderboardsPage({super.key}); @override State<LeaderboardsPage> createState()=>_LeaderboardsPageState();}
 class _LeaderboardsPageState extends State<LeaderboardsPage>{ List<int> cheers=[0,0,0];
   @override Widget build(BuildContext c)=>AppShell(currentIndex:3, child: DefaultTabController(length:3, child: Column(children:[

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class MetricDetailsPage extends StatefulWidget {
   const MetricDetailsPage({super.key});
@@ -38,7 +38,7 @@ class _MetricDetailsPageState extends State<MetricDetailsPage> {
             child: SizedBox(
               height: 220,
               child: Center(
-                child: Text('Chart ($range) — stubbed',
+                child: Text('Chart ($range) â€” stubbed',
                     style: Theme.of(context).textTheme.bodyMedium),
               ),
             ),
@@ -51,7 +51,7 @@ class _MetricDetailsPageState extends State<MetricDetailsPage> {
               leading: const Icon(Icons.lightbulb_outline),
               title: const Text('What moved this metric?'),
               subtitle: const Text(
-                  'Sleep schedule consistency • Alcohol flag • Late workouts'),
+                  'Sleep schedule consistency â€¢ Alcohol flag â€¢ Late workouts'),
               onTap: () {},
             ),
           ),

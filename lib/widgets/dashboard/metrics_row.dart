@@ -1,7 +1,7 @@
-import 'dart:math' as math;
+﻿import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:aevara_master/theme/aevara_theme.dart';
-import 'package:aevara_master/tiles/sync_tile.dart';
+import 'package:aevara_app/theme/aevara_theme.dart';
+import 'package:aevara_app/tiles/sync_tile.dart';
 
 // Icon accent colors for the metric badges
 const _sleepIcon = Color(0xFF3F87A6);
@@ -162,7 +162,7 @@ class _AdaptiveMetricCard extends StatelessWidget {
 
         // Font sizes (make missing-value prompt smaller so it never clips)
         final valueFsPresent = _clamp(h * 0.24, 15, 20);
-        final valueFsMissing = _clamp(h * 0.16, 10, 12); // smaller for “Tap to add”
+        final valueFsMissing = _clamp(h * 0.16, 10, 12); // smaller for â€œTap to addâ€
         final labelFs        = _clamp(h * 0.18, 12, 14.5);
 
         // Flex proportions

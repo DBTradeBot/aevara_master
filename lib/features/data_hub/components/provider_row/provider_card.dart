@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class ProviderCard extends StatelessWidget {
   final String name; final String status; final IconData icon;
   const ProviderCard({super.key, required this.name, required this.status, required this.icon});

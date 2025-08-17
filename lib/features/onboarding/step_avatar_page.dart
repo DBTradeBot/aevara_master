@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../navigation/routes.dart';
 class OnboardingAvatarPage extends StatelessWidget{ const OnboardingAvatarPage({super.key});
   @override Widget build(BuildContext c)=>Scaffold(appBar: AppBar(title: const Text('Profile Photo (4/4)')), body: ListView(padding: const EdgeInsets.all(16), children:[

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 
 /// In-memory social state for Challenges.
 /// Swap with Firestore later without changing UI code.

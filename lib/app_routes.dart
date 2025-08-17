@@ -1,4 +1,4 @@
-class Routes {
+﻿class Routes {
   static const signIn = '/auth/signin'; static const signUp = '/auth/signup'; static const forgot = '/auth/forgot';
   static const onboardingBasics = '/onboarding/basics'; static const onboardingGoals = '/onboarding/goals';
   static const onboardingAvatar = '/onboarding/avatar'; static const ready = '/onboarding/ready';

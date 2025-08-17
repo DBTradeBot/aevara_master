@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class ReactionBar extends StatelessWidget{
   final VoidCallback? onCheer; final VoidCallback? onComment; final VoidCallback? onShare;
   const ReactionBar({super.key, this.onCheer, this.onComment, this.onShare});

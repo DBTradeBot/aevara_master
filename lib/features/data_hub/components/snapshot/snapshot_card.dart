@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'source_badge.dart'; import 'freshness_chip.dart'; import 'mini_sparkline.dart';
 class SnapshotCard extends StatelessWidget{
   final String title; final String bigValue; final String unit; final String source; final String freshness; final VoidCallback onTap;

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; import '../../app_routes.dart';
+﻿import 'package:flutter/material.dart'; import '../../app_routes.dart';
 class AppBottomNav extends StatelessWidget{ final int index; const AppBottomNav({super.key, required this.index});
   void _go(BuildContext c, String r){ if (ModalRoute.of(c)?.settings.name == r) return; Navigator.of(c).pushReplacementNamed(r); }
   @override Widget build(BuildContext c)=>NavigationBar(selectedIndex: index, onDestinationSelected:(i){switch(i){case 0:_go(c,Routes.home);break;case 1:_go(c,Routes.dataHub);break;case 2:_go(c,Routes.experiments);break;case 3:_go(c,Routes.community);break;case 4:_go(c,Routes.profile);}}, destinations: const [

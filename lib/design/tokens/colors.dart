@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class AeColors {
   static const neonPrimary = Color(0xFF00E5FF);
   static const neonSecondary = Color(0xFFFF2BD8);

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class SyncHeader extends StatelessWidget{
   const SyncHeader({super.key});
   @override Widget build(BuildContext c)=>Row(children:[

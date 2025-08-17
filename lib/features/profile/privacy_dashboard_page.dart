@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class PrivacyDashboardPage extends StatelessWidget{ const PrivacyDashboardPage({super.key});
   @override Widget build(BuildContext c)=>Scaffold(appBar: AppBar(title: const Text('Privacy & Data')), body: ListView(padding: const EdgeInsets.all(16), children:[
     const Text('Storage explainer: placeholder text about local vs cloud, deletion requests.'),

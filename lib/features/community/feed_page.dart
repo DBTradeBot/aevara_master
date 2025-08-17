@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class FeedPage extends StatelessWidget{ const FeedPage({super.key});
   Widget _post(String user, String text)=>Card(child: Padding(padding: const EdgeInsets.all(12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children:[
     Row(children:[CircleAvatar(child: Text(user[0])), const SizedBox(width:8), Text(user, style: const TextStyle(fontWeight: FontWeight.w600))]),

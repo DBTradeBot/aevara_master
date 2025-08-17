@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class CoachCard extends StatelessWidget{
   final VoidCallback onOpen;
   const CoachCard({super.key, required this.onOpen});

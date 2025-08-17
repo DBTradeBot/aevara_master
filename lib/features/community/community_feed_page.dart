@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; import '../../core/tiles/feed_item_tile.dart'; import '../../core/utils/snack.dart';
+﻿import 'package:flutter/material.dart'; import '../../core/tiles/feed_item_tile.dart'; import '../../core/utils/snack.dart';
 class CommunityFeedPage extends StatefulWidget{ const CommunityFeedPage({super.key}); @override State<CommunityFeedPage> createState()=>_CommunityFeedPageState();}
 class _CommunityFeedPageState extends State<CommunityFeedPage>{ int cheers=0;
   @override Widget build(BuildContext c)=>Scaffold(appBar: AppBar(title: const Text('Community Feed')), body: ListView(children:[

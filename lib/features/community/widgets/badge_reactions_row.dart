@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../services/reaction_store.dart';
 
 /// Compact emoji reactions row. Use only on Friends tab.
@@ -32,7 +32,7 @@ class BadgeReactionsRow extends StatelessWidget {
           onTap: () => ReactionStore.I.toggle(badgeId, e.key),
         ))
             : [
-          for (final e in const ['👏', '🔥', '💪'])
+          for (final e in const ['ðŸ‘', 'ðŸ”¥', 'ðŸ’ª'])
             _EmojiChip(
               emoji: e,
               count: 0,
@@ -133,7 +133,7 @@ class _EmojiPickerSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final options = ['👏','🔥','💪','🙌','😍','🤯','🎉','🏆','💯','😊','🫡','🤝'];
+    final options = ['ðŸ‘','ðŸ”¥','ðŸ’ª','ðŸ™Œ','ðŸ˜','ðŸ¤¯','ðŸŽ‰','ðŸ†','ðŸ’¯','ðŸ˜Š','ðŸ«¡','ðŸ¤'];
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       child: Wrap(

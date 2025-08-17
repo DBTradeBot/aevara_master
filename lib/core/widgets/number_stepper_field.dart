@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class NumberStepperField extends StatefulWidget{
   final String label; final double value; final double min; final double max; final double step; final String unit;
   final void Function(double) onChanged;

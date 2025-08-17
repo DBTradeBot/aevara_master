@@ -1,4 +1,4 @@
-
+﻿
 import 'package:flutter/material.dart';
 import '../data/mock_community_data.dart';
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../app_routes.dart';
 import 'global_settings_panel.dart';
 class AppShell extends StatelessWidget{

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/aevara_theme.dart';
 import 'number_input_sheet.dart';
 
@@ -37,7 +37,7 @@ Future<void> showStepsSheet(
         'We score steps based on dose-response benefits for mortality risk. Higher activity boosts healthy days; low activity may reduce them.',
         infoWhereToFind:
         'Wearables/phones: Apple Health (Steps), Fitbit, Garmin Connect, WHOOP (Activity), Samsung Health.\n\n'
-            'Manual/estimate: Use your phone’s pedometer or estimate from known distances and time spent walking.',
+            'Manual/estimate: Use your phoneâ€™s pedometer or estimate from known distances and time spent walking.',
       ),
     ),
   );

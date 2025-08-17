@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class SyncTimelineList extends StatelessWidget{
   const SyncTimelineList({super.key});
   @override Widget build(BuildContext c)=>Column(children:[

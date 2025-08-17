@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../widgets/layout/auth_scaffold.dart';
 import '../../widgets/atoms/aev_text_field.dart';
 import '../../widgets/atoms/aev_button.dart';
@@ -38,7 +38,7 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(height: 16),
                 Text('Welcome Back', style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 8),
-                Text('Let’s get started by filling out the form below.', style: Theme.of(context).textTheme.bodyMedium),
+                Text('Letâ€™s get started by filling out the form below.', style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(height: 16),
                 AevTextField(
                   controller: _email,

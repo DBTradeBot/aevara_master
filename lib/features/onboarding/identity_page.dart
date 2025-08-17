@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../widgets/atoms/aev_text_field.dart';
 
 class IdentityPage extends StatefulWidget {
@@ -54,7 +54,7 @@ class _IdentityPageState extends State<IdentityPage> {
                   AevTextField(controller: _last, label: 'Last name'),
                   const SizedBox(height: 12),
 
-                  // DOB field – tap anywhere to pick.
+                  // DOB field â€“ tap anywhere to pick.
                   InkWell(
                     onTap: _pickDob,
                     borderRadius: BorderRadius.circular(12),

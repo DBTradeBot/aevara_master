@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; import '../../app_routes.dart'; import '../../core/widgets/chip_filters.dart';
+﻿import 'package:flutter/material.dart'; import '../../app_routes.dart'; import '../../core/widgets/chip_filters.dart';
 class OnboardingGoalsPage extends StatelessWidget{ const OnboardingGoalsPage({super.key});
   @override Widget build(BuildContext c)=>Scaffold(appBar: AppBar(title: const Text('Goals (2/3)')), body: ListView(padding: const EdgeInsets.all(16), children:[
     const Text('Pick your goals'), const SizedBox(height:8),

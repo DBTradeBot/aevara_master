@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class ParticipantAvatarsRow extends StatelessWidget {
   final Iterable<String> names;

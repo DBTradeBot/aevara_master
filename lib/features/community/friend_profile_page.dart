@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; import '../../core/atoms/avatar.dart';
+﻿import 'package:flutter/material.dart'; import '../../core/atoms/avatar.dart';
 class FriendProfilePage extends StatelessWidget{ const FriendProfilePage({super.key});
   @override Widget build(BuildContext c)=>Scaffold(appBar: AppBar(title: const Text('Friend Profile')), body: ListView(padding: const EdgeInsets.all(16), children:[
     const Center(child: Avatar(size:72)), const SizedBox(height:8), const Center(child: Text('@friend_handle')),

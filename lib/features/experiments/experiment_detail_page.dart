@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class ExperimentDetailPage extends StatefulWidget {
   const ExperimentDetailPage({super.key});
@@ -66,13 +66,13 @@ class _ExperimentDetailPageState extends State<ExperimentDetailPage> {
           CheckboxListTile(
             value: windDown,
             onChanged: (v) => setState(() => windDown = v ?? false),
-            title: const Text('20–30 min wind-down routine'),
+            title: const Text('20â€“30 min wind-down routine'),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           CheckboxListTile(
             value: dimLights,
             onChanged: (v) => setState(() => dimLights = v ?? false),
-            title: const Text('Dim lights 1–2h before bed'),
+            title: const Text('Dim lights 1â€“2h before bed'),
             controlAffinity: ListTileControlAffinity.leading,
           ),
           const SizedBox(height: 16),

@@ -1,7 +1,7 @@
-// lib/widgets/dashboard/synced_metrics_row.dart
+﻿// lib/widgets/dashboard/synced_metrics_row.dart
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:aevara_master/theme/aevara_theme.dart';
+import 'package:aevara_app/theme/aevara_theme.dart';
 
 class SyncedMetricsRow extends StatelessWidget {
   // Sleep
@@ -78,7 +78,7 @@ class SyncedMetricsRow extends StatelessWidget {
         : (fitnessAge != null ? '${fitnessAge!.toStringAsFixed(0)}y' : '--');
 
     final cardioSublabel = (vo2max != null)
-        ? 'VO₂max'
+        ? 'VOâ‚‚max'
         : (baselineFitnessAge != null && fitnessAge != null
         ? 'vs ${baselineFitnessAge!.toStringAsFixed(0)}'
         : '');
@@ -146,7 +146,7 @@ class _SyncedMetricCard extends StatelessWidget {
   final Color iconColor;
   final String label;
   final String value;      // main number (e.g., "6.9h", "82", "8.5k", "42.0")
-  final String sublabel;   // small helper (e.g., "vs 7.5h", "/100", "85% goal", "VO₂max")
+  final String sublabel;   // small helper (e.g., "vs 7.5h", "/100", "85% goal", "VOâ‚‚max")
 
   const _SyncedMetricCard({
     required this.radius,

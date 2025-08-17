@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class RingProgress extends StatelessWidget{
   final double value; final String label;
   const RingProgress({super.key, required this.value, required this.label});

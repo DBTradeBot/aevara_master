@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../widgets/atoms/aev_text_field.dart';
 import '../../widgets/atoms/aev_button.dart';
 import '../../state/stubs.dart';
@@ -43,7 +43,7 @@ class _ProfileMePageState extends State<ProfileMePage> {
           ]),
           if (available != null) Padding(
             padding: const EdgeInsets.only(top: 6),
-            child: Text(available! ? 'Available ✔' : 'Taken ✖', style: TextStyle(color: available!? Colors.green : Colors.red)),
+            child: Text(available! ? 'Available âœ”' : 'Taken âœ–', style: TextStyle(color: available!? Colors.green : Colors.red)),
           ),
           const SizedBox(height: 24),
           Text('Demographics', style: Theme.of(context).textTheme.titleMedium),

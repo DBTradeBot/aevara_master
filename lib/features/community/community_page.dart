@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class CommunityPage extends StatefulWidget {
   const CommunityPage({super.key});
@@ -137,7 +137,7 @@ class _GroupsTab extends StatelessWidget {
           return OutlinedButton.icon(onPressed: (){}, icon: const Icon(Icons.add), label: const Text('Create group'));
         }
         final g = groups[i-1];
-        return Card(child: ListTile(title: Text(g), subtitle: const Text('Weekly leaderboard • 128 members'), trailing: FilledButton(onPressed: (){}, child: const Text('Open'))));
+        return Card(child: ListTile(title: Text(g), subtitle: const Text('Weekly leaderboard â€¢ 128 members'), trailing: FilledButton(onPressed: (){}, child: const Text('Open'))));
       },
     );
   }

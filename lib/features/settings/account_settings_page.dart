@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; import '../../core/inputs/text_input.dart'; import '../../core/utils/snack.dart';
+﻿import 'package:flutter/material.dart'; import '../../core/inputs/text_input.dart'; import '../../core/utils/snack.dart';
 class AccountSettingsPage extends StatelessWidget{ const AccountSettingsPage({super.key});
   void _changeEmail(BuildContext c){
     showModalBottomSheet(context:c, isScrollControlled:true, builder: (_)=>Padding(padding: EdgeInsets.only(bottom: MediaQuery.of(c).viewInsets.bottom), child: ListView(shrinkWrap:true, padding: const EdgeInsets.all(16), children:[

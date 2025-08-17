@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; import '../../app_routes.dart';
+﻿import 'package:flutter/material.dart'; import '../../app_routes.dart';
 class OnboardingBasicsPage extends StatefulWidget{ const OnboardingBasicsPage({super.key}); @override State<OnboardingBasicsPage> createState()=>_OnboardingBasicsPageState();}
 class _OnboardingBasicsPageState extends State<OnboardingBasicsPage>{
   DateTime? dob; String gender='Prefer not to say'; String units='Metric'; double height=170; double weight=70;

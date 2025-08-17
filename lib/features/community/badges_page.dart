@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../data/mock_community_data.dart';
 import '../../widgets/badge_card.dart';
 import '../../widgets/badge_filters.dart';
@@ -47,7 +47,7 @@ class _BadgesPageState extends State<BadgesPage> with SingleTickerProviderStateM
         controller: _tabs,
         children: [
           _buildMine(),
-          _buildFriends(), // 👈 reactions live here only
+          _buildFriends(), // ðŸ‘ˆ reactions live here only
           _buildAll(),
         ],
       ),
@@ -88,7 +88,7 @@ class _BadgesPageState extends State<BadgesPage> with SingleTickerProviderStateM
     );
   }
 
-  /// FRIENDS TAB — includes reactions row under each earned badge card.
+  /// FRIENDS TAB â€” includes reactions row under each earned badge card.
   Widget _buildFriends() {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
@@ -107,7 +107,7 @@ class _BadgesPageState extends State<BadgesPage> with SingleTickerProviderStateM
               child: ListTile(
                 leading: Text(b.emoji, style: const TextStyle(fontSize: 24)),
                 title: Text('@friend${i + 1} earned ${b.name}'),
-                subtitle: Text('${b.tier.label} • ${b.category}'),
+                subtitle: Text('${b.tier.label} â€¢ ${b.category}'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => _showBadgeDetail(b),
               ),
@@ -119,7 +119,7 @@ class _BadgesPageState extends State<BadgesPage> with SingleTickerProviderStateM
             BadgeReactionsRow(
               badgeId: badgeId,
               // Optionally seed with some starting counts from your mocks:
-              // seedCounts: {'👏': 2, '🔥': 1},
+              // seedCounts: {'ðŸ‘': 2, 'ðŸ”¥': 1},
             ),
 
             const SizedBox(height: 8),
@@ -201,8 +201,8 @@ class _BadgeDetailSheet extends StatelessWidget {
             const SizedBox(height: 16),
             Text('How to earn', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 6),
-            const Text('• Complete the associated challenge(s) or keep up your streak.'),
-            const Text('• Streaks respect your time zone; one-day grace tokens for long tiers.'),
+            const Text('â€¢ Complete the associated challenge(s) or keep up your streak.'),
+            const Text('â€¢ Streaks respect your time zone; one-day grace tokens for long tiers.'),
             const SizedBox(height: 16),
             Row(
               children: [

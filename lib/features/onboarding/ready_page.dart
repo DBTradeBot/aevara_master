@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class ReadyPage extends StatelessWidget {
   const ReadyPage({super.key});

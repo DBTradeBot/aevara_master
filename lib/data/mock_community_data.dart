@@ -1,4 +1,4 @@
-
+﻿
 import 'package:flutter/material.dart';
 
 enum BadgeTier { bronze, silver, gold, platinum, diamond }
@@ -101,7 +101,7 @@ final demoBadges = <BadgeModel>[
     id: 'sleep_7',
     category: 'Sleep',
     name: 'Sleep Streak 7',
-    emoji: '😴',
+    emoji: 'ðŸ˜´',
     tier: BadgeTier.bronze,
     description: 'Sleep 7 nights in a row',
     progress: .6,
@@ -110,7 +110,7 @@ final demoBadges = <BadgeModel>[
     id: 'steps_10k_day',
     category: 'Steps',
     name: '10k in a Day',
-    emoji: '👟',
+    emoji: 'ðŸ‘Ÿ',
     tier: BadgeTier.bronze,
     description: 'Hit 10k steps in one day',
     progress: 1,
@@ -120,7 +120,7 @@ final demoBadges = <BadgeModel>[
     id: 'hrv_plus_10',
     category: 'Heart',
     name: 'HRV +10ms',
-    emoji: '💓',
+    emoji: 'ðŸ’“',
     tier: BadgeTier.silver,
     description: 'Increase HRV by 10ms over 30 days',
     progress: .2,
@@ -129,7 +129,7 @@ final demoBadges = <BadgeModel>[
     id: 'mood_30',
     category: 'Mood',
     name: 'Mood High 30',
-    emoji: '😊',
+    emoji: 'ðŸ˜Š',
     tier: BadgeTier.gold,
     description: 'Mood >4 for 30 days',
     progress: .8,
@@ -138,7 +138,7 @@ final demoBadges = <BadgeModel>[
     id: 'med_100',
     category: 'Mindfulness',
     name: 'Meditation 100',
-    emoji: '🧘',
+    emoji: 'ðŸ§˜',
     tier: BadgeTier.gold,
     description: 'Meditate 100 days',
     progress: .35,
@@ -147,7 +147,7 @@ final demoBadges = <BadgeModel>[
     id: 'sleep_90',
     category: 'Sleep',
     name: 'Sleep Streak 90',
-    emoji: '🌙',
+    emoji: 'ðŸŒ™',
     tier: BadgeTier.platinum,
     description: 'Sleep 90 nights in a row',
     progress: .12,
@@ -156,7 +156,7 @@ final demoBadges = <BadgeModel>[
     id: 'steps_365',
     category: 'Steps',
     name: '365 Step Streak',
-    emoji: '🔥',
+    emoji: 'ðŸ”¥',
     tier: BadgeTier.diamond,
     description: '10k steps for 365 days',
     progress: .01,
@@ -168,15 +168,15 @@ final demoChallenges = <ChallengeModel>[
     id: 'sleep_onramp_7',
     title: 'Sleep 7',
     subtitle: '7 nights in a row',
-    emoji: '🛌',
+    emoji: 'ðŸ›Œ',
     days: 7,
     category: 'Sleep',
   ),
   ChallengeModel(
     id: 'steps_10k_week',
     title: '70k Week',
-    subtitle: '10k steps × 7 days',
-    emoji: '👣',
+    subtitle: '10k steps Ã— 7 days',
+    emoji: 'ðŸ‘£',
     days: 7,
     category: 'Steps',
   ),
@@ -184,7 +184,7 @@ final demoChallenges = <ChallengeModel>[
     id: 'hrv_lift_7',
     title: 'HRV Lift',
     subtitle: '+5ms over 7 days',
-    emoji: '📈',
+    emoji: 'ðŸ“ˆ',
     days: 7,
     category: 'Heart',
   ),
@@ -192,7 +192,7 @@ final demoChallenges = <ChallengeModel>[
     id: 'med_7',
     title: 'Meditate 7',
     subtitle: '7 sessions in 7 days',
-    emoji: '🧘',
+    emoji: 'ðŸ§˜',
     days: 7,
     category: 'Mindfulness',
   ),
@@ -202,21 +202,21 @@ final demoClubs = <ClubModel>[
   ClubModel(
     id: 'sleep_streakers',
     name: 'Sleep Streakers',
-    emoji: '🌙',
+    emoji: 'ðŸŒ™',
     description: 'Members chasing 30/60/90-night streaks.',
     members: 428,
   ),
   ClubModel(
     id: 'ten_k_daily',
     name: '10k Daily',
-    emoji: '👟',
+    emoji: 'ðŸ‘Ÿ',
     description: 'We hit 10k every day. Tips & routes inside.',
     members: 1321,
   ),
   ClubModel(
     id: 'meditation_100',
     name: 'Meditation 100',
-    emoji: '🧘',
+    emoji: 'ðŸ§˜',
     description: 'Mindfulness fans aiming for 100 sessions.',
     members: 289,
   ),
@@ -226,11 +226,11 @@ final demoLeaderboard = List.generate(10, (i) {
   return LeaderboardRowModel(
     uid: 'user$i',
     name: 'User${i+1}',
-    avatarEmoji: ['🙂','😎','🤩','🤓','🥳'][i%5],
+    avatarEmoji: ['ðŸ™‚','ðŸ˜Ž','ðŸ¤©','ðŸ¤“','ðŸ¥³'][i%5],
     rank: i+1,
     score: 100 - (i*2),
     delta: (i%2==0? 1: -1) * (i%3),
-    recentBadgeEmoji: ['😴','👟','🧘','📈','😊'][i%5],
+    recentBadgeEmoji: ['ðŸ˜´','ðŸ‘Ÿ','ðŸ§˜','ðŸ“ˆ','ðŸ˜Š'][i%5],
   );
 });
 
@@ -242,9 +242,9 @@ class RecentEvent {
 }
 
 final demoEvents = <RecentEvent>[
-  RecentEvent('@sam clapped your HRV streak', '👏', DateTime.now().subtract(Duration(minutes: 2))),
-  RecentEvent('@jordan fired up your steps', '🔥', DateTime.now().subtract(Duration(hours: 1))),
-  RecentEvent('@morgan flexed your PR sleep score', '💪', DateTime.now().subtract(Duration(hours: 3))),
+  RecentEvent('@sam clapped your HRV streak', 'ðŸ‘', DateTime.now().subtract(Duration(minutes: 2))),
+  RecentEvent('@jordan fired up your steps', 'ðŸ”¥', DateTime.now().subtract(Duration(hours: 1))),
+  RecentEvent('@morgan flexed your PR sleep score', 'ðŸ’ª', DateTime.now().subtract(Duration(hours: 3))),
 ];
 
 BadgeModel? computeNextMilestone(List<BadgeModel> mine) {

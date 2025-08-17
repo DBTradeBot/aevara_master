@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../navigation/routes.dart';
 class BottomNav extends StatelessWidget{
   final int currentIndex; const BottomNav({super.key, required this.currentIndex});

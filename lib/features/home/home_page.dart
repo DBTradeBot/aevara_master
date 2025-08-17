@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; import '../../core/shell/app_shell.dart'; import '../../core/widgets/ring_progress.dart'; import '../../core/widgets/section_header.dart'; import '../../app_routes.dart';
+﻿import 'package:flutter/material.dart'; import '../../core/shell/app_shell.dart'; import '../../core/widgets/ring_progress.dart'; import '../../core/widgets/section_header.dart'; import '../../app_routes.dart';
 class HomePage extends StatelessWidget{ const HomePage({super.key});
   @override Widget build(BuildContext c)=>AppShell(currentIndex:0, title: 'Home', body: ListView(padding: const EdgeInsets.all(16), children:[
     Row(children:[ Expanded(child: Card(child: Padding(padding: const EdgeInsets.all(12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children:[const Text('Welcome back'), Text('Coach tip: small steps daily', style: Theme.of(c).textTheme.bodySmall)])))), const SizedBox(width:12), const RingProgress(value:.62, label:'Weekly Goal') ]),

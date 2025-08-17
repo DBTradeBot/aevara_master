@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:aevara_master/features/sync/sync_status_icon.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:aevara_app/features/sync/sync_status_icon.dart';
 
 class MetricsHeader extends StatelessWidget {
   const MetricsHeader({

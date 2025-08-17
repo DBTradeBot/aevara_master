@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class ExperimentsHomePage extends StatelessWidget {
   const ExperimentsHomePage({super.key});
@@ -7,7 +7,7 @@ class ExperimentsHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final catalog = [
       ('Sleep Hygiene', '7d: caffeine cutoff, wind-down, lights'),
-      ('Morning Light', '10–15 min outdoor light on wake'),
+      ('Morning Light', '10â€“15 min outdoor light on wake'),
       ('Hydration', '2L/day, no late fluids'),
       ('No Alcohol', 'A/B weeks'),
       ('Late Exercise', 'Avoid <3h before sleep'),

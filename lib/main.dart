@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 // App shell (bottom nav + settings bar)
 import 'features/home/dashboard_placeholder.dart';

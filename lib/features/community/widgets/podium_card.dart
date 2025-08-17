@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models.dart';
 
 class PodiumCard extends StatelessWidget {
@@ -54,7 +54,7 @@ class PodiumCard extends StatelessWidget {
     final byRank = List<UserRank>.from(top3)..sort((a,b)=>a.rank.compareTo(b.rank));
     if (byRank.length < 3) {
       while (byRank.length < 3) {
-        byRank.add(UserRank(username: '—', score: 0, rank: byRank.length+1, avatarEmoji: '🙂'));
+        byRank.add(UserRank(username: 'â€”', score: 0, rank: byRank.length+1, avatarEmoji: 'ðŸ™‚'));
       }
     }
 

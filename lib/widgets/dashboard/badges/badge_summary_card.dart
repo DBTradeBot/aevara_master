@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../data/mock_community_data.dart';
 
 /// Compact Community Home summary:
@@ -16,7 +16,7 @@ class BadgeSummaryCard extends StatelessWidget {
         .toList();
     final recent = earned.isNotEmpty ? earned.first : null;
 
-    // nearest upcoming (highest progress that’s not yet earned)
+    // nearest upcoming (highest progress thatâ€™s not yet earned)
     final pending = demoBadges
         .where((b) => !(b.earned == true || b.progress >= 1))
         .toList()
@@ -62,15 +62,15 @@ class BadgeSummaryCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // 👇 badge thumbnail with placeholder
+                    // ðŸ‘‡ badge thumbnail with placeholder
                     BadgeThumb(
-                      emoji: recent.emoji, // today’s placeholder
+                      emoji: recent.emoji, // todayâ€™s placeholder
                       // assetPath: recent.assetPath, // uncomment when you add assets to model
                       size: 22,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Congrats! You earned “${recent.name}”',
+                      'Congrats! You earned â€œ${recent.name}â€',
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ],
@@ -82,9 +82,9 @@ class BadgeSummaryCard extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                // 👇 badge thumbnail with placeholder
+                // ðŸ‘‡ badge thumbnail with placeholder
                 BadgeThumb(
-                  emoji: next.emoji, // today’s placeholder
+                  emoji: next.emoji, // todayâ€™s placeholder
                   // assetPath: next.assetPath, // uncomment when available
                   size: 22,
                 ),

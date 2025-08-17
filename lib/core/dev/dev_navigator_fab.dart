@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../../navigation/routes.dart';
 import '../../controllers/theme_controller.dart';
@@ -11,10 +11,10 @@ class DevNavigatorFab extends StatelessWidget{
     {'name':'Sign In','route':Routes.signIn},
     {'name':'Sign Up','route':Routes.signUp},
     {'name':'Forgot','route':Routes.forgot},
-    {'name':'Onboarding • Basics','route':Routes.obBasics},
-    {'name':'Onboarding • Goals','route':Routes.obGoals},
-    {'name':'Onboarding • Avatar','route':Routes.obAvatar},
-    {'name':'Onboarding • Ready','route':Routes.obReady},
+    {'name':'Onboarding â€¢ Basics','route':Routes.obBasics},
+    {'name':'Onboarding â€¢ Goals','route':Routes.obGoals},
+    {'name':'Onboarding â€¢ Avatar','route':Routes.obAvatar},
+    {'name':'Onboarding â€¢ Ready','route':Routes.obReady},
     {'name':'Home','route':Routes.home},
     {'name':'Data Hub','route':Routes.dataHub},
     {'name':'Experiments','route':Routes.experiments},
@@ -63,7 +63,7 @@ class _DevNavigatorSheetState extends State<_DevNavigatorSheet>{
     return SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children:[
       Row(children:[const Icon(Icons.bug_report), const SizedBox(width:8), const Expanded(child: Text('Dev Navigator', style: TextStyle(fontWeight: FontWeight.w700))), IconButton(onPressed: ()=>Navigator.pop(c), icon: const Icon(Icons.close))]),
       const SizedBox(height:8),
-      TextField(decoration: const InputDecoration(prefixIcon: Icon(Icons.search), hintText:'Search routes…'), onChanged:(v)=>setState(()=>q=v)),
+      TextField(decoration: const InputDecoration(prefixIcon: Icon(Icons.search), hintText:'Search routesâ€¦'), onChanged:(v)=>setState(()=>q=v)),
       const SizedBox(height:12),
       Row(children:[
         FilledButton.tonal(onPressed: ()=>ThemeController.mode.value=ThemeMode.light, child: const Text('Light')),

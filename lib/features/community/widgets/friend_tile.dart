@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../models.dart';
 
 class FriendTile extends StatelessWidget {
@@ -15,7 +15,7 @@ class FriendTile extends StatelessWidget {
         leading: CircleAvatar(child: Text(f.avatarEmoji)),
         title: Text('@${f.handle}'),
         subtitle: f.streak > 0 ? Row(children: [
-          const Text('🔥 '),
+          const Text('ðŸ”¥ '),
           Text('x${f.streak}', style: const TextStyle(color: Colors.black54)),
         ]) : const Text(''),
         trailing: IconButton(icon: const Icon(Icons.more_horiz), onPressed: onMore),

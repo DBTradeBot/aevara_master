@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class FreshnessChip extends StatelessWidget{
   final String freshness; // 'green','yellow','red'
   const FreshnessChip({super.key, required this.freshness});

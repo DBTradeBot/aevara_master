@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 
 /// Minimal in-memory reaction store (swap with Firestore later).
 class ReactionStore extends ChangeNotifier {

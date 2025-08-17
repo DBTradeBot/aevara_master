@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 // Data tab: simple hub that links to your data subpages
 import '../data/daily_snapshot_page.dart';
@@ -35,7 +35,7 @@ class _DashboardPlaceholderState extends State<DashboardPlaceholder> {
     final pages = <Widget>[
       const _DataHubCards(),                // Data tab container
       const ExperimentsHomePage(),          // Experiments
-      const CommunityHomePage(),            // ✅ New Community Hub here
+      const CommunityHomePage(),            // âœ… New Community Hub here
     ];
 
     return Scaffold(
@@ -104,7 +104,7 @@ class _DashboardPlaceholderState extends State<DashboardPlaceholder> {
 }
 
 /// ----------------------------
-/// Data Tab (cards → details)
+/// Data Tab (cards â†’ details)
 /// ----------------------------
 class _DataHubCards extends StatelessWidget {
   const _DataHubCards();
@@ -165,7 +165,7 @@ class _SettingsDrawer extends StatelessWidget {
                 CircleAvatar(
                   radius: 22,
                   backgroundColor: cs.primaryContainer,
-                  child: const Text('😎', style: TextStyle(fontSize: 20)),
+                  child: const Text('ðŸ˜Ž', style: TextStyle(fontSize: 20)),
                 ),
                 const SizedBox(width: 12),
                 Column(

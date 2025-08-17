@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'snapshot_card.dart';
 class SnapshotGrid extends StatelessWidget{
   final void Function(String metric) onOpenMetric;

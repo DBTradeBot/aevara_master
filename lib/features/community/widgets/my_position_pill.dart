@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class MyPositionPill extends StatelessWidget {
   final int myIndex;
@@ -15,7 +15,7 @@ class MyPositionPill extends StatelessWidget {
           heroTag: 'me_pill',
           onPressed: onTap,
           icon: const Icon(Icons.my_location),
-          label: Text('Me • #${myIndex + 1}'),
+          label: Text('Me â€¢ #${myIndex + 1}'),
         ),
       ),
     );

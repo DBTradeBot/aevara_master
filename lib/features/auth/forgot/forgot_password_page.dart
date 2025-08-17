@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class ForgotPasswordPage extends StatelessWidget{ const ForgotPasswordPage({super.key});
   @override Widget build(BuildContext c)=>Scaffold(appBar: AppBar(title: const Text('Reset password')), body: ListView(padding: const EdgeInsets.all(16), children:[
     const Text('Enter your email to receive a reset link.'),

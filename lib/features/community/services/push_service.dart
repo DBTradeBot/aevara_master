@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 /// No-op push service. Swap internals for `firebase_messaging` later.
 class PushService {

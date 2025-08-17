@@ -1,14 +1,14 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../theme/aevara_theme.dart';
 import 'metric_info_sheet.dart';
 
 /// Combined Mood + Stress selection (1..5) using symbols:
-/// 1 🌿 Calm & Happy
-/// 2 🍃 Content
-/// 3 🌓 Neutral
-/// 4 ⚡ Tense
-/// 5 🌪 Overwhelmed
+/// 1 ðŸŒ¿ Calm & Happy
+/// 2 ðŸƒ Content
+/// 3 ðŸŒ“ Neutral
+/// 4 âš¡ Tense
+/// 5 ðŸŒª Overwhelmed
 ///
 /// Usage:
 /// await showWellbeingSheet(context, initialValue: 3, onSave: (v) { /* persist v (1..5) */ });
@@ -59,35 +59,35 @@ class _WellbeingSheetBodyState extends State<_WellbeingSheetBody> {
   static const List<_WBItem> _items = <_WBItem>[
     _WBItem(
       value: 1,
-      symbol: '🌿',
+      symbol: 'ðŸŒ¿',
       label: 'Calm & Happy',
       shortLabel: 'Calm',
       description: 'Feeling relaxed, positive, and at ease.',
     ),
     _WBItem(
       value: 2,
-      symbol: '🍃',
+      symbol: 'ðŸƒ',
       label: 'Content',
       shortLabel: 'Content',
       description: 'Generally good mood, low stress, steady.',
     ),
     _WBItem(
       value: 3,
-      symbol: '🌓',
+      symbol: 'ðŸŒ“',
       label: 'Neutral',
       shortLabel: 'Neutral',
-      description: 'Balanced state — neither high nor low mood/stress.',
+      description: 'Balanced state â€” neither high nor low mood/stress.',
     ),
     _WBItem(
       value: 4,
-      symbol: '⚡',
+      symbol: 'âš¡',
       label: 'Tense',
       shortLabel: 'Tense',
       description: 'Noticeable stress, irritability, or restlessness.',
     ),
     _WBItem(
       value: 5,
-      symbol: '🌪',
+      symbol: 'ðŸŒª',
       label: 'Overwhelmed',
       shortLabel: 'Overwhelmed',
       description: 'High stress, low mood, feeling overloaded.',
@@ -126,17 +126,17 @@ class _WellbeingSheetBodyState extends State<_WellbeingSheetBody> {
               'This combines both Mood and Stress into one selection.',
           whyItMatters:
           'Your perceived wellbeing influences stress response, recovery, and long-term health. '
-              'It’s a key part of your overall healthy days score.',
+              'Itâ€™s a key part of your overall healthy days score.',
           howItAffectsScore:
           'We combine your wellbeing rating with other affective metrics to adjust healthy days. '
               'Low ratings may reduce your score; consistently high ratings improve it.',
           whereToFindIt:
           'Symbols and meanings:\n'
-              '🌿 (1) Calm & Happy — Feeling relaxed, positive, and at ease.\n'
-              '🍃 (2) Content — Generally good mood, low stress, steady.\n'
-              '🌓 (3) Neutral — Balanced state, neither high nor low mood/stress.\n'
-              '⚡ (4) Tense — Noticeable stress, irritability, or restlessness.\n'
-              '🌪 (5) Overwhelmed — High stress, low mood, feeling overloaded.\n\n'
+              'ðŸŒ¿ (1) Calm & Happy â€” Feeling relaxed, positive, and at ease.\n'
+              'ðŸƒ (2) Content â€” Generally good mood, low stress, steady.\n'
+              'ðŸŒ“ (3) Neutral â€” Balanced state, neither high nor low mood/stress.\n'
+              'âš¡ (4) Tense â€” Noticeable stress, irritability, or restlessness.\n'
+              'ðŸŒª (5) Overwhelmed â€” High stress, low mood, feeling overloaded.\n\n'
               'Wearables: WHOOP (Journal), Garmin (Body Battery + Stress), Fitbit (Mindfulness).\n\n'
               'Manual: Reflect on mood, energy, and stress level; choose the number (and symbol) that feels most accurate.',
         ),

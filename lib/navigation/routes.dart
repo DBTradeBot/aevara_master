@@ -1,4 +1,4 @@
-class Routes {
+﻿class Routes {
   // Auth
   static const signIn = '/auth/signin';
   static const signUp = '/auth/signup';

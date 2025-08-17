@@ -1,6 +1,6 @@
-import 'dart:math' as math;
+﻿import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:aevara_master/theme/aevara_theme.dart';
+import 'package:aevara_app/theme/aevara_theme.dart';
 
 class SyncTile extends StatelessWidget {
   final bool isConnected;
@@ -52,8 +52,8 @@ class SyncTile extends StatelessWidget {
         return Center(
           // Only fraction width; give an explicit, finite height.
           child: FractionallySizedBox(
-            widthFactor: innerScale,         // ✅ fraction width
-            // heightFactor: ❌ removed to avoid infinite height issues
+            widthFactor: innerScale,         // âœ… fraction width
+            // heightFactor: âŒ removed to avoid infinite height issues
             child: SizedBox(
               height: h * innerScale,        // explicit finite height
               child: Container(

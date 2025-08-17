@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../data/mock_community_data.dart';
 
 class RecentBadgePill extends StatelessWidget {
@@ -24,7 +24,7 @@ class RecentBadgePill extends StatelessWidget {
           Text(b.emoji, style: const TextStyle(fontSize: 18)),
           const SizedBox(width: 8),
           Text(
-            'Congrats! You earned “${b.name}”',
+            'Congrats! You earned â€œ${b.name}â€',
             style: Theme.of(context).textTheme.labelLarge,
             overflow: TextOverflow.ellipsis,
           ),

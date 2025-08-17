@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../data/mock_community_data.dart';
 
 class NextBadgeCard extends StatelessWidget {

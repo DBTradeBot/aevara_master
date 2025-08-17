@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Community RankTile (emoji/URL-aware).
 /// Keep this at: lib/features/community/widgets/rank_tile.dart

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../state/stubs.dart';
 
 class UsernamePage extends StatefulWidget {
@@ -37,7 +37,7 @@ class _UsernamePageState extends State<UsernamePage> {
             ),
             const SizedBox(height: 12),
 
-            // Plain TextField — zero magic
+            // Plain TextField â€” zero magic
             TextField(
               controller: _u,
               decoration: const InputDecoration(
@@ -51,13 +51,13 @@ class _UsernamePageState extends State<UsernamePage> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: checking ? null : _check,
-              child: Text(checking ? 'Checking…' : 'Check availability'),
+              child: Text(checking ? 'Checkingâ€¦' : 'Check availability'),
             ),
 
             if (available != null) ...[
               const SizedBox(height: 8),
               Text(
-                available! ? 'Available ✔' : 'Taken ✖',
+                available! ? 'Available âœ”' : 'Taken âœ–',
                 style: TextStyle(
                   fontSize: 14,
                   color: available! ? Colors.green : Colors.red,

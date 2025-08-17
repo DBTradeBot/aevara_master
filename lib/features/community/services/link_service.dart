@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Represents different deep link intents the app understands.
 sealed class CommunityLink {

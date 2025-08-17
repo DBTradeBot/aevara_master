@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/aevara_theme.dart';
 import 'number_input_sheet.dart';
 
 Future<void> showStressSheet(
     BuildContext context, {
-      required double initialLevel, // 1–5
+      required double initialLevel, // 1â€“5
       ValueChanged<double>? onSave,
       ValueChanged<double>? onChanged,
     }) {
@@ -22,14 +22,14 @@ Future<void> showStressSheet(
       child: NumberInputSheet(
         metricName: 'Stress',
         metricIcon: Icons.self_improvement_outlined,
-        unit: '1–5',
+        unit: '1â€“5',
         initialValue: initialLevel,
         min: 1,
         max: 5,
         step: 1,
         onChanged: onChanged,
         onSave: onSave,
-        infoWhat: 'Perceived stress today on a 1–5 scale.',
+        infoWhat: 'Perceived stress today on a 1â€“5 scale.',
         infoWhy:
         'Higher stress can reduce recovery quality and affect sleep and choices.',
         infoWhyLinkLabel: 'Learn more',

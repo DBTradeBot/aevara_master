@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 /// Compact, overflow-safe switcher for Leaderboards.
 /// Uses strings (no enum dependency) to avoid type drift.

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class SearchPage extends StatefulWidget{ const SearchPage({super.key}); @override State<SearchPage> createState()=>_SearchPageState();}
 class _SearchPageState extends State<SearchPage>{ String q='';
   @override Widget build(BuildContext c)=>Scaffold(appBar: AppBar(title: const Text('Search')), body: Column(children:[

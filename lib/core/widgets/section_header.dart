@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class SectionHeader extends StatelessWidget{
   final String title; final String? actionLabel; final VoidCallback? onAction;
   const SectionHeader({super.key, required this.title, this.actionLabel, this.onAction});

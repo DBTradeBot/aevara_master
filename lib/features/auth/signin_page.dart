@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; import '../../app_routes.dart';
+﻿import 'package:flutter/material.dart'; import '../../app_routes.dart';
 class SignInPage extends StatefulWidget{ const SignInPage({super.key}); @override State<SignInPage> createState()=>_SignInPageState();}
 class _SignInPageState extends State<SignInPage>{ final email=TextEditingController(); final pass=TextEditingController(); bool show=false;
   @override Widget build(BuildContext c)=>Scaffold(appBar: AppBar(title: const Text('Sign in')), body: ListView(padding: const EdgeInsets.all(16), children:[

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
@@ -73,13 +73,13 @@ class _FriendsPageState extends State<FriendsPage> with SingleTickerProviderStat
             separatorBuilder: (_, __) => const SizedBox(height: 8),
             itemBuilder: (_, i) => Card(
               child: ListTile(
-                leading: CircleAvatar(child: Text(['🙂','😎','🤩'][i])),
+                leading: CircleAvatar(child: Text(['ðŸ™‚','ðŸ˜Ž','ðŸ¤©'][i])),
                 title: Text(['@alex','@sam','@jordan'][i]),
-                subtitle: const Text('x7 • Top badges: 😴 👟 🧘'),
+                subtitle: const Text('x7 â€¢ Top badges: ðŸ˜´ ðŸ‘Ÿ ðŸ§˜'),
                 trailing: PopupMenuButton<String>(
                   itemBuilder: (_) => const [
-                    PopupMenuItem(value: 'cheer', child: Text('Cheer 👏')),
-                    PopupMenuItem(value: 'nudge', child: Text('Nudge 🔔')),
+                    PopupMenuItem(value: 'cheer', child: Text('Cheer ðŸ‘')),
+                    PopupMenuItem(value: 'nudge', child: Text('Nudge ðŸ””')),
                     PopupMenuItem(value: 'remove', child: Text('Remove')),
                   ],
                 ),

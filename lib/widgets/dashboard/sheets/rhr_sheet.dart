@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../../../theme/aevara_theme.dart';
 import 'number_input_sheet.dart';
 
@@ -36,7 +36,7 @@ Future<void> showRhrSheet(
         infoHowAffects:
         'We factor RHR alongside HRV in your recovery score. High RHR relative to your baseline may reduce your healthy days; lower-than-usual can improve them.',
         infoWhereToFind:
-        'Wearables: Apple Watch (Health → Heart → Resting Rate), Fitbit (Today → Heart Rate → Resting), Garmin (Heart Rate → Resting), Oura (Readiness).\n\n'
+        'Wearables: Apple Watch (Health â†’ Heart â†’ Resting Rate), Fitbit (Today â†’ Heart Rate â†’ Resting), Garmin (Heart Rate â†’ Resting), Oura (Readiness).\n\n'
             'Manual/estimate: Measure your pulse for 60 seconds right after waking, before getting out of bed.',
       ),
     ),

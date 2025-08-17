@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class DevicesPage extends StatefulWidget {
   const DevicesPage({super.key});

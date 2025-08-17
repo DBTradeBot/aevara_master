@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 class ShimmerList extends StatelessWidget{
   final int itemCount; const ShimmerList({super.key, this.itemCount=6});
   @override Widget build(BuildContext c){
