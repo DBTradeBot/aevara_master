@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 // App shell (bottom nav + settings bar)
 import 'features/home/dashboard_placeholder.dart';
@@ -49,7 +49,7 @@ class AevaraApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp(builder: (context, child) => DefaultTextStyle.merge(style: const TextStyle(fontFamilyFallback: ['Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji']), child: child!,), 
       title: 'Aevara',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -112,3 +112,4 @@ class AevaraApp extends StatelessWidget {
     );
   }
 }
+

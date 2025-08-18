@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class UserRank {
   final String username;
@@ -61,4 +61,3 @@ class Club {
       required this.members,
       this.emoji = 'ðŸ'});
 }
-

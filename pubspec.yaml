@@ -1,4 +1,4 @@
-name: aevara_app
+﻿name: aevara_app
 description: Aevara UI skeleton (no backend) with pages/components wired and a dev debugger.
 publish_to: "none"
 version: 0.1.0+1

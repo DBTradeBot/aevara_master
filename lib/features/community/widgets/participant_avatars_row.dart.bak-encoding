@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class ParticipantAvatarsRow extends StatelessWidget {
   final List<String> names;
@@ -40,4 +40,3 @@ class ParticipantAvatarsRow extends StatelessWidget {
     return (parts[0].substring(0, 1) + parts[1].substring(0, 1)).toUpperCase();
   }
 }
-

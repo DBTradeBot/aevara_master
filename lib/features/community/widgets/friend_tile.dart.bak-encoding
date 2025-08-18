@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../models.dart';
 
 class FriendTile extends StatelessWidget {
@@ -27,4 +27,3 @@ class FriendTile extends StatelessWidget {
     );
   }
 }
-

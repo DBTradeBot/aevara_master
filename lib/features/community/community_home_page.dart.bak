@@ -1,0 +1,131 @@
+﻿// lib/features/community/community_home_page.dart
+import 'package:flutter/material.dart';
+
+// Data you confirmed exists
+import 'package:aevara_app/data/mock_community_data.dart';
+
+// Alias: typedef Challenge = ChallengeModel;
+import 'package:aevara_app/features/community/models/challenge_compat.dart';
+
+// Your widgets
+import 'package:aevara_app/features/community/widgets/challenge_card.dart';
+import 'package:aevara_app/features/community/widgets/club_card.dart';
+
+// Shared
+import 'package:aevara_app/widgets/dashboard/badges/badge_summary_card.dart';
+
+/// Forces reliable emoji rendering even if a custom font is active.
+class Emoji extends StatelessWidget {
+  const Emoji(this.char, {this.size = 20, super.key});
+  final String char;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      char,
+      style: TextStyle(
+        fontSize: size,
+        height: 1,
+        fontFamilyFallback: const [
+          'Apple Color Emoji', // iOS/macOS
+          'Segoe UI Emoji',    // Windows
+          'Noto Color Emoji',  // Android/Linux/Web
+        ],
+      ),
+    );
+  }
+}
+
+/// Section title with emoji + label
+class TitleWithEmoji extends StatelessWidget {
+  const TitleWithEmoji({required this.emoji, required this.label, super.key});
+  final String emoji;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.titleLarge;
+    return Row(
+      children: [
+        Emoji(emoji, size: (style?.fontSize ?? 20) + 2),
+        const SizedBox(width: 10),
+        Text(label, style: style),
+      ],
+    );
+  }
+}
+
+class CommunityHomePage extends StatelessWidget {
+  const CommunityHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Available in your mock file:
+    // demoBadges, demoChallenges (List<ChallengeModel>), demoClubs (List<ClubModel>)
+    final challenges = demoChallenges;
+    final clubs = demoClubs;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Community'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Open settings from shell')),
+              );
+            },
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+        children: [
+          // Badges summary
+          const TitleWithEmoji(emoji: '🏅', label: 'Badges'),
+          const SizedBox(height: 8),
+          const BadgeSummaryCard(),
+          const SizedBox(height: 20),
+
+          // Challenges (alias cast ensures type-safe call)
+          const TitleWithEmoji(emoji: '🎯', label: 'Challenges'),
+          const SizedBox(height: 8),
+          ...challenges.take(3).map((c) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: ChallengeCard(c: c as Challenge),
+          )),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: () => Navigator.of(context).pushNamed('/community/challenges'),
+              icon: const Emoji('➕', size: 18),
+              label: const Text('Create or browse challenges'),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Clubs
+          const TitleWithEmoji(emoji: '🏟️', label: 'Clubs'),
+          const SizedBox(height: 8),
+          ...clubs.take(3).map((club) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            // If ClubCard uses a different param name (e.g., c:), tweak here.
+            child: ClubCard(club: club),
+          )),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              onPressed: () => Navigator.of(context).pushNamed('/community/clubs'),
+              child: const Text('Browse clubs'),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Friends / Leaderboards / Recent are hidden until their mocks land.
+        ],
+      ),
+    );
+  }
+}

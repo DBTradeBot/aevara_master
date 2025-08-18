@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../services/reaction_store.dart';
 
 /// Compact emoji reactions row. Use only on Friends tab.
@@ -174,4 +174,3 @@ class _EmojiPickerSheet extends StatelessWidget {
     );
   }
 }
-

@@ -48,7 +48,7 @@ class _BadgesPageState extends State<BadgesPage>
         controller: _tabs,
         children: [
           _buildMine(),
-          _buildFriends(), // ?? reactions live here only
+          _buildFriends(), // 👈 reactions live here only
           _buildAll(),
         ],
       ),
@@ -93,7 +93,7 @@ class _BadgesPageState extends State<BadgesPage>
     );
   }
 
-  /// FRIENDS TAB � includes reactions row under each earned badge card.
+  /// FRIENDS TAB — includes reactions row under each earned badge card.
   Widget _buildFriends() {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
@@ -113,7 +113,7 @@ class _BadgesPageState extends State<BadgesPage>
               child: ListTile(
                 leading: Text(b.emoji, style: const TextStyle(fontSize: 24)),
                 title: Text('@friend${i + 1} earned ${b.name}'),
-                subtitle: Text('${b.tier.label} � ${b.category}'),
+                subtitle: Text('${b.tier.label} • ${b.category}'),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => _showBadgeDetail(b),
               ),
@@ -125,7 +125,7 @@ class _BadgesPageState extends State<BadgesPage>
             BadgeReactionsRow(
               badgeId: badgeId,
               // Optionally seed with some starting counts from your mocks:
-              // seedCounts: {'??': 2, '??': 1},
+              // seedCounts: {'👏': 2, '🔥': 1},
             ),
 
             const SizedBox(height: 8),
@@ -213,9 +213,9 @@ class _BadgeDetailSheet extends StatelessWidget {
             Text('How to earn', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 6),
             const Text(
-                '� Complete the associated challenge(s) or keep up your streak.'),
+                '• Complete the associated challenge(s) or keep up your streak.'),
             const Text(
-                '� Streaks respect your time zone; one-day grace tokens for long tiers.'),
+                '• Streaks respect your time zone; one-day grace tokens for long tiers.'),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -234,6 +234,5 @@ class _BadgeDetailSheet extends StatelessWidget {
     );
   }
 }
-
 
 

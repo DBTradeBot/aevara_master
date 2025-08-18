@@ -19,7 +19,7 @@ class _EmojiScaleState extends State<EmojiScale> {
 
   @override
   Widget build(BuildContext c) {
-    final items = ['ðŸ˜ž', 'ðŸ˜', 'ðŸ™‚', 'ðŸ˜ƒ', 'ðŸ¤©'];
+    final items = ['Ã°Å¸ËœÅ¾', 'Ã°Å¸ËœÂ', 'Ã°Å¸â„¢â€š', 'Ã°Å¸ËœÆ’', 'Ã°Å¸Â¤Â©'];
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(
@@ -32,5 +32,4 @@ class _EmojiScaleState extends State<EmojiScale> {
                 child: Text(items[i], style: const TextStyle(fontSize: 24)))));
   }
 }
-
 

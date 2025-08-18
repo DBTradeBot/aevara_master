@@ -10,16 +10,15 @@ class GroupsPage extends StatelessWidget {
         Card(
             child: ListTile(
                 title: const Text('Aevara Crew'),
-                subtitle: const Text('12 members â€¢ Weekly steps challenge'),
+                subtitle: const Text('12 members Ã¢â‚¬Â¢ Weekly steps challenge'),
                 trailing:
                     FilledButton(onPressed: () {}, child: const Text('Join')))),
         Card(
             child: ListTile(
                 title: const Text('Sleep Boosters'),
-                subtitle: const Text('8 members â€¢ Sleep streak challenge'),
+                subtitle: const Text('8 members Ã¢â‚¬Â¢ Sleep streak challenge'),
                 trailing:
                     FilledButton(onPressed: () {}, child: const Text('Join')))),
       ]));
 }
-
 

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../data/mock_community_data.dart';
 
 /// Compact Community Home summary:
@@ -178,4 +178,3 @@ class BadgeThumb extends StatelessWidget {
     return Icon(Icons.emoji_events, size: size * 0.9);
   }
 }
-
