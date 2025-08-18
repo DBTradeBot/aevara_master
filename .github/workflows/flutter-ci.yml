@@ -10,58 +10,57 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-
 jobs:
   android:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - name: Debug: list repo & android dir
+        run: |
+          pwd
+          ls -la
+          ls -la android || true
+          ls -la android/gradle || true
+          ls -la test || true
+          git status --porcelain
+          git ls-files | sed -n '1,50p'
+
+      - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.0'
           channel: stable
           cache: true
 
-      # Install Android SDK + accept licenses
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Accept Android licenses
-        run: yes | sdkmanager --licenses
-
-      - name: Show env
-        run: |
-          flutter --version
-          flutter doctor -v
-          java -version
-          sdkmanager --list | head -n 50 || true
-          ls -la
-          ls -la test || true
-
-      - name: Pub get
-        run: flutter pub get
-
-      - name: Analyze
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+      - run: flutter --version
+      - run: flutter pub get
+      - run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
       - name: Run Flutter tests (only if tests exist)
         if: ${{ hashFiles('test/**') != '' }}
         run: flutter test --no-pub
 
-      # Ensure gradlew is executable on Linux runners
+      # Android SDK only matters if we actually have the wrapper
+      - name: Set up Android SDK
+        if: ${{ hashFiles('android/gradlew') != '' }}
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android licenses
+        if: ${{ hashFiles('android/gradlew') != '' }}
+        run: yes | sdkmanager --licenses
+
       - name: Make gradlew executable
-        run: chmod +x android/gradlew
+        if: ${{ hashFiles('android/gradlew') != '' }}
+        run: chmod +x ./android/gradlew
 
       - name: Build debug APK
+        if: ${{ hashFiles('android/gradlew') != '' }}
         run: flutter build apk --debug
 
       - name: Upload debug APK
+        if: ${{ hashFiles('android/gradlew') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
