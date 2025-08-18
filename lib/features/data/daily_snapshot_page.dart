@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class DailySnapshotPage extends StatelessWidget {
   const DailySnapshotPage({super.key});
@@ -24,9 +24,9 @@ class DailySnapshotPage extends StatelessWidget {
               child: ListTile(
                 leading: Icon(t.$3),
                 title: Text(t.$1),
-                subtitle: Text('Today'),
-                trailing: Text(t.$2,
-                    style: Theme.of(context).textTheme.titleMedium),
+                subtitle: const Text('Today'),
+                trailing:
+                    Text(t.$2, style: Theme.of(context).textTheme.titleMedium),
                 onTap: () => Navigator.pushNamed(
                   context,
                   '/data/metric',

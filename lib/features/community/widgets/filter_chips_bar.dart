@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class FilterChipsBar extends StatelessWidget {
   final List<String> options;
@@ -19,7 +19,8 @@ class FilterChipsBar extends StatelessWidget {
       spacing: 8,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        if (label != null) Text(label!, style: Theme.of(context).textTheme.labelLarge),
+        if (label != null)
+          Text(label!, style: Theme.of(context).textTheme.labelLarge),
         for (final o in options)
           ChoiceChip(
             label: Text(o),

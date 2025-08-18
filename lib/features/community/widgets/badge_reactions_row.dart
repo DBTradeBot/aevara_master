@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../services/reaction_store.dart';
 
 /// Compact emoji reactions row. Use only on Friends tab.
@@ -26,27 +26,28 @@ class BadgeReactionsRow extends StatelessWidget {
 
         final chips = entries.isNotEmpty
             ? entries.take(3).map((e) => _EmojiChip(
-          emoji: e.key,
-          count: e.value,
-          selected: mine == e.key,
-          onTap: () => ReactionStore.I.toggle(badgeId, e.key),
-        ))
+                  emoji: e.key,
+                  count: e.value,
+                  selected: mine == e.key,
+                  onTap: () => ReactionStore.I.toggle(badgeId, e.key),
+                ))
             : [
-          for (final e in const ['ðŸ‘', 'ðŸ”¥', 'ðŸ’ª'])
-            _EmojiChip(
-              emoji: e,
-              count: 0,
-              selected: mine == e,
-              onTap: () => ReactionStore.I.toggle(badgeId, e),
-            )
-        ];
+                for (final e in const ['ðŸ‘', 'ðŸ”¥', 'ðŸ’ª'])
+                  _EmojiChip(
+                    emoji: e,
+                    count: 0,
+                    selected: mine == e,
+                    onTap: () => ReactionStore.I.toggle(badgeId, e),
+                  )
+              ];
 
         return Wrap(
           spacing: 8,
           runSpacing: 8,
           children: [
             ...chips,
-            _AddEmojiChip(onPick: (emoji) => ReactionStore.I.toggle(badgeId, emoji)),
+            _AddEmojiChip(
+                onPick: (emoji) => ReactionStore.I.toggle(badgeId, emoji)),
           ],
         );
       },
@@ -77,7 +78,7 @@ class _EmojiChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(999),
-          color: selected ? cs.primaryContainer : cs.surfaceVariant,
+          color: selected ? cs.primaryContainer : cs.surfaceContainerHighest,
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Text(emoji, style: const TextStyle(fontSize: 16)),
@@ -115,7 +116,7 @@ class _AddEmojiChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(999),
-          color: cs.surfaceVariant,
+          color: cs.surfaceContainerHighest,
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           const Icon(Icons.add_reaction, size: 18),
@@ -133,22 +134,37 @@ class _EmojiPickerSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final options = ['ðŸ‘','ðŸ”¥','ðŸ’ª','ðŸ™Œ','ðŸ˜','ðŸ¤¯','ðŸŽ‰','ðŸ†','ðŸ’¯','ðŸ˜Š','ðŸ«¡','ðŸ¤'];
+    final options = [
+      'ðŸ‘',
+      'ðŸ”¥',
+      'ðŸ’ª',
+      'ðŸ™Œ',
+      'ðŸ˜',
+      'ðŸ¤¯',
+      'ðŸŽ‰',
+      'ðŸ†',
+      'ðŸ’¯',
+      'ðŸ˜Š',
+      'ðŸ«¡',
+      'ðŸ¤'
+    ];
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       child: Wrap(
-        spacing: 8, runSpacing: 8,
+        spacing: 8,
+        runSpacing: 8,
         children: [
           for (final e in options)
             InkWell(
               onTap: () => Navigator.of(context).pop(e),
               borderRadius: BorderRadius.circular(12),
               child: Container(
-                width: 52, height: 52,
+                width: 52,
+                height: 52,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 ),
                 child: Text(e, style: const TextStyle(fontSize: 22)),
               ),

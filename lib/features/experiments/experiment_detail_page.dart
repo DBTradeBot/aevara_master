@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class ExperimentDetailPage extends StatefulWidget {
   const ExperimentDetailPage({super.key});
@@ -17,7 +17,8 @@ class _ExperimentDetailPageState extends State<ExperimentDetailPage> {
   @override
   Widget build(BuildContext context) {
     final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ?? {};
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
+            {};
     final name = args['name'] as String? ?? 'Experiment';
     final desc = args['desc'] as String? ?? 'Description';
 

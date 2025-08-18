@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 // Data tab: simple hub that links to your data subpages
 import '../data/daily_snapshot_page.dart';
@@ -23,9 +23,12 @@ class _DashboardPlaceholderState extends State<DashboardPlaceholder> {
   late int _index = widget.initialIndex;
 
   final _navItems = const <BottomNavigationBarItem>[
-    BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined), label: 'Data'),
-    BottomNavigationBarItem(icon: Icon(Icons.science_outlined), label: 'Experiments'),
-    BottomNavigationBarItem(icon: Icon(Icons.groups_outlined), label: 'Community'),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.bar_chart_outlined), label: 'Data'),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.science_outlined), label: 'Experiments'),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.groups_outlined), label: 'Community'),
   ];
 
   void _openSettings() => Scaffold.of(context).openEndDrawer();
@@ -33,9 +36,9 @@ class _DashboardPlaceholderState extends State<DashboardPlaceholder> {
   @override
   Widget build(BuildContext context) {
     final pages = <Widget>[
-      const _DataHubCards(),                // Data tab container
-      const ExperimentsHomePage(),          // Experiments
-      const CommunityHomePage(),            // âœ… New Community Hub here
+      const _DataHubCards(), // Data tab container
+      const ExperimentsHomePage(), // Experiments
+      const CommunityHomePage(), // âœ… New Community Hub here
     ];
 
     return Scaffold(
@@ -49,19 +52,15 @@ class _DashboardPlaceholderState extends State<DashboardPlaceholder> {
           ),
         ],
       ),
-
       endDrawer: const _SettingsDrawer(),
-
       body: SafeArea(
         child: IndexedStack(index: _index, children: pages),
       ),
-
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         onTap: (i) => setState(() => _index = i),
         items: _navItems,
       ),
-
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 48.0), // keep above nav
         child: FloatingActionButton.extended(
@@ -81,13 +80,15 @@ class _DashboardPlaceholderState extends State<DashboardPlaceholder> {
                       const ListTile(
                         leading: Icon(Icons.info_outline),
                         title: Text('This is a placeholder shell'),
-                        subtitle: Text('Swap this with your real dashboard when ready.'),
+                        subtitle: Text(
+                            'Swap this with your real dashboard when ready.'),
                       ),
                       const SizedBox(height: 8),
                       ListTile(
                         leading: const Icon(Icons.logout),
                         title: const Text('Go to Sign In'),
-                        onTap: () => Navigator.pushReplacementNamed(context, '/auth/signin'),
+                        onTap: () => Navigator.pushReplacementNamed(
+                            context, '/auth/signin'),
                       ),
                       const SizedBox(height: 12),
                     ],
@@ -168,10 +169,11 @@ class _SettingsDrawer extends StatelessWidget {
                   child: const Text('ðŸ˜Ž', style: TextStyle(fontSize: 20)),
                 ),
                 const SizedBox(width: 12),
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('Your Account', style: TextStyle(fontWeight: FontWeight.w600)),
+                  children: [
+                    Text('Your Account',
+                        style: TextStyle(fontWeight: FontWeight.w600)),
                     Text('@username', style: TextStyle(color: Colors.black54)),
                   ],
                 ),
@@ -187,33 +189,43 @@ class _SettingsDrawer extends StatelessWidget {
             const Divider(),
 
             _sec('Account'),
-            _tile(context, Icons.person_outline, 'Profile', '/settings/profile'),
-            _tile(context, Icons.lock_outline, 'Password', '/settings/password'),
+            _tile(
+                context, Icons.person_outline, 'Profile', '/settings/profile'),
+            _tile(
+                context, Icons.lock_outline, 'Password', '/settings/password'),
 
             const SizedBox(height: 8),
             _sec('Devices & Data'),
-            _tile(context, Icons.watch_outlined, 'Connected devices', '/settings/devices'),
-            _tile(context, Icons.delete_sweep_outlined, 'Revoke sync / Delete data', '/settings/data-control'),
+            _tile(context, Icons.watch_outlined, 'Connected devices',
+                '/settings/devices'),
+            _tile(context, Icons.delete_sweep_outlined,
+                'Revoke sync / Delete data', '/settings/data-control'),
 
             const SizedBox(height: 8),
             _sec('Notifications'),
-            _tile(context, Icons.notifications_none, 'Push & email settings', '/settings/notifications'),
+            _tile(context, Icons.notifications_none, 'Push & email settings',
+                '/settings/notifications'),
 
             const SizedBox(height: 8),
             _sec('Privacy & Consent'),
-            _tile(context, Icons.verified_user_outlined, 'Privacy policy', '/settings/about'), // adjust if you split policy
-            _tile(context, Icons.article_outlined, 'Terms of service', '/settings/about'),   // adjust if you split terms
-            _tile(context, Icons.rule_folder_outlined, 'Consents', '/settings/consents'),
+            _tile(context, Icons.verified_user_outlined, 'Privacy policy',
+                '/settings/about'), // adjust if you split policy
+            _tile(context, Icons.article_outlined, 'Terms of service',
+                '/settings/about'), // adjust if you split terms
+            _tile(context, Icons.rule_folder_outlined, 'Consents',
+                '/settings/consents'),
 
             const SizedBox(height: 8),
             _sec('About'),
-            _tile(context, Icons.info_outline, 'App version & build', '/settings/about'),
+            _tile(context, Icons.info_outline, 'App version & build',
+                '/settings/about'),
 
             const SizedBox(height: 16),
             FilledButton.tonalIcon(
               icon: const Icon(Icons.logout),
               label: const Text('Sign out (stub)'),
-              onPressed: () => Navigator.pushReplacementNamed(context, '/auth/signin'),
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, '/auth/signin'),
             ),
             const SizedBox(height: 12),
           ],
@@ -223,11 +235,14 @@ class _SettingsDrawer extends StatelessWidget {
   }
 
   Widget _sec(String label) => Padding(
-    padding: const EdgeInsets.fromLTRB(4, 12, 4, 6),
-    child: Text(label, style: const TextStyle(fontSize: 12, color: Colors.black54, letterSpacing: .6)),
-  );
+        padding: const EdgeInsets.fromLTRB(4, 12, 4, 6),
+        child: Text(label,
+            style: const TextStyle(
+                fontSize: 12, color: Colors.black54, letterSpacing: .6)),
+      );
 
-  Widget _tile(BuildContext context, IconData icon, String title, String route) {
+  Widget _tile(
+      BuildContext context, IconData icon, String title, String route) {
     return Card(
       child: ListTile(
         leading: Icon(icon),

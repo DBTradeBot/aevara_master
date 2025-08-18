@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 
 /// In-memory social state for Challenges.
 /// Swap with Firestore later without changing UI code.
@@ -62,7 +62,8 @@ class ChallengeSocialStore extends ChangeNotifier {
   }
 
   void invite(String id, List<String> friends) {
-    _participants.putIfAbsent(id, () => <String>{})
+    _participants
+        .putIfAbsent(id, () => <String>{})
         .addAll(friends.map((e) => '$e (invited)'));
     notifyListeners();
   }

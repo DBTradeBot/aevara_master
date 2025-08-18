@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class ParticipantAvatarsRow extends StatelessWidget {
   final List<String> names;
@@ -24,7 +24,8 @@ class ParticipantAvatarsRow extends StatelessWidget {
         if (extra > 0)
           Padding(
             padding: const EdgeInsets.only(left: 2),
-            child: Text('+$extra', style: Theme.of(context).textTheme.labelSmall),
+            child:
+                Text('+$extra', style: Theme.of(context).textTheme.labelSmall),
           ),
       ],
     );

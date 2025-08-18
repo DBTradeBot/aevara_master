@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../widgets/atoms/aev_text_field.dart';
 
 class IdentityPage extends StatefulWidget {

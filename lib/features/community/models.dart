@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class UserRank {
   final String username;
@@ -45,7 +45,8 @@ class Friend {
   final int streak;
   final String avatarEmoji;
 
-  const Friend({required this.handle, this.streak = 0, this.avatarEmoji = 'ðŸ™‚'});
+  const Friend(
+      {required this.handle, this.streak = 0, this.avatarEmoji = 'ðŸ™‚'});
 }
 
 class Club {
@@ -54,5 +55,9 @@ class Club {
   final int members;
   final String emoji;
 
-  const Club({required this.name, required this.description, required this.members, this.emoji = 'ðŸ'});
+  const Club(
+      {required this.name,
+      required this.description,
+      required this.members,
+      this.emoji = 'ðŸ'});
 }

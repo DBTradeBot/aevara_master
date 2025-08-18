@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../data/mock_community_data.dart';
 import '../../widgets/badge_card.dart';
 import '../../widgets/badge_filters.dart';
@@ -12,7 +12,8 @@ class BadgesPage extends StatefulWidget {
   State<BadgesPage> createState() => _BadgesPageState();
 }
 
-class _BadgesPageState extends State<BadgesPage> with SingleTickerProviderStateMixin {
+class _BadgesPageState extends State<BadgesPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabs;
   String selectedCat = 'All';
   String selectedTier = 'All';
@@ -64,9 +65,13 @@ class _BadgesPageState extends State<BadgesPage> with SingleTickerProviderStateM
     return ListView(
       children: [
         const SizedBox(height: 8),
-        CategoryChips(selected: selectedCat, onChanged: (c) => setState(() => selectedCat = c)),
+        CategoryChips(
+            selected: selectedCat,
+            onChanged: (c) => setState(() => selectedCat = c)),
         const SizedBox(height: 8),
-        TierFilterBar(selectedTier: selectedTier, onChanged: (t) => setState(() => selectedTier = t)),
+        TierFilterBar(
+            selectedTier: selectedTier,
+            onChanged: (t) => setState(() => selectedTier = t)),
         const SizedBox(height: 8),
         Section(
           title: 'Your badges',
@@ -103,7 +108,8 @@ class _BadgesPageState extends State<BadgesPage> with SingleTickerProviderStateM
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
               child: ListTile(
                 leading: Text(b.emoji, style: const TextStyle(fontSize: 24)),
                 title: Text('@friend${i + 1} earned ${b.name}'),
@@ -140,7 +146,8 @@ class _BadgesPageState extends State<BadgesPage> with SingleTickerProviderStateM
         childAspectRatio: 1.8,
       ),
       itemCount: demoBadges.length,
-      itemBuilder: (_, i) => BadgeCard(badge: demoBadges[i], onTap: () => _showBadgeDetail(demoBadges[i])),
+      itemBuilder: (_, i) => BadgeCard(
+          badge: demoBadges[i], onTap: () => _showBadgeDetail(demoBadges[i])),
     );
   }
 
@@ -148,7 +155,8 @@ class _BadgesPageState extends State<BadgesPage> with SingleTickerProviderStateM
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => _BadgeDetailSheet(badge: b),
     );
   }
@@ -183,9 +191,12 @@ class _BadgeDetailSheet extends StatelessWidget {
               children: [
                 Text(badge.emoji, style: const TextStyle(fontSize: 28)),
                 const SizedBox(width: 12),
-                Expanded(child: Text(badge.name, style: Theme.of(context).textTheme.titleLarge)),
+                Expanded(
+                    child: Text(badge.name,
+                        style: Theme.of(context).textTheme.titleLarge)),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
                     color: badge.tier.color.withOpacity(.2),
                     borderRadius: BorderRadius.circular(999),
@@ -201,14 +212,20 @@ class _BadgeDetailSheet extends StatelessWidget {
             const SizedBox(height: 16),
             Text('How to earn', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 6),
-            const Text('â€¢ Complete the associated challenge(s) or keep up your streak.'),
-            const Text('â€¢ Streaks respect your time zone; one-day grace tokens for long tiers.'),
+            const Text(
+                'â€¢ Complete the associated challenge(s) or keep up your streak.'),
+            const Text(
+                'â€¢ Streaks respect your time zone; one-day grace tokens for long tiers.'),
             const SizedBox(height: 16),
             Row(
               children: [
-                FilledButton(onPressed: () => Navigator.pop(context), child: Text(earned ? 'Share' : 'Join a challenge')),
+                FilledButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(earned ? 'Share' : 'Join a challenge')),
                 const SizedBox(width: 8),
-                OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text('Close')),
+                OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Close')),
               ],
             ),
           ],

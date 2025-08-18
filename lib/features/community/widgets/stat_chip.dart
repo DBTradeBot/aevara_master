@@ -1,17 +1,24 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class StatChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  const StatChip({super.key, required this.icon, required this.label, required this.value});
+  const StatChip(
+      {super.key,
+      required this.icon,
+      required this.label,
+      required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(.5),
+        color: Theme.of(context)
+            .colorScheme
+            .surfaceContainerHighest
+            .withOpacity(.5),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class SettingsDrawer extends StatelessWidget {
   const SettingsDrawer({super.key});
@@ -13,7 +13,6 @@ class SettingsDrawer extends StatelessWidget {
           children: [
             const _Header(),
             const Divider(),
-
             const _SectionLabel('Account'),
             ListTile(
               leading: const Icon(Icons.person_outline),
@@ -26,7 +25,6 @@ class SettingsDrawer extends StatelessWidget {
               title: const Text('Password'),
               onTap: () => _go(context, '/settings/password'),
             ),
-
             const _SectionLabel('Devices & Data'),
             ListTile(
               leading: const Icon(Icons.watch_outlined),
@@ -39,28 +37,24 @@ class SettingsDrawer extends StatelessWidget {
               title: const Text('Revoke sync / Delete data'),
               onTap: () => _go(context, '/settings/data-control'),
             ),
-
             const _SectionLabel('Notifications'),
             ListTile(
               leading: const Icon(Icons.notifications_active_outlined),
               title: const Text('Push & email settings'),
               onTap: () => _go(context, '/settings/notifications'),
             ),
-
             const _SectionLabel('Privacy & Consent'),
             ListTile(
               leading: const Icon(Icons.fact_check_outlined),
               title: const Text('Consents'),
               onTap: () => _go(context, '/settings/consents'),
             ),
-
             const _SectionLabel('About'),
             ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('App version & build'),
               onTap: () => _go(context, '/settings/about'),
             ),
-
             const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -72,7 +66,7 @@ class SettingsDrawer extends StatelessWidget {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     '/auth/signin',
-                        (r) => false,
+                    (r) => false,
                   );
                 },
               ),
@@ -114,7 +108,7 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-    child: Text(text, style: Theme.of(context).textTheme.labelLarge),
-  );
+        padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+        child: Text(text, style: Theme.of(context).textTheme.labelLarge),
+      );
 }

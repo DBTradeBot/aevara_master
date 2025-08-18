@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../data/mock_community_data.dart';
 
 class NextBadgeCard extends StatelessWidget {
@@ -6,7 +6,9 @@ class NextBadgeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pending = demoBadges.where((b) => !(b.earned || b.progress >= 1)).toList()
+    final pending = demoBadges
+        .where((b) => !(b.earned || b.progress >= 1))
+        .toList()
       ..sort((a, b) => b.progress.compareTo(a.progress));
     final b = pending.isNotEmpty ? pending.first : demoBadges.first;
 
@@ -24,13 +26,17 @@ class NextBadgeCard extends StatelessWidget {
                 Text(b.emoji, style: const TextStyle(fontSize: 22)),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(b.name, style: Theme.of(context).textTheme.titleMedium,
-                    maxLines: 1, overflow: TextOverflow.ellipsis),
+                  child: Text(b.name,
+                      style: Theme.of(context).textTheme.titleMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceVariant,
+                    color:
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(

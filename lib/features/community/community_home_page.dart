@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../data/mock_community_data.dart';
 import '../../widgets/next_milestone_card.dart';
 import '../../widgets/section.dart';
@@ -37,16 +37,28 @@ class CommunityHomePage extends StatelessWidget {
           ),
 
           // quick links
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Wrap(
               spacing: 12,
               runSpacing: 12,
-              children: const [
-                _QuickLink(icon: Icons.military_tech, label: 'Badges', route: '/community/badges'),
-                _QuickLink(icon: Icons.emoji_events, label: 'Leaderboards', route: '/community/leaderboards'),
-                _QuickLink(icon: Icons.flag, label: 'Challenges', route: '/community/challenges'),
-                _QuickLink(icon: Icons.groups, label: 'Friends', route: '/community/friends'),
+              children: [
+                _QuickLink(
+                    icon: Icons.military_tech,
+                    label: 'Badges',
+                    route: '/community/badges'),
+                _QuickLink(
+                    icon: Icons.emoji_events,
+                    label: 'Leaderboards',
+                    route: '/community/leaderboards'),
+                _QuickLink(
+                    icon: Icons.flag,
+                    label: 'Challenges',
+                    route: '/community/challenges'),
+                _QuickLink(
+                    icon: Icons.groups,
+                    label: 'Friends',
+                    route: '/community/friends'),
               ],
             ),
           ),
@@ -91,7 +103,8 @@ class CommunityHomePage extends StatelessWidget {
           Section(
             title: 'Suggested challenges',
             actionLabel: 'See all',
-            onSeeAll: () => Navigator.pushNamed(context, '/community/challenges'),
+            onSeeAll: () =>
+                Navigator.pushNamed(context, '/community/challenges'),
             child: ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -114,7 +127,8 @@ class _QuickLink extends StatelessWidget {
   final IconData icon;
   final String label;
   final String route;
-  const _QuickLink({required this.icon, required this.label, required this.route});
+  const _QuickLink(
+      {required this.icon, required this.label, required this.route});
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +140,8 @@ class _QuickLink extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+          border:
+              Border.all(color: Theme.of(context).colorScheme.outlineVariant),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(

@@ -1,4 +1,4 @@
-﻿import 'dart:math' as math;
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:aevara_app/theme/aevara_theme.dart';
 
@@ -22,13 +22,13 @@ class SyncTile extends StatelessWidget {
   });
 
   Color _statusColor() {
-    if (syncError) return const Color(0xFFE74C3C);            // red
-    if (!isConnected) return const Color(0xFF9AA3AF);         // grey
-    if (lastSyncUtc == null) return const Color(0xFF9AA3AF);  // grey
+    if (syncError) return const Color(0xFFE74C3C); // red
+    if (!isConnected) return const Color(0xFF9AA3AF); // grey
+    if (lastSyncUtc == null) return const Color(0xFF9AA3AF); // grey
     final now = DateTime.now().toUtc();
     final age = now.difference(lastSyncUtc!);
-    if (age.inHours <= 24) return const Color(0xFF27AE60);    // fresh green
-    return const Color(0xFFF2994A);                           // stale amber
+    if (age.inHours <= 24) return const Color(0xFF27AE60); // fresh green
+    return const Color(0xFFF2994A); // stale amber
   }
 
   double _clamp(double v, double minV, double maxV) =>
@@ -42,7 +42,8 @@ class SyncTile extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, c) {
         // If height is unconstrained, fall back to a compact default.
-        final h = (c.maxHeight.isFinite && c.maxHeight > 0) ? c.maxHeight : 74.0;
+        final h =
+            (c.maxHeight.isFinite && c.maxHeight > 0) ? c.maxHeight : 74.0;
 
         // Adaptive padding & badge sizing
         final padV = _clamp(h * 0.08, 4, 10);
@@ -52,10 +53,10 @@ class SyncTile extends StatelessWidget {
         return Center(
           // Only fraction width; give an explicit, finite height.
           child: FractionallySizedBox(
-            widthFactor: innerScale,         // âœ… fraction width
+            widthFactor: innerScale, // âœ… fraction width
             // heightFactor: âŒ removed to avoid infinite height issues
             child: SizedBox(
-              height: h * innerScale,        // explicit finite height
+              height: h * innerScale, // explicit finite height
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,

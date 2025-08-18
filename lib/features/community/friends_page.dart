@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class FriendsPage extends StatefulWidget {
   const FriendsPage({super.key});
@@ -7,14 +7,16 @@ class FriendsPage extends StatefulWidget {
   State<FriendsPage> createState() => _FriendsPageState();
 }
 
-class _FriendsPageState extends State<FriendsPage> with SingleTickerProviderStateMixin {
+class _FriendsPageState extends State<FriendsPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabs;
   final _search = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _tabs = TabController(length: 4, vsync: this); // Friends / Invites / Discover / Clubs
+    _tabs = TabController(
+        length: 4, vsync: this); // Friends / Invites / Discover / Clubs
   }
 
   @override
@@ -43,7 +45,7 @@ class _FriendsPageState extends State<FriendsPage> with SingleTickerProviderStat
         controller: _tabs,
         children: [
           _friends(),
-          _invites(),     // fixed: trailing is now constrained
+          _invites(), // fixed: trailing is now constrained
           _discover(),
           _clubsShortcut(),
         ],
@@ -73,8 +75,8 @@ class _FriendsPageState extends State<FriendsPage> with SingleTickerProviderStat
             separatorBuilder: (_, __) => const SizedBox(height: 8),
             itemBuilder: (_, i) => Card(
               child: ListTile(
-                leading: CircleAvatar(child: Text(['ðŸ™‚','ðŸ˜Ž','ðŸ¤©'][i])),
-                title: Text(['@alex','@sam','@jordan'][i]),
+                leading: CircleAvatar(child: Text(['ðŸ™‚', 'ðŸ˜Ž', 'ðŸ¤©'][i])),
+                title: Text(['@alex', '@sam', '@jordan'][i]),
                 subtitle: const Text('x7 â€¢ Top badges: ðŸ˜´ ðŸ‘Ÿ ðŸ§˜'),
                 trailing: PopupMenuButton<String>(
                   itemBuilder: (_) => const [
@@ -101,21 +103,24 @@ class _FriendsPageState extends State<FriendsPage> with SingleTickerProviderStat
             title: const Text('Invite to @casey'),
             subtitle: const Text('1m ago'),
             trailing: SizedBox(
-              width: 180, // constrain trailing area so ListTile doesn't overflow
+              width:
+                  180, // constrain trailing area so ListTile doesn't overflow
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () {},
-                      child: const Text('Decline', overflow: TextOverflow.ellipsis),
+                      child: const Text('Decline',
+                          overflow: TextOverflow.ellipsis),
                     ),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: FilledButton(
                       onPressed: () {},
-                      child: const Text('Accept', overflow: TextOverflow.ellipsis),
+                      child:
+                          const Text('Accept', overflow: TextOverflow.ellipsis),
                     ),
                   ),
                 ],
@@ -134,9 +139,13 @@ class _FriendsPageState extends State<FriendsPage> with SingleTickerProviderStat
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Find friends via contacts or share your QR.', textAlign: TextAlign.center),
+            const Text('Find friends via contacts or share your QR.',
+                textAlign: TextAlign.center),
             const SizedBox(height: 12),
-            FilledButton.icon(onPressed: () {}, icon: const Icon(Icons.person_add), label: const Text('Invite friends')),
+            FilledButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.person_add),
+                label: const Text('Invite friends')),
           ],
         ),
       ),

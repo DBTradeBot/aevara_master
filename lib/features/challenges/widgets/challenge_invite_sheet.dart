@@ -1,10 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 /// Returns a list of selected friend names when closed with "Invite".
 Future<List<String>?> showChallengeInviteSheet(
-    BuildContext context, {
-      required String challengeTitle,
-    }) {
+  BuildContext context, {
+  required String challengeTitle,
+}) {
   return showModalBottomSheet<List<String>>(
     context: context,
     isScrollControlled: true,
@@ -26,8 +26,16 @@ class _InviteSheet extends StatefulWidget {
 
 class _InviteSheetState extends State<_InviteSheet> {
   final List<String> _friends = const [
-    'Alex Kim', 'Sam Lee', 'Jordan P.', 'Casey R.', 'Taylor S.',
-    'Morgan A.', 'Riley T.', 'Jamie C.', 'Quinn H.', 'Avery N.'
+    'Alex Kim',
+    'Sam Lee',
+    'Jordan P.',
+    'Casey R.',
+    'Taylor S.',
+    'Morgan A.',
+    'Riley T.',
+    'Jamie C.',
+    'Quinn H.',
+    'Avery N.'
   ];
   final Set<String> _selected = {};
   String _q = '';
@@ -49,14 +57,18 @@ class _InviteSheetState extends State<_InviteSheet> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 36, height: 4,
+            width: 36,
+            height: 4,
             decoration: BoxDecoration(
-              color: Colors.black12, borderRadius: BorderRadius.circular(999),
+              color: Colors.black12,
+              borderRadius: BorderRadius.circular(999),
             ),
           ),
           const SizedBox(height: 12),
-          Text('Invite friends to', style: Theme.of(context).textTheme.labelLarge),
-          Text(widget.challengeTitle, style: Theme.of(context).textTheme.titleMedium),
+          Text('Invite friends to',
+              style: Theme.of(context).textTheme.labelLarge),
+          Text(widget.challengeTitle,
+              style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 12),
           TextField(
             decoration: const InputDecoration(
@@ -75,8 +87,8 @@ class _InviteSheetState extends State<_InviteSheet> {
                 final sel = _selected.contains(n);
                 return CheckboxListTile(
                   value: sel,
-                  onChanged: (_) =>
-                      setState(() => sel ? _selected.remove(n) : _selected.add(n)),
+                  onChanged: (_) => setState(
+                      () => sel ? _selected.remove(n) : _selected.add(n)),
                   title: Text(n),
                 );
               },

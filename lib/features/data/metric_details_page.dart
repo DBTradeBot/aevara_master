@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class MetricDetailsPage extends StatefulWidget {
   const MetricDetailsPage({super.key});
@@ -12,7 +12,8 @@ class _MetricDetailsPageState extends State<MetricDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final metric = args?['metric'] as String? ?? 'Metric Details';
 
     return Scaffold(
@@ -25,10 +26,10 @@ class _MetricDetailsPageState extends State<MetricDetailsPage> {
             spacing: 8,
             children: ['7d', '14d', '30d', '90d']
                 .map((r) => ChoiceChip(
-              label: Text(r),
-              selected: range == r,
-              onSelected: (_) => setState(() => range = r),
-            ))
+                      label: Text(r),
+                      selected: range == r,
+                      onSelected: (_) => setState(() => range = r),
+                    ))
                 .toList(),
           ),
           const SizedBox(height: 12),

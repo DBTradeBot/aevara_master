@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 /// Bottom sheet to create a new challenge (mock/local only).
 /// Returns a Map with: { title, category, days, friendsOnly }
@@ -48,15 +48,17 @@ class _CreateSheetState extends State<_CreateSheet> {
             children: [
               Center(
                 child: Container(
-                  width: 36, height: 4,
+                  width: 36,
+                  height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.black12, borderRadius: BorderRadius.circular(999),
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.circular(999),
                   ),
                 ),
               ),
               const SizedBox(height: 12),
-              Text('Create challenge', style: Theme.of(context).textTheme.titleMedium),
-
+              Text('Create challenge',
+                  style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 12),
               TextField(
                 controller: _title,
@@ -66,7 +68,6 @@ class _CreateSheetState extends State<_CreateSheet> {
                 ),
                 textInputAction: TextInputAction.done,
               ),
-
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
                 value: _category,
@@ -74,12 +75,12 @@ class _CreateSheetState extends State<_CreateSheet> {
                   DropdownMenuItem(value: 'Steps', child: Text('Steps')),
                   DropdownMenuItem(value: 'Sleep', child: Text('Sleep')),
                   DropdownMenuItem(value: 'HRV', child: Text('HRV')),
-                  DropdownMenuItem(value: 'Mindfulness', child: Text('Mindfulness')),
+                  DropdownMenuItem(
+                      value: 'Mindfulness', child: Text('Mindfulness')),
                 ],
                 onChanged: (v) => setState(() => _category = v ?? 'Steps'),
                 decoration: const InputDecoration(labelText: 'Category'),
               ),
-
               const SizedBox(height: 12),
               Row(
                 children: [
@@ -99,7 +100,6 @@ class _CreateSheetState extends State<_CreateSheet> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 8),
               SwitchListTile.adaptive(
                 value: _friendsOnly,
@@ -107,7 +107,6 @@ class _CreateSheetState extends State<_CreateSheet> {
                 title: const Text('Friends only'),
                 contentPadding: EdgeInsets.zero,
               ),
-
               const SizedBox(height: 12),
               Row(
                 children: [

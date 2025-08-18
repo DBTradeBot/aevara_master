@@ -1,1 +1,19 @@
-﻿import 'package:flutter/material.dart'; class AeCard extends StatelessWidget{ final Widget child; final EdgeInsetsGeometry padding; final GestureTapCallback? onTap; const AeCard({super.key, required this.child, this.padding=const EdgeInsets.all(12), this.onTap}); @override Widget build(BuildContext c){final card=Card(child: Padding(padding: padding, child: child)); return onTap!=null?InkWell(onTap:onTap, child:card):card; }}
+﻿// ignore_for_file: avoid_renaming_method_parameters
+import 'package:flutter/material.dart';
+
+class AeCard extends StatelessWidget {
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+  final GestureTapCallback? onTap;
+  const AeCard(
+      {super.key,
+      required this.child,
+      this.padding = const EdgeInsets.all(12),
+      this.onTap});
+  @override
+  Widget build(BuildContext c) {
+    final card = Card(child: Padding(padding: padding, child: child));
+    return onTap != null ? InkWell(onTap: onTap, child: card) : card;
+  }
+}
+

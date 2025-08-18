@@ -1,4 +1,4 @@
-﻿import "package:flutter/material.dart";
+import "package:flutter/material.dart";
 
 class MetricInfo {
   final String title;
@@ -36,7 +36,8 @@ Future<void> showMetricInfo(BuildContext context, MetricInfo info) async {
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     builder: (ctx) => ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.85),
+      constraints:
+          BoxConstraints(maxHeight: MediaQuery.of(ctx).size.height * 0.85),
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
         child: Column(
@@ -54,7 +55,9 @@ Future<void> showMetricInfo(BuildContext context, MetricInfo info) async {
             section("Where to add/find it", info.whereDataComesFrom),
             Align(
               alignment: Alignment.centerRight,
-              child: FilledButton(onPressed: () => Navigator.pop(ctx), child: const Text("Got it")),
+              child: FilledButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text("Got it")),
             ),
           ],
         ),

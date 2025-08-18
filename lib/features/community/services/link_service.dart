@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 /// Represents different deep link intents the app understands.
 sealed class CommunityLink {
@@ -34,9 +34,10 @@ class LinkService {
     // https://aevara.app/u/@alex
     final path = uri.pathSegments;
     if (path.isNotEmpty) {
-      if (path.first == 'invite' && path.length >= 2) return InviteLink(path[1]);
-      if (path.first == 'group'  && path.length >= 2) return GroupLink(path[1]);
-      if (path.first == 'u'      && path.length >= 2) return ProfileLink(path[1]);
+      if (path.first == 'invite' && path.length >= 2)
+        return InviteLink(path[1]);
+      if (path.first == 'group' && path.length >= 2) return GroupLink(path[1]);
+      if (path.first == 'u' && path.length >= 2) return ProfileLink(path[1]);
     }
     if (uri.scheme == 'aevara' && uri.host == 'invite') {
       final code = uri.queryParameters['code'];
@@ -63,13 +64,16 @@ class LinkService {
     if (link == null) return;
     switch (link) {
       case InviteLink(code: final c):
-        Navigator.pushNamed(context, '/community/friends', arguments: {'segment': 'Invites', 'code': c});
+        Navigator.pushNamed(context, '/community/friends',
+            arguments: {'segment': 'Invites', 'code': c});
         break;
       case GroupLink(id: final id):
-        Navigator.pushNamed(context, '/community/challenges', arguments: {'groupId': id});
+        Navigator.pushNamed(context, '/community/challenges',
+            arguments: {'groupId': id});
         break;
       case ProfileLink(handle: final h):
-        Navigator.pushNamed(context, '/community/friends', arguments: {'profile': h});
+        Navigator.pushNamed(context, '/community/friends',
+            arguments: {'profile': h});
         break;
     }
   }

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../data/mock_community_data.dart';
 
 class RecentBadgePill extends StatelessWidget {
@@ -7,7 +7,8 @@ class RecentBadgePill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Pick first earned badge (fallback to first)
-    final earned = demoBadges.where((b) => b.earned || b.progress >= 1).toList();
+    final earned =
+        demoBadges.where((b) => b.earned || b.progress >= 1).toList();
     final b = earned.isNotEmpty ? earned.first : demoBadges.first;
 
     final cs = Theme.of(context).colorScheme;

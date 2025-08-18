@@ -1,14 +1,14 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class BaseInputSheet extends StatelessWidget {
-  final IconData icon;                          // NEW: matches your caller
+  final IconData icon; // NEW: matches your caller
   final String title;
   final String unit;
   final double value;
   final double min;
   final double max;
   final String helper;
-  final void Function(BuildContext) onInfo;     // expects (ctx) => ...
+  final void Function(BuildContext) onInfo; // expects (ctx) => ...
   final ValueChanged<double> onSave;
 
   const BaseInputSheet({
@@ -57,7 +57,8 @@ class BaseInputSheet extends StatelessWidget {
                     ),
                     IconButton(
                       icon: const Icon(Icons.info_outline),
-                      onPressed: () => onInfo(context), // pass ctx as your code expects
+                      onPressed: () =>
+                          onInfo(context), // pass ctx as your code expects
                     ),
                   ],
                 ),
@@ -71,7 +72,8 @@ class BaseInputSheet extends StatelessWidget {
                     _RoundIconButton(
                       icon: Icons.remove,
                       onTap: () {
-                        final parsed = double.tryParse(controller.text) ?? value;
+                        final parsed =
+                            double.tryParse(controller.text) ?? value;
                         final newValue = (parsed - 0.5).clamp(min, max);
                         controller.text = newValue.toStringAsFixed(1);
                       },
@@ -82,12 +84,14 @@ class BaseInputSheet extends StatelessWidget {
                       child: TextField(
                         controller: controller,
                         textAlign: TextAlign.center,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                         decoration: InputDecoration(
                           isDense: true,
                           suffixText: unit,
                           border: const OutlineInputBorder(),
-                          contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 10),
                         ),
                       ),
                     ),
@@ -95,7 +99,8 @@ class BaseInputSheet extends StatelessWidget {
                     _RoundIconButton(
                       icon: Icons.add,
                       onTap: () {
-                        final parsed = double.tryParse(controller.text) ?? value;
+                        final parsed =
+                            double.tryParse(controller.text) ?? value;
                         final newValue = (parsed + 0.5).clamp(min, max);
                         controller.text = newValue.toStringAsFixed(1);
                       },
@@ -127,7 +132,8 @@ class BaseInputSheet extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          final parsed = double.tryParse(controller.text) ?? value;
+                          final parsed =
+                              double.tryParse(controller.text) ?? value;
                           onSave(parsed);
                           Navigator.pop(context);
                         },
@@ -161,7 +167,8 @@ class _RoundIconButton extends StatelessWidget {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface.withOpacity(0.08), // no deprecated surfaceVariant
+          color: theme.colorScheme.surface
+              .withOpacity(0.08), // no deprecated surfaceVariant
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,

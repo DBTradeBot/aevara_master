@@ -1,4 +1,4 @@
-﻿// lib/pages/dashboard_page.dart
+// lib/pages/dashboard_page.dart
 import 'package:flutter/material.dart';
 
 // Manual metrics row (your existing widget with Tap-to-add + Sync tile)
@@ -87,7 +87,9 @@ class _DashboardPageState extends State<DashboardPage> {
           _sleepUpdatedUtc = DateTime.now().toUtc();
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Saved Sleep: ${hours.toStringAsFixed(hours % 1 == 0 ? 0 : 1)}h')),
+          SnackBar(
+              content: Text(
+                  'Saved Sleep: ${hours.toStringAsFixed(hours % 1 == 0 ? 0 : 1)}h')),
         );
       },
     );
@@ -220,7 +222,8 @@ class _DashboardPageState extends State<DashboardPage> {
               PopupMenuItem(value: 'profile', child: Text('Profile Setup')),
               PopupMenuItem(value: 'ready', child: Text('Ready / Coach Intro')),
               PopupMenuDivider(),
-              PopupMenuItem(value: 'devices', child: Text('Device Connections')),
+              PopupMenuItem(
+                  value: 'devices', child: Text('Device Connections')),
               PopupMenuItem(value: 'privacy', child: Text('Privacy & Data')),
               PopupMenuItem(value: 'account', child: Text('Account Settings')),
               PopupMenuItem(value: 'about', child: Text('About Aevara')),
@@ -245,29 +248,29 @@ class _DashboardPageState extends State<DashboardPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: _connected
                 ? SyncedMetricsRow(
-              sleepHours: _sleepHours,
-              sleepGoalHours: 7.5,
-              readinessScore: _hrvMs == null
-                  ? null
-                  : (((_hrvMs!.clamp(20, 100) - 20) / 80) * 100)
-                  .round()
-                  .clamp(0, 100),
-              steps: _steps,
-              stepsGoal: 10000,
-              vo2max: 42.0,
-            )
+                    sleepHours: _sleepHours,
+                    sleepGoalHours: 7.5,
+                    readinessScore: _hrvMs == null
+                        ? null
+                        : (((_hrvMs!.clamp(20, 100) - 20) / 80) * 100)
+                            .round()
+                            .clamp(0, 100),
+                    steps: _steps,
+                    stepsGoal: 10000,
+                    vo2max: 42.0,
+                  )
                 : MetricsRow(
-              sleepHours: _sleepHours,
-              hrvRmssdMs: _hrvMs,
-              stepsCount: _steps,
-              isAnyProviderConnected: _connected,
-              onSleepTap: _openSleep,
-              onHRVTap: _openHRV,
-              onStepsTap: _openSteps,
-              onSyncTap: _openSync,
-              lastSyncUtc: _lastFullSyncUtc,
-              syncError: false,
-            ),
+                    sleepHours: _sleepHours,
+                    hrvRmssdMs: _hrvMs,
+                    stepsCount: _steps,
+                    isAnyProviderConnected: _connected,
+                    onSleepTap: _openSleep,
+                    onHRVTap: _openHRV,
+                    onStepsTap: _openSteps,
+                    onSyncTap: _openSync,
+                    lastSyncUtc: _lastFullSyncUtc,
+                    syncError: false,
+                  ),
           ),
         ],
       ),

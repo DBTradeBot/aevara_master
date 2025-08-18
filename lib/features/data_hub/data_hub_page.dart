@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../widgets/layout/page_header.dart';
 import '../../widgets/atoms/aev_status_dot.dart';
 
@@ -6,10 +6,13 @@ class DataHubPage extends StatelessWidget {
   const DataHubPage({super.key});
 
   Color _statusColor(String status) {
-    switch(status){
-      case 'ok': return Colors.green;
-      case 'partial': return Colors.amber;
-      default: return Colors.grey;
+    switch (status) {
+      case 'ok':
+        return Colors.green;
+      case 'partial':
+        return Colors.amber;
+      default:
+        return Colors.grey;
     }
   }
 
@@ -34,9 +37,10 @@ class DataHubPage extends StatelessWidget {
         children: [
           const PageHeader(title: 'Sources'),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal:16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Wrap(
-              spacing: 12, runSpacing: 12,
+              spacing: 12,
+              runSpacing: 12,
               children: [
                 for (final s in sources)
                   Card(
@@ -49,11 +53,17 @@ class DataHubPage extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(s.$1),
                           const SizedBox(width: 12),
-                          Text(s.$3, style: Theme.of(context).textTheme.bodySmall),
+                          Text(s.$3,
+                              style: Theme.of(context).textTheme.bodySmall),
                           const SizedBox(width: 12),
-                          OutlinedButton(onPressed: (){
-                            showModalBottomSheet(context: context, showDragHandle: true, builder: (c)=> _SourceDetails(name: s.$1));
-                          }, child: const Text('Manage')),
+                          OutlinedButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    showDragHandle: true,
+                                    builder: (c) => _SourceDetails(name: s.$1));
+                              },
+                              child: const Text('Manage')),
                         ],
                       ),
                     ),
@@ -65,7 +75,8 @@ class DataHubPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Wrap(
-              spacing: 12, runSpacing: 12,
+              spacing: 12,
+              runSpacing: 12,
               children: [
                 for (final m in snapshots)
                   SizedBox(
@@ -73,9 +84,13 @@ class DataHubPage extends StatelessWidget {
                     child: Card(
                       child: InkWell(
                         borderRadius: BorderRadius.circular(16),
-                        onTap: (){
-                          showModalBottomSheet(context: context, isScrollControlled: true, showDragHandle: true,
-                            builder: (c)=> _MetricDetails(metric: m.$1, value: m.$2, source: m.$3));
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              showDragHandle: true,
+                              builder: (c) => _MetricDetails(
+                                  metric: m.$1, value: m.$2, source: m.$3));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(12),
@@ -83,11 +98,17 @@ class DataHubPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(m.$1, style: Theme.of(context).textTheme.labelLarge),
+                              Text(m.$1,
+                                  style:
+                                      Theme.of(context).textTheme.labelLarge),
                               const SizedBox(height: 8),
-                              Text(m.$2, style: Theme.of(context).textTheme.headlineSmall),
+                              Text(m.$2,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall),
                               const SizedBox(height: 6),
-                              Text(m.$3, style: Theme.of(context).textTheme.bodySmall),
+                              Text(m.$3,
+                                  style: Theme.of(context).textTheme.bodySmall),
                             ],
                           ),
                         ),
@@ -106,10 +127,15 @@ class DataHubPage extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    const Expanded(child: Text('Download CSV/JSON of your data (range & fields selectable later).')),
-                    FilledButton(onPressed: (){
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Export stub.')));
-                    }, child: const Text('Export')),
+                    const Expanded(
+                        child: Text(
+                            'Download CSV/JSON of your data (range & fields selectable later).')),
+                    FilledButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Export stub.')));
+                        },
+                        child: const Text('Export')),
                   ],
                 ),
               ),
@@ -129,7 +155,8 @@ class _SourceDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -141,9 +168,9 @@ class _SourceDetails extends StatelessWidget {
             const Text('Scopes: read sleep, activity, heart-rate variability'),
             const SizedBox(height: 8),
             Wrap(spacing: 8, children: [
-              OutlinedButton(onPressed: (){}, child: const Text('Reconnect')),
-              OutlinedButton(onPressed: (){}, child: const Text('Revoke')),
-              OutlinedButton(onPressed: (){}, child: const Text('Sync now')),
+              OutlinedButton(onPressed: () {}, child: const Text('Reconnect')),
+              OutlinedButton(onPressed: () {}, child: const Text('Revoke')),
+              OutlinedButton(onPressed: () {}, child: const Text('Sync now')),
             ]),
             const SizedBox(height: 8),
           ],
@@ -157,13 +184,14 @@ class _MetricDetails extends StatelessWidget {
   final String metric;
   final String value;
   final String source;
-  const _MetricDetails({required this.metric, required this.value, required this.source});
+  const _MetricDetails(
+      {required this.metric, required this.value, required this.source});
 
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       expand: false,
-      builder: (_, controller)=> Padding(
+      builder: (_, controller) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView(
           controller: controller,
@@ -174,11 +202,14 @@ class _MetricDetails extends StatelessWidget {
             const SizedBox(height: 12),
             const Text('Why this value?'),
             const SizedBox(height: 4),
-            const Text('Merged from available providers using Aevara priority rules (stub for now).'),
+            const Text(
+                'Merged from available providers using Aevara priority rules (stub for now).'),
             const SizedBox(height: 12),
             const Text('History (14 days) â€“ chart placeholder'),
             const SizedBox(height: 12),
-            FilledButton(onPressed: ()=> Navigator.pop(context), child: const Text('Close')),
+            FilledButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close')),
             const SizedBox(height: 12),
           ],
         ),
