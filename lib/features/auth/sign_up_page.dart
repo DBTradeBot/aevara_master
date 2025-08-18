@@ -61,6 +61,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     onPressed: _loading
                         ? null
                         : () async {
+<<<<<<< Updated upstream
                             if (!_formKey.currentState!.validate()) return;
                             setState(() => _loading = true);
                             await Future.delayed(
@@ -68,6 +69,14 @@ class _SignUpPageState extends State<SignUpPage> {
                             if (mounted)
                               Navigator.pushReplacementNamed(
                                   context, '/auth/verify');
+=======
+if (!_formKey.currentState!.validate() ) return
+                            setState(() => _loading = true);
+                            await Future.delayed(
+                                const Duration(milliseconds: 500));
+if (mounted) Navigator.pushReplacementNamed(
+                                  context, '/auth/verify')
+>>>>>>> Stashed changes
                           }),
                 const SizedBox(height: 12),
                 TextButton(
@@ -82,3 +91,5 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
+
+

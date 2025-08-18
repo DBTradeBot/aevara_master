@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import '../../core/app_shell/app_shell.dart';
 import '../../core/widgets/ae_progress_ring.dart';

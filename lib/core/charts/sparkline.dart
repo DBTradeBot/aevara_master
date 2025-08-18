@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class Sparkline extends StatelessWidget {
@@ -8,4 +12,7 @@ class Sparkline extends StatelessWidget {
   Widget build(BuildContext c) => SizedBox(
       height: 30, child: Center(child: Text('Spark ${values.length}')));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

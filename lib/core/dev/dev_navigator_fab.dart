@@ -44,7 +44,11 @@ class DevNavigatorFab extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext c) {
+<<<<<<< Updated upstream
     if (kReleaseMode || !_devToolsOn) return const SizedBox.shrink();
+=======
+if (kReleaseMode || !_devToolsOn) return const SizedBox.shrink()
+>>>>>>> Stashed changes
     return FloatingActionButton(
         onPressed: () => _open(c), child: const Icon(Icons.bug_report));
   }
@@ -122,3 +126,8 @@ class _DevNavigatorSheetState extends State<_DevNavigatorSheet> {
   }
 }
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes

@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class RingProgress extends StatelessWidget {
@@ -13,4 +17,7 @@ class RingProgress extends StatelessWidget {
         Text('${(value * 100).round()}%')
       ]));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

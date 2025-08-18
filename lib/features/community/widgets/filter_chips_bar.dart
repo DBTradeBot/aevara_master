@@ -19,8 +19,12 @@ class FilterChipsBar extends StatelessWidget {
       spacing: 8,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
+<<<<<<< Updated upstream
         if (label != null)
           Text(label!, style: Theme.of(context).textTheme.labelLarge),
+=======
+if (label != null) Text(label!, style: Theme.of(context).textTheme.labelLarge),
+>>>>>>> Stashed changes
         for (final o in options)
           ChoiceChip(
             label: Text(o),
@@ -28,6 +32,8 @@ class FilterChipsBar extends StatelessWidget {
             onSelected: (_) => onChanged(o),
           ),
       ],
-    );
+    )
   }
 }
+
+

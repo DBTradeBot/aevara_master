@@ -121,13 +121,13 @@ class _CreateSheetState extends State<_CreateSheet> {
                     child: FilledButton(
                       onPressed: () {
                         final t = _title.text.trim();
-                        if (t.isEmpty) return;
-                        Navigator.pop<Map<String, Object>>(context, {
-                          'title': t,
-                          'category': _category,
-                          'days': _days,
-                          'friendsOnly': _friendsOnly,
-                        });
+                        if (t.isEmpty)
+                          return Navigator.pop<Map<String, Object>>(context, {
+                            'title': t,
+                            'category': _category,
+                            'days': _days,
+                            'friendsOnly': _friendsOnly,
+                          });
                       },
                       child: const Text('Create'),
                     ),

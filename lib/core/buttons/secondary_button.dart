@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class SecondaryButton extends StatelessWidget {
@@ -9,4 +13,7 @@ class SecondaryButton extends StatelessWidget {
   Widget build(BuildContext c) =>
       OutlinedButton(onPressed: onPressed, child: Text(label));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

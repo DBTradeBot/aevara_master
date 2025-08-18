@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class MiniBar extends StatelessWidget {
@@ -17,4 +21,7 @@ class MiniBar extends StatelessWidget {
                           color: Colors.blueGrey))))
               .toList()));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

@@ -16,7 +16,7 @@ class BadgeSummaryCard extends StatelessWidget {
         .toList();
     final recent = earned.isNotEmpty ? earned.first : null;
 
-    // nearest upcoming (highest progress thatâ€™s not yet earned)
+    // nearest upcoming (highest progress thatÃ¢â‚¬â„¢s not yet earned)
     final pending = demoBadges
         .where((b) => !(b.earned == true || b.progress >= 1))
         .toList()
@@ -51,7 +51,7 @@ class BadgeSummaryCard extends StatelessWidget {
             ),
 
             // congrats chip only if we truly have one
-            if (recent != null) ...[
+if (recent != null) { ...[
               const SizedBox(height: 8),
               Container(
                 padding:
@@ -63,15 +63,15 @@ class BadgeSummaryCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // ðŸ‘‡ badge thumbnail with placeholder
+                    // Ã°Å¸â€˜â€¡ badge thumbnail with placeholder
                     BadgeThumb(
-                      emoji: recent.emoji, // todayâ€™s placeholder
+                      emoji: recent.emoji, // todayÃ¢â‚¬â„¢s placeholder
                       // assetPath: recent.assetPath, // uncomment when you add assets to model
                       size: 22,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Congrats! You earned â€œ${recent.name}â€',
+                      'Congrats! You earned Ã¢â‚¬Å“${recent.name}Ã¢â‚¬Â',
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ],
@@ -83,9 +83,9 @@ class BadgeSummaryCard extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                // ðŸ‘‡ badge thumbnail with placeholder
+                // Ã°Å¸â€˜â€¡ badge thumbnail with placeholder
                 BadgeThumb(
-                  emoji: next.emoji, // todayâ€™s placeholder
+                  emoji: next.emoji, // todayÃ¢â‚¬â„¢s placeholder
                   // assetPath: next.assetPath, // uncomment when available
                   size: 22,
                 ),
@@ -116,7 +116,7 @@ class BadgeSummaryCard extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ); }
   }
 }
 
@@ -172,10 +172,12 @@ class BadgeThumb extends StatelessWidget {
   }
 
   Widget _fallbackFromEmojiOrIcon(double size, {String? emoji}) {
-    if (emoji != null && emoji.isNotEmpty) {
-      return Text(emoji, style: TextStyle(fontSize: size * 0.9));
-    }
+    if (emoji != null && emoji.isNotEmpty) return Text(emoji, style: TextStyle(fontSize: size * 0.9))
     return Icon(Icons.emoji_events, size: size * 0.9);
   }
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes

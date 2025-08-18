@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿import 'package:flutter/material.dart';
+=======
+import 'package:flutter/material.dart';
+>>>>>>> Stashed changes
 
 enum BadgeTier { bronze, silver, gold, platinum, diamond }
 
@@ -225,11 +229,19 @@ final demoLeaderboard = List.generate(10, (i) {
   return LeaderboardRowModel(
     uid: 'user$i',
     name: 'User${i + 1}',
+<<<<<<< Updated upstream
     avatarEmoji: ['🙂', '😎', '🤩', '🤓', '🥳'][i % 5],
     rank: i + 1,
     score: 100 - (i * 2),
     delta: (i % 2 == 0 ? 1 : -1) * (i % 3),
     recentBadgeEmoji: ['😴', '👟', '🧘', '📈', '😊'][i % 5],
+=======
+    avatarEmoji: ['ðŸ™‚', 'ðŸ˜Ž', 'ðŸ¤©', 'ðŸ¤“', 'ðŸ¥³'][i % 5],
+    rank: i + 1,
+    score: 100 - (i * 2),
+    delta: (i % 2 == 0 ? 1 : -1) * (i % 3),
+    recentBadgeEmoji: ['ðŸ˜´', 'ðŸ‘Ÿ', 'ðŸ§˜', 'ðŸ“ˆ', 'ðŸ˜Š'][i % 5],
+>>>>>>> Stashed changes
   );
 });
 
@@ -241,11 +253,19 @@ class RecentEvent {
 }
 
 final demoEvents = <RecentEvent>[
+<<<<<<< Updated upstream
   RecentEvent('@sam clapped your HRV streak', '👏',
       DateTime.now().subtract(const Duration(minutes: 2))),
   RecentEvent('@jordan fired up your steps', '🔥',
       DateTime.now().subtract(const Duration(hours: 1))),
   RecentEvent('@morgan flexed your PR sleep score', '💪',
+=======
+  RecentEvent('@sam clapped your HRV streak', 'ðŸ‘',
+      DateTime.now().subtract(const Duration(minutes: 2))),
+  RecentEvent('@jordan fired up your steps', 'ðŸ”¥',
+      DateTime.now().subtract(const Duration(hours: 1))),
+  RecentEvent('@morgan flexed your PR sleep score', 'ðŸ’ª',
+>>>>>>> Stashed changes
       DateTime.now().subtract(const Duration(hours: 3))),
 ];
 

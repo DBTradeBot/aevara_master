@@ -27,8 +27,8 @@ class ChallengeSocialStore extends ChangeNotifier {
       }
     }
     // Seed a couple of invites if empty.
-    if (_invites.isEmpty && (challengeIds?.isNotEmpty ?? false)) {
-      final ids = challengeIds!;
+if (_invites.isEmpty && (challengeIds?.isNotEmpty ?? false) { ) {
+      final ids = challengeIds!; }
       if (ids.length >= 2) {
         _invites.addAll([
           {'challengeId': ids[0], 'from': 'Alex'},
@@ -85,3 +85,4 @@ class ChallengeSocialStore extends ChangeNotifier {
     notifyListeners();
   }
 }
+

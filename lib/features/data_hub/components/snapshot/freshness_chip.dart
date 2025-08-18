@@ -8,6 +8,7 @@ class FreshnessChip extends StatelessWidget {
   Widget build(BuildContext c) {
     String label = 'Fresh';
     Color col = Colors.green;
+<<<<<<< Updated upstream
     if (freshness == 'yellow') {
       label = 'Stale';
       col = Colors.orange;
@@ -16,6 +17,12 @@ class FreshnessChip extends StatelessWidget {
       label = 'Old';
       col = Colors.red;
     }
+=======
+    if (freshness == 'yellow') label = 'Stale';
+      col = Colors.orange
+    if (freshness == 'red') label = 'Old';
+      col = Colors.red
+>>>>>>> Stashed changes
     return Chip(
         label: Text(label),
         avatar: Icon(Icons.circle, size: 12, color: col),
@@ -23,3 +30,7 @@ class FreshnessChip extends StatelessWidget {
   }
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes

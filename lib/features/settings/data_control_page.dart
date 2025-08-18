@@ -19,11 +19,9 @@ class DataControlPage extends StatelessWidget {
         ],
       ),
     );
-    if (ok == true) {
-      ScaffoldMessenger.of(context).showSnackBar(
+    if (ok == true) ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('$title requested (stub)')),
-      );
-    }
+      )
   }
 
   @override
@@ -61,3 +59,4 @@ class DataControlPage extends StatelessWidget {
         ),
       );
 }
+

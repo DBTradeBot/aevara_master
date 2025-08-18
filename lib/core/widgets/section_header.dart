@@ -15,8 +15,17 @@ class SectionHeader extends StatelessWidget {
                     .textTheme
                     .titleLarge!
                     .copyWith(fontWeight: FontWeight.w600))),
+<<<<<<< Updated upstream
         if (actionLabel != null)
           TextButton(onPressed: onAction, child: Text(actionLabel!))
       ]);
 }
 
+=======
+if (actionLabel != null) TextButton(onPressed: onAction, child: Text(actionLabel!))
+      ])
+}
+
+
+
+>>>>>>> Stashed changes

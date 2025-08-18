@@ -28,7 +28,7 @@ class _IdentityPageState extends State<IdentityPage> {
       lastDate: DateTime(now.year - 13),
       initialDate: DateTime(now.year - 20),
     );
-    if (picked != null) setState(() => _dob = picked);
+if (picked != null) setState(() => _dob = picked)
   }
 
   @override
@@ -54,7 +54,7 @@ class _IdentityPageState extends State<IdentityPage> {
                   AevTextField(controller: _last, label: 'Last name'),
                   const SizedBox(height: 12),
 
-                  // DOB field â€“ tap anywhere to pick.
+                  // DOB field Ã¢â‚¬â€œ tap anywhere to pick.
                   InkWell(
                     onTap: _pickDob,
                     borderRadius: BorderRadius.circular(12),
@@ -100,3 +100,5 @@ class _IdentityPageState extends State<IdentityPage> {
     );
   }
 }
+
+

@@ -32,7 +32,11 @@ class BadgeReactionsRow extends StatelessWidget {
                   onTap: () => ReactionStore.I.toggle(badgeId, e.key),
                 ))
             : [
+<<<<<<< Updated upstream
                 for (final e in const ['ðŸ‘', 'ðŸ”¥', 'ðŸ’ª'])
+=======
+                for (final e in const ['Ã°Å¸â€˜Â', 'Ã°Å¸â€Â¥', 'Ã°Å¸â€™Âª'])
+>>>>>>> Stashed changes
                   _EmojiChip(
                     emoji: e,
                     count: 0,
@@ -82,13 +86,13 @@ class _EmojiChip extends StatelessWidget {
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
           Text(emoji, style: const TextStyle(fontSize: 16)),
-          if (count > 0) ...[
+if (count > 0) ...[
             const SizedBox(width: 6),
             Text('$count', style: Theme.of(context).textTheme.labelSmall),
           ],
         ]),
       ),
-    );
+    )
   }
 }
 
@@ -109,7 +113,7 @@ class _AddEmojiChip extends StatelessWidget {
           ),
           builder: (context) => _EmojiPickerSheet(onPick: onPick),
         );
-        if (picked != null) onPick(picked);
+if (picked != null) onPick(picked)
       },
       borderRadius: BorderRadius.circular(999),
       child: Container(
@@ -135,6 +139,7 @@ class _EmojiPickerSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final options = [
+<<<<<<< Updated upstream
       'ðŸ‘',
       'ðŸ”¥',
       'ðŸ’ª',
@@ -147,6 +152,20 @@ class _EmojiPickerSheet extends StatelessWidget {
       'ðŸ˜Š',
       'ðŸ«¡',
       'ðŸ¤'
+=======
+      'Ã°Å¸â€˜Â',
+      'Ã°Å¸â€Â¥',
+      'Ã°Å¸â€™Âª',
+      'Ã°Å¸â„¢Å’',
+      'Ã°Å¸ËœÂ',
+      'Ã°Å¸Â¤Â¯',
+      'Ã°Å¸Å½â€°',
+      'Ã°Å¸Ââ€ ',
+      'Ã°Å¸â€™Â¯',
+      'Ã°Å¸ËœÅ ',
+      'Ã°Å¸Â«Â¡',
+      'Ã°Å¸Â¤Â'
+>>>>>>> Stashed changes
     ];
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -175,3 +194,7 @@ class _EmojiPickerSheet extends StatelessWidget {
   }
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes

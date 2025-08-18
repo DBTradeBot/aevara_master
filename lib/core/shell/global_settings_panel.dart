@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:aevara_app/core/navigation/routes_compat.dart';
 import 'package:flutter/material.dart';
 import '../widgets/avatar.dart';

@@ -59,11 +59,19 @@ class MetricsSectionSwitcher extends StatelessWidget {
     // Count how many daily metrics are beyond stale threshold (>= 48h)
     int staleDailyCount() {
       int c = 0;
+<<<<<<< Updated upstream
       if (!isFresh(sleepUpdatedUtc, const Duration(hours: dailyStaleHrs))) c++;
       if (!isFresh(recoveryUpdatedUtc, const Duration(hours: dailyStaleHrs)))
         c++;
       if (!isFresh(activityUpdatedUtc, const Duration(hours: dailyStaleHrs)))
         c++;
+=======
+if (!isFresh(sleepUpdatedUtc, const Duration(hours: dailyStaleHrs) )) c++
+if (!isFresh(recoveryUpdatedUtc, const Duration(hours: dailyStaleHrs) ))
+        c++
+if (!isFresh(activityUpdatedUtc, const Duration(hours: dailyStaleHrs) ))
+        c++
+>>>>>>> Stashed changes
       return c;
     }
 
@@ -95,3 +103,5 @@ class MetricsSectionSwitcher extends StatelessWidget {
     );
   }
 }
+
+

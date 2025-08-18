@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class GaugePlaceholderCard extends StatelessWidget {
@@ -9,4 +13,7 @@ class GaugePlaceholderCard extends StatelessWidget {
       child:
           SizedBox(height: 120, child: Center(child: Text('Gauge: $title'))));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

@@ -60,7 +60,7 @@ class MetricsHeader extends StatelessWidget {
             ),
           ],
         ),
-        if (showInstruction) ...[
+if (showInstruction) ...[
           const SizedBox(height: 6),
           Text(
             'Tap a metric to enter your data, or sync your wearable for automatic tracking.',
@@ -68,6 +68,8 @@ class MetricsHeader extends StatelessWidget {
           ),
         ],
       ],
-    );
+    )
   }
 }
+
+

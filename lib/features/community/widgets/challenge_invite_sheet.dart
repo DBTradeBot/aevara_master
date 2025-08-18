@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 /// Returns the list of picked handles (e.g. ['@mia', '@sam']) or null if canceled.
 Future<List<String>?> showChallengeInviteSheet(

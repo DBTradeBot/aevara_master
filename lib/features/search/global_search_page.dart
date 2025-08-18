@@ -22,6 +22,7 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
                 onChanged: (v) => setState(() => q = v))),
         Expanded(
             child: ListView(children: [
+<<<<<<< Updated upstream
           if (q.isEmpty)
             const ListTile(title: Text('Try searching for "steps"')),
           if (q.isNotEmpty) ListTile(title: Text('Result for: $q'))
@@ -29,3 +30,13 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
       ]));
 }
 
+=======
+if (q.isEmpty) const ListTile(title: Text('Try searching for "steps"')),
+          if (q.isNotEmpty) ListTile(title: Text('Result for: $q'))
+        ])),
+      ]))
+}
+
+
+
+>>>>>>> Stashed changes

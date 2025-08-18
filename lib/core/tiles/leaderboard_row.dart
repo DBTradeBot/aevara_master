@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class LeaderboardRow extends StatelessWidget {
@@ -22,4 +26,7 @@ class LeaderboardRow extends StatelessWidget {
             onPressed: onCheer, icon: const Icon(Icons.emoji_emotions_outlined))
       ]));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

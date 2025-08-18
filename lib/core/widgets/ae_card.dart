@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class AeCard extends StatelessWidget {
@@ -16,4 +20,7 @@ class AeCard extends StatelessWidget {
     return onTap != null ? InkWell(onTap: onTap, child: card) : card;
   }
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

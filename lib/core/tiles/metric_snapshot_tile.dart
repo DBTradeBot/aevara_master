@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class MetricSnapshotTile extends StatelessWidget {
@@ -11,4 +15,7 @@ class MetricSnapshotTile extends StatelessWidget {
   Widget build(BuildContext c) => Card(
       child: ListTile(title: Text(title), subtitle: Text(value), onTap: onTap));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 // lib/theme/aevara_theme.dart
+=======
+﻿// lib/theme/aevara_theme.dart
+>>>>>>> Stashed changes
 import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 
@@ -106,7 +110,11 @@ class AevaraTheme extends ThemeExtension<AevaraTheme> {
 
   @override
   AevaraTheme lerp(ThemeExtension<AevaraTheme>? other, double t) {
+<<<<<<< Updated upstream
     if (other is! AevaraTheme) return this;
+=======
+if (other is! AevaraTheme) return this
+>>>>>>> Stashed changes
     return AevaraTheme(
       radius: lerpDouble(radius, other.radius, t)!,
       elevation: lerpDouble(elevation, other.elevation, t)!,
@@ -136,3 +144,5 @@ class AevaraTheme extends ThemeExtension<AevaraTheme> {
 extension AevaraContextX on BuildContext {
   AevaraTheme get aevara => AevaraTheme.of(this);
 }
+
+

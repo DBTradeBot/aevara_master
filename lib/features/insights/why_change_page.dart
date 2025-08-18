@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import '../../core/navigation/app_shell.dart';
 
@@ -15,7 +19,12 @@ class WhyChangePage extends StatelessWidget {
         const ListTile(
             title: Text('HRV'), subtitle: Text('Ã¢â€ â€˜ +4 ms vs prior week')),
         const ListTile(
+<<<<<<< Updated upstream
             title: Text('Steps'), subtitle: Text('Ã¢â€ â€™ flat vs prior week')),
+=======
+            title: Text('Steps'),
+            subtitle: Text('Ã¢â€ â€™ flat vs prior week')),
+>>>>>>> Stashed changes
       ]));
 }
 

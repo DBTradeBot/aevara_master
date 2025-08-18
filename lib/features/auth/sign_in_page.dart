@@ -40,7 +40,11 @@ class _SignInPageState extends State<SignInPage> {
                 Text('Welcome Back',
                     style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 8),
+<<<<<<< Updated upstream
                 Text('Letâ€™s get started by filling out the form below.',
+=======
+                Text('LetÃ¢â‚¬â„¢s get started by filling out the form below.',
+>>>>>>> Stashed changes
                     style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(height: 16),
                 AevTextField(
@@ -65,6 +69,7 @@ class _SignInPageState extends State<SignInPage> {
                     onPressed: _loading
                         ? null
                         : () async {
+<<<<<<< Updated upstream
                             if (!_formKey.currentState!.validate()) return;
                             setState(() => _loading = true);
                             await Future.delayed(
@@ -73,6 +78,14 @@ class _SignInPageState extends State<SignInPage> {
                               Navigator.of(context)
                                   .pushReplacementNamed('/onboarding/intro');
                             }
+=======
+if (!_formKey.currentState!.validate() ) return
+                            setState(() => _loading = true);
+                            await Future.delayed(
+                                const Duration(milliseconds: 500));
+                            if (mounted) Navigator.of(context)
+                                  .pushReplacementNamed('/onboarding/intro')
+>>>>>>> Stashed changes
                           }),
                 const SizedBox(height: 12),
                 const Row(children: [
@@ -112,3 +125,5 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 }
+
+

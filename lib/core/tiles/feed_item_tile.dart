@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class FeedItemTile extends StatelessWidget {
@@ -15,4 +19,7 @@ class FeedItemTile extends StatelessWidget {
       trailing: IconButton(
           icon: const Icon(Icons.favorite_border), onPressed: onCheer));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

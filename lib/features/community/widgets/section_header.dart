@@ -13,9 +13,15 @@ class SectionHeader extends StatelessWidget {
       children: [
         Expanded(
             child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
+<<<<<<< Updated upstream
         if (actionLabel != null)
           TextButton(onPressed: onAction, child: Text(actionLabel!)),
+=======
+if (actionLabel != null) TextButton(onPressed: onAction, child: Text(actionLabel!)),
+>>>>>>> Stashed changes
       ],
-    );
+    )
   }
 }
+
+

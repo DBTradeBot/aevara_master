@@ -1,0 +1,53 @@
+﻿import 'package:flutter/material.dart';
+import '../models.dart';
+import 'progress_ring.dart';
+
+class ChallengeCard extends StatelessWidget {
+  final Challenge c;
+  final VoidCallback? onJoin;
+  final VoidCallback? onPreview;
+  final double? progress;
+
+  const ChallengeCard(
+      {super.key, required this.c, this.onJoin, this.onPreview, this.progress});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onPreview,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              ProgressRing(progress: progress ?? 0, size: 56, color: c.color),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(c.title,
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 4),
+                    Text(c.subtitle,
+                        style: const TextStyle(color: Colors.black54)),
+                    const SizedBox(height: 6),
+                    Wrap(spacing: 6, children: [
+                      Chip(label: Text('${c.durationDays}d')),
+                      Chip(label: Text(c.focus)),
+if (c.groupable) { const Chip(label: Text('Group')),
+                    ]),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              FilledButton(onPressed: onJoin, child: const Text('Join')),
+            ],
+          ),
+        ),
+      ),
+    ); }
+  }
+}
+

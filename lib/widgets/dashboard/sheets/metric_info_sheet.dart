@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import 'package:flutter/material.dart';
+=======
+﻿import 'package:flutter/material.dart';
+>>>>>>> Stashed changes
 import 'package:aevara_app/theme/aevara_theme.dart';
 
 class MetricInfoSheet extends StatelessWidget {
@@ -76,8 +80,7 @@ class MetricInfoSheet extends StatelessWidget {
                 runSpacing: 8,
                 children: [
                   Text(whyItMatters, style: body),
-                  if (onOpenWhyLink != null && whyItMattersLinkLabel != null)
-                    TextButton(
+if (onOpenWhyLink != null && whyItMattersLinkLabel != null) TextButton(
                       onPressed: onOpenWhyLink,
                       child: Text(whyItMattersLinkLabel!),
                     ),
@@ -102,6 +105,8 @@ class MetricInfoSheet extends StatelessWidget {
           ],
         ),
       ),
-    );
+    )
   }
 }
+
+

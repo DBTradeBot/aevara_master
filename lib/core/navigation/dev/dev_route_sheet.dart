@@ -18,7 +18,11 @@ class _DevRouteSheetState extends State<DevRouteSheet> {
       final filtered = routes
           .where((r) => r.toLowerCase().contains(_q.toLowerCase()))
           .toList();
+<<<<<<< Updated upstream
       if (filtered.isEmpty) return;
+=======
+if (filtered.isEmpty) return
+>>>>>>> Stashed changes
       kids.add(Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: Text(group,
@@ -54,6 +58,7 @@ class _DevRouteSheetState extends State<DevRouteSheet> {
                       onChanged: (v) => setState(() => _q = v))),
               const SizedBox(height: 8),
               Expanded(child: ListView(children: kids)),
+<<<<<<< Updated upstream
               if (!kDebugMode)
                 const Padding(
                     padding: EdgeInsets.all(8), child: Text('Debug disabled')),
@@ -61,3 +66,13 @@ class _DevRouteSheetState extends State<DevRouteSheet> {
   }
 }
 
+=======
+if (!kDebugMode) const Padding(
+                    padding: EdgeInsets.all(8), child: Text('Debug disabled')),
+            ])))
+  }
+}
+
+
+
+>>>>>>> Stashed changes

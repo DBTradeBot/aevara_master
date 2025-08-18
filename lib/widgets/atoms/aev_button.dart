@@ -17,12 +17,14 @@ class AevButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (leading != null) ...[leading!, const SizedBox(width: 8)],
+if (leading != null) ...[leading!, const SizedBox(width: 8)],
         Text(label),
       ],
-    );
+    )
     return primary
         ? ElevatedButton(onPressed: onPressed, child: child)
         : OutlinedButton(onPressed: onPressed, child: child);
   }
 }
+
+

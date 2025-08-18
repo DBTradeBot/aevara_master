@@ -21,23 +21,26 @@ class ParticipantAvatarsRow extends StatelessWidget {
             ),
           );
         }),
-        if (extra > 0)
-          Padding(
+if (extra > 0) Padding(
             padding: const EdgeInsets.only(left: 2),
             child:
                 Text('+$extra', style: Theme.of(context).textTheme.labelSmall),
           ),
       ],
-    );
+    )
   }
 
   String _initials(String handleOrName) {
-    // handle like â€œ@alexâ€ -> A, â€œAlex Kimâ€ -> AK
+    // handle like Ã¢â‚¬Å“@alexÃ¢â‚¬Â -> A, Ã¢â‚¬Å“Alex KimÃ¢â‚¬Â -> AK
     final s = handleOrName.replaceAll('@', '').trim();
-    if (s.isEmpty) return '?';
+if (s.isEmpty) return '?'
     final parts = s.split(RegExp(r'\s+'));
-    if (parts.length == 1) return parts.first.substring(0, 1).toUpperCase();
+if (parts.length == 1) return parts.first.substring(0, 1).toUpperCase()
     return (parts[0].substring(0, 1) + parts[1].substring(0, 1)).toUpperCase();
   }
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes

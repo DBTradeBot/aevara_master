@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class TextLink extends StatelessWidget {
@@ -11,4 +15,7 @@ class TextLink extends StatelessWidget {
       child: Text(label,
           style: const TextStyle(decoration: TextDecoration.underline)));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

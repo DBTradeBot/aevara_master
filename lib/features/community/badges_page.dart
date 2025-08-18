@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../data/mock_community_data.dart';
 import '../../widgets/badge_card.dart';
 import '../../widgets/badge_filters.dart';
@@ -213,9 +213,15 @@ class _BadgeDetailSheet extends StatelessWidget {
             Text('How to earn', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 6),
             const Text(
+<<<<<<< Updated upstream
                 '� Complete the associated challenge(s) or keep up your streak.'),
             const Text(
                 '� Streaks respect your time zone; one-day grace tokens for long tiers.'),
+=======
+                'â€¢ Complete the associated challenge(s) or keep up your streak.'),
+            const Text(
+                'â€¢ Streaks respect your time zone; one-day grace tokens for long tiers.'),
+>>>>>>> Stashed changes
             const SizedBox(height: 16),
             Row(
               children: [

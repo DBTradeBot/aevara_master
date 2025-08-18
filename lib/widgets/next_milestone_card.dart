@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import 'package:flutter/material.dart';
+=======
+﻿import 'package:flutter/material.dart';
+>>>>>>> Stashed changes
 import '../data/mock_community_data.dart';
 
 class NextMilestoneCard extends StatelessWidget {
@@ -8,7 +12,7 @@ class NextMilestoneCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (badge == null) return const SizedBox.shrink();
+if (badge == null) return const SizedBox.shrink()
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -29,7 +33,11 @@ class NextMilestoneCard extends StatelessWidget {
                   Text('Your next milestone',
                       style: Theme.of(context).textTheme.titleSmall),
                   const SizedBox(height: 4),
+<<<<<<< Updated upstream
                   Text('${badge!.name} â€¢ ${(badge!.progress * 100).round()}%',
+=======
+                  Text('${badge!.name} Ã¢â‚¬Â¢ ${(badge!.progress * 100).round()}%',
+>>>>>>> Stashed changes
                       style: Theme.of(context).textTheme.bodyMedium),
                 ],
               ),
@@ -41,3 +49,5 @@ class NextMilestoneCard extends StatelessWidget {
     );
   }
 }
+
+

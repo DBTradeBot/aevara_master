@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import '../atoms/avatar.dart';
 
@@ -14,4 +18,7 @@ class HeroHeaderCard extends StatelessWidget {
           title: Text(title),
           subtitle: Text(subtitle)));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

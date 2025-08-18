@@ -143,12 +143,10 @@ class _DashboardPageState extends State<DashboardPage> {
           _activityUpdatedUtc ??= _lastFullSyncUtc;
           _cardioUpdatedUtc ??= _lastFullSyncUtc;
         });
-        if (mounted) Navigator.of(context).maybePop();
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
+if (mounted) Navigator.of(context).maybePop()
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Connected: $id')),
-          );
-        }
+          )
       },
     );
 
@@ -161,11 +159,9 @@ class _DashboardPageState extends State<DashboardPage> {
         _activityUpdatedUtc = null;
         _cardioUpdatedUtc = null;
       });
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Disconnected — showing manual entry')),
-        );
-      }
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Disconnected â€” showing manual entry')),
+        )
     }
   }
 
@@ -277,3 +273,5 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 }
+
+

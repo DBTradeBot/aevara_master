@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import '../../app_routes.dart';
 
@@ -6,8 +10,13 @@ class AppBottomNav extends StatelessWidget {
   final int index;
   const AppBottomNav({super.key, required this.index});
   void _go(BuildContext c, String r) {
+<<<<<<< Updated upstream
     if (ModalRoute.of(c)?.settings.name == r) return;
     Navigator.of(c).pushReplacementNamed(r);
+=======
+    if (ModalRoute.of(c)?.settings.name == r)
+      return Navigator.of(c).pushReplacementNamed(r);
+>>>>>>> Stashed changes
   }
 
   @override

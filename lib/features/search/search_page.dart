@@ -22,6 +22,7 @@ class _SearchPageState extends State<SearchPage> {
                     hintText: 'Search users, badges, challenges...'))),
         Expanded(
             child: ListView(children: [
+<<<<<<< Updated upstream
           if (q.isEmpty) const ListTile(title: Text('Try: "steps challenge"')),
           if (q.isNotEmpty)
             ListTile(title: Text('Result for "$q" (placeholder)'))
@@ -29,3 +30,14 @@ class _SearchPageState extends State<SearchPage> {
       ]));
 }
 
+=======
+if (q.isEmpty) const ListTile(title: Text('Try: "steps challenge"')),
+          if (q.isNotEmpty)
+            ListTile(title: Text('Result for "$q" (placeholder)'))
+        ])),
+      ]))
+}
+
+
+
+>>>>>>> Stashed changes

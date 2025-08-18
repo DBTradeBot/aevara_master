@@ -71,10 +71,8 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
     _v = widget.initialValue.clamp(widget.min, widget.max);
     _c = TextEditingController(text: _fmt(_v));
     _focus.addListener(() {
-      if (!_focus.hasFocus) {
-        _finalizeFromText();
-        widget.onSave?.call(_v);
-      }
+      if (!_focus.hasFocus) _finalizeFromText();
+        widget.onSave?.call(_v)
     });
   }
 
@@ -90,20 +88,18 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
       _hasDecimal ? v.toStringAsFixed(1) : v.toStringAsFixed(0);
 
   double _roundToStep(double x) {
-    if (_hasDecimal) return (x * 10).round() / 10.0;
+if (_hasDecimal) return (x * 10).round() / 10.0
     return x.roundToDouble();
   }
 
   void _applyImmediateFromText() {
     final raw = _c.text.trim();
-    if (raw.isEmpty || raw == '.' || raw == '-') return;
+if (raw.isEmpty || raw == '.' || raw == '-') return
     final parsed = double.tryParse(raw.replaceAll(',', '.'));
-    if (parsed == null) return;
+if (parsed == null) return
     final next = _roundToStep(parsed).clamp(widget.min, widget.max);
-    if (next != _v) {
-      setState(() => _v = next);
-      widget.onChanged?.call(_v);
-    }
+    if (next != _v) setState(() => _v = next);
+      widget.onChanged?.call(_v)
   }
 
   void _finalizeFromText() {
@@ -123,10 +119,15 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
     setState(() {
       _v = (_v + sign * widget.step).clamp(widget.min, widget.max);
       _c.text = _fmt(_v);
+<<<<<<< Updated upstream
       if (_focus.hasFocus) {
         _c.selection =
             TextSelection.fromPosition(TextPosition(offset: _c.text.length));
       }
+=======
+      if (_focus.hasFocus) _c.selection =
+            TextSelection.fromPosition(TextPosition(offset: _c.text.length))
+>>>>>>> Stashed changes
     });
     widget.onChanged?.call(_v);
   }
@@ -488,3 +489,5 @@ class _HoldButtonState extends State<_HoldButton> {
     );
   }
 }
+
+

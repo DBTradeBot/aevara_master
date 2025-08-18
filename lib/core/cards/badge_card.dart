@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class BadgeCard extends StatelessWidget {
@@ -15,4 +19,7 @@ class BadgeCard extends StatelessWidget {
           subtitle: Text(detail),
           onTap: onTap));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

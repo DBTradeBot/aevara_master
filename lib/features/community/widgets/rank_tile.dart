@@ -27,8 +27,8 @@ class RankTile extends StatelessWidget {
     final theme = Theme.of(context);
 
     Widget avatar;
-    if ((avatarEmoji ?? '').isNotEmpty) {
-      avatar = CircleAvatar(child: Text(avatarEmoji!));
+if ((avatarEmoji ?? '') { .isNotEmpty) {
+      avatar = CircleAvatar(child: Text(avatarEmoji!)); }
     } else if ((avatarUrl ?? '').isNotEmpty) {
       avatar = CircleAvatar(backgroundImage: NetworkImage(avatarUrl!));
     } else {
@@ -56,3 +56,4 @@ class RankTile extends StatelessWidget {
     );
   }
 }
+

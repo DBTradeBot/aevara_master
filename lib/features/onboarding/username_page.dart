@@ -24,7 +24,11 @@ class _UsernamePageState extends State<UsernamePage> {
       available = null;
     });
     final ok = await isUsernameAvailable(_u.text);
+<<<<<<< Updated upstream
     if (!mounted) return;
+=======
+if (!mounted) return
+>>>>>>> Stashed changes
     setState(() {
       available = ok;
       checking = false;
@@ -46,7 +50,7 @@ class _UsernamePageState extends State<UsernamePage> {
             ),
             const SizedBox(height: 12),
 
-            // Plain TextField â€” zero magic
+            // Plain TextField Ã¢â‚¬â€ zero magic
             TextField(
               controller: _u,
               decoration: const InputDecoration(
@@ -60,13 +64,12 @@ class _UsernamePageState extends State<UsernamePage> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: checking ? null : _check,
-              child: Text(checking ? 'Checkingâ€¦' : 'Check availability'),
+              child: Text(checking ? 'CheckingÃ¢â‚¬Â¦' : 'Check availability'),
             ),
-
-            if (available != null) ...[
+if (available != null) ...[
               const SizedBox(height: 8),
               Text(
-                available! ? 'Available âœ”' : 'Taken âœ–',
+                available! ? 'Available Ã¢Å“â€' : 'Taken Ã¢Å“â€“',
                 style: TextStyle(
                   fontSize: 14,
                   color: available! ? Colors.green : Colors.red,
@@ -94,6 +97,8 @@ class _UsernamePageState extends State<UsernamePage> {
           ],
         ),
       ),
-    );
+    )
   }
 }
+
+

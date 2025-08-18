@@ -7,7 +7,11 @@ class DevFab extends StatelessWidget {
   const DevFab({super.key});
   @override
   Widget build(BuildContext c) {
+<<<<<<< Updated upstream
     if (!kDebugMode) return const SizedBox.shrink();
+=======
+if (!kDebugMode) return const SizedBox.shrink()
+>>>>>>> Stashed changes
     return FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
@@ -23,3 +27,8 @@ class DevFab extends StatelessWidget {
   }
 }
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes

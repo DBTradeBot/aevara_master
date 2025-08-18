@@ -34,14 +34,20 @@ class LinkService {
     // https://aevara.app/u/@alex
     final path = uri.pathSegments;
     if (path.isNotEmpty) {
+<<<<<<< Updated upstream
       if (path.first == 'invite' && path.length >= 2)
         return InviteLink(path[1]);
       if (path.first == 'group' && path.length >= 2) return GroupLink(path[1]);
       if (path.first == 'u' && path.length >= 2) return ProfileLink(path[1]);
+=======
+if (path.first == 'invite' && path.length >= 2) return InviteLink(path[1])
+if (path.first == 'group' && path.length >= 2) return GroupLink(path[1])
+if (path.first == 'u' && path.length >= 2) return ProfileLink(path[1])
+>>>>>>> Stashed changes
     }
     if (uri.scheme == 'aevara' && uri.host == 'invite') {
       final code = uri.queryParameters['code'];
-      if (code != null && code.isNotEmpty) return InviteLink(code);
+if (code != null && code.isNotEmpty) return InviteLink(code)
     }
     return null;
   }
@@ -61,7 +67,7 @@ class LinkService {
   }
 
   void route(BuildContext context, CommunityLink? link) {
-    if (link == null) return;
+if (link == null) return
     switch (link) {
       case InviteLink(code: final c):
         Navigator.pushNamed(context, '/community/friends',
@@ -78,3 +84,5 @@ class LinkService {
     }
   }
 }
+
+

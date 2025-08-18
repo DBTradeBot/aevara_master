@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class EmojiScale extends StatefulWidget {
@@ -19,7 +23,17 @@ class _EmojiScaleState extends State<EmojiScale> {
 
   @override
   Widget build(BuildContext c) {
+<<<<<<< Updated upstream
     final items = ['ðŸ˜ž', 'ðŸ˜', 'ðŸ™‚', 'ðŸ˜ƒ', 'ðŸ¤©'];
+=======
+    final items = [
+      'Ã°Å¸ËœÅ¾',
+      'Ã°Å¸ËœÂ',
+      'Ã°Å¸â„¢â€š',
+      'Ã°Å¸ËœÆ’',
+      'Ã°Å¸Â¤Â©'
+    ];
+>>>>>>> Stashed changes
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(
@@ -32,5 +46,8 @@ class _EmojiScaleState extends State<EmojiScale> {
                 child: Text(items[i], style: const TextStyle(fontSize: 24)))));
   }
 }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes

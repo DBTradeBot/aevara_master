@@ -37,26 +37,31 @@ class SyncedMetricsRow extends StatelessWidget {
       '${v.toStringAsFixed(v % 1 == 0 ? 0 : 1)}h';
 
   static String _fmtSteps(int v) {
+<<<<<<< Updated upstream
     if (v >= 1000000) return '${(v / 1000000).toStringAsFixed(1)}M';
     if (v >= 1000)
       return '${(v / 1000).toStringAsFixed(1).replaceAll('.0', '')}k';
+=======
+if (v >= 1000000) { return '${(v / 1000000).toStringAsFixed(1)}M'; }
+if (v >= 1000) { return '${(v / 1000).toStringAsFixed(1).replaceAll('.0', '')}k'; }
+>>>>>>> Stashed changes
     return v.toString();
   }
 
   static Color _byGoal(BuildContext ctx, double ratio) {
     final aev = ctx.aevara;
-    if (ratio >= 1.0) return aev.success;
-    if (ratio >= 0.7) return aev.accent1;
-    if (ratio >= 0.5) return aev.warning;
+if (ratio >= 1.0) return aev.success
+if (ratio >= 0.7) return aev.accent1
+if (ratio >= 0.5) return aev.warning
     return aev.error;
   }
 
   static Color _byReadiness(BuildContext ctx, int? r) {
     final aev = ctx.aevara;
-    if (r == null) return aev.secondaryText;
-    if (r >= 80) return aev.success;
-    if (r >= 60) return aev.accent1;
-    if (r >= 40) return aev.warning;
+if (r == null) return aev.secondaryText
+if (r >= 80) return aev.success
+if (r >= 60) return aev.accent1
+if (r >= 40) return aev.warning
     return aev.error;
   }
 
@@ -78,7 +83,7 @@ class SyncedMetricsRow extends StatelessWidget {
         : (fitnessAge != null ? '${fitnessAge!.toStringAsFixed(0)}y' : '--');
 
     final cardioSublabel = (vo2max != null)
-        ? 'VOâ‚‚max'
+        ? 'VOÃ¢â€šâ€šmax'
         : (baselineFitnessAge != null && fitnessAge != null
             ? 'vs ${baselineFitnessAge!.toStringAsFixed(0)}'
             : '');
@@ -150,7 +155,11 @@ class _SyncedMetricCard extends StatelessWidget {
   final String label;
   final String value; // main number (e.g., "6.9h", "82", "8.5k", "42.0")
   final String
+<<<<<<< Updated upstream
       sublabel; // small helper (e.g., "vs 7.5h", "/100", "85% goal", "VOâ‚‚max")
+=======
+      sublabel; // small helper (e.g., "vs 7.5h", "/100", "85% goal", "VOÃ¢â€šâ€šmax")
+>>>>>>> Stashed changes
 
   const _SyncedMetricCard({
     required this.radius,
@@ -243,8 +252,7 @@ class _SyncedMetricCard extends StatelessWidget {
                           height: 1.0,
                         ),
                       ),
-                      if (sublabel.isNotEmpty)
-                        Padding(
+if (sublabel.isNotEmpty) Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: Text(
                             sublabel,
@@ -286,6 +294,8 @@ class _SyncedMetricCard extends StatelessWidget {
           ),
         ],
       ),
-    );
+    )
   }
 }
+
+

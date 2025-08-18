@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class ToggleRow extends StatefulWidget {
@@ -29,4 +33,7 @@ class _ToggleRowState extends State<ToggleRow> {
             widget.onChanged?.call(b);
           }));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

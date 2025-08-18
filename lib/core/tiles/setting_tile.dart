@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class SettingTile extends StatelessWidget {
@@ -14,4 +18,7 @@ class SettingTile extends StatelessWidget {
       trailing: const Icon(Icons.chevron_right),
       onTap: onTap);
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

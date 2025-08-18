@@ -69,6 +69,7 @@ class _PasswordPageState extends State<PasswordPage> {
             const SizedBox(height: 16),
             FilledButton(
               onPressed: () {
+<<<<<<< Updated upstream
                 if (_new.text != _confirm.text) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Passwords do not match')),
@@ -76,6 +77,13 @@ class _PasswordPageState extends State<PasswordPage> {
                   return;
                 }
                 ScaffoldMessenger.of(context).showSnackBar(
+=======
+                if (_new.text != _confirm.text)
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Passwords do not match')),
+                  );
+                return ScaffoldMessenger.of(context).showSnackBar(
+>>>>>>> Stashed changes
                   const SnackBar(content: Text('Password changed (stub)')),
                 );
                 Navigator.pop(context);

@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {
@@ -8,4 +12,7 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext c) =>
       CircleAvatar(radius: size / 2, child: const Icon(Icons.person));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

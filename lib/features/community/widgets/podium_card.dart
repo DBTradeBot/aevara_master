@@ -36,7 +36,11 @@ class PodiumCard extends StatelessWidget {
           children: [
             Text(u.username,
                 style: const TextStyle(fontWeight: FontWeight.w600)),
+<<<<<<< Updated upstream
             if (u.verified) const SizedBox(width: 6),
+=======
+if (u.verified) { const SizedBox(width: 6),
+>>>>>>> Stashed changes
             if (u.verified)
               const Icon(Icons.verified, size: 14, color: Colors.blueAccent),
           ],
@@ -53,7 +57,7 @@ class PodiumCard extends StatelessWidget {
           child: Text(label, style: const TextStyle(fontSize: 12)),
         ),
       ],
-    );
+    ); }
   }
 
   @override
@@ -67,10 +71,17 @@ class PodiumCard extends StatelessWidget {
     if (byRank.length < 3) {
       while (byRank.length < 3) {
         byRank.add(UserRank(
+<<<<<<< Updated upstream
             username: 'â€”',
             score: 0,
             rank: byRank.length + 1,
             avatarEmoji: 'ðŸ™‚'));
+=======
+            username: 'Ã¢â‚¬â€',
+            score: 0,
+            rank: byRank.length + 1,
+            avatarEmoji: 'Ã°Å¸â„¢â€š'));
+>>>>>>> Stashed changes
       }
     }
 

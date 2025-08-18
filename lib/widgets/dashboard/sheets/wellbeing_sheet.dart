@@ -4,11 +4,11 @@ import 'package:aevara_app/theme/aevara_theme.dart';
 import 'metric_info_sheet.dart';
 
 /// Combined Mood + Stress selection (1..5) using symbols:
-/// 1 ðŸŒ¿ Calm & Happy
-/// 2 ðŸƒ Content
-/// 3 ðŸŒ“ Neutral
-/// 4 âš¡ Tense
-/// 5 ðŸŒª Overwhelmed
+/// 1 Ã°Å¸Å’Â¿ Calm & Happy
+/// 2 Ã°Å¸ÂÆ’ Content
+/// 3 Ã°Å¸Å’â€œ Neutral
+/// 4 Ã¢Å¡Â¡ Tense
+/// 5 Ã°Å¸Å’Âª Overwhelmed
 ///
 /// Usage:
 /// await showWellbeingSheet(context, initialValue: 3, onSave: (v) { /* persist v (1..5) */ });
@@ -62,35 +62,35 @@ class _WellbeingSheetBodyState extends State<_WellbeingSheetBody> {
   static const List<_WBItem> _items = <_WBItem>[
     _WBItem(
       value: 1,
-      symbol: 'ðŸŒ¿',
+      symbol: 'Ã°Å¸Å’Â¿',
       label: 'Calm & Happy',
       shortLabel: 'Calm',
       description: 'Feeling relaxed, positive, and at ease.',
     ),
     _WBItem(
       value: 2,
-      symbol: 'ðŸƒ',
+      symbol: 'Ã°Å¸ÂÆ’',
       label: 'Content',
       shortLabel: 'Content',
       description: 'Generally good mood, low stress, steady.',
     ),
     _WBItem(
       value: 3,
-      symbol: 'ðŸŒ“',
+      symbol: 'Ã°Å¸Å’â€œ',
       label: 'Neutral',
       shortLabel: 'Neutral',
-      description: 'Balanced state â€” neither high nor low mood/stress.',
+      description: 'Balanced state Ã¢â‚¬â€ neither high nor low mood/stress.',
     ),
     _WBItem(
       value: 4,
-      symbol: 'âš¡',
+      symbol: 'Ã¢Å¡Â¡',
       label: 'Tense',
       shortLabel: 'Tense',
       description: 'Noticeable stress, irritability, or restlessness.',
     ),
     _WBItem(
       value: 5,
-      symbol: 'ðŸŒª',
+      symbol: 'Ã°Å¸Å’Âª',
       label: 'Overwhelmed',
       shortLabel: 'Overwhelmed',
       description: 'High stress, low mood, feeling overloaded.',
@@ -104,8 +104,7 @@ class _WellbeingSheetBodyState extends State<_WellbeingSheetBody> {
   }
 
   void _select(int v) {
-    if (_value == v) return;
-    HapticFeedback.selectionClick();
+    if (_value == v) return HapticFeedback.selectionClick();
     setState(() => _value = v);
     widget.onChanged?.call(_value);
   }
@@ -132,16 +131,28 @@ class _WellbeingSheetBodyState extends State<_WellbeingSheetBody> {
               'This combines both Mood and Stress into one selection.',
           whyItMatters:
               'Your perceived wellbeing influences stress response, recovery, and long-term health. '
+<<<<<<< Updated upstream
               'Itâ€™s a key part of your overall healthy days score.',
+=======
+              'ItÃ¢â‚¬â„¢s a key part of your overall healthy days score.',
+>>>>>>> Stashed changes
           howItAffectsScore:
               'We combine your wellbeing rating with other affective metrics to adjust healthy days. '
               'Low ratings may reduce your score; consistently high ratings improve it.',
           whereToFindIt: 'Symbols and meanings:\n'
+<<<<<<< Updated upstream
               'ðŸŒ¿ (1) Calm & Happy â€” Feeling relaxed, positive, and at ease.\n'
               'ðŸƒ (2) Content â€” Generally good mood, low stress, steady.\n'
               'ðŸŒ“ (3) Neutral â€” Balanced state, neither high nor low mood/stress.\n'
               'âš¡ (4) Tense â€” Noticeable stress, irritability, or restlessness.\n'
               'ðŸŒª (5) Overwhelmed â€” High stress, low mood, feeling overloaded.\n\n'
+=======
+              'Ã°Å¸Å’Â¿ (1) Calm & Happy Ã¢â‚¬â€ Feeling relaxed, positive, and at ease.\n'
+              'Ã°Å¸ÂÆ’ (2) Content Ã¢â‚¬â€ Generally good mood, low stress, steady.\n'
+              'Ã°Å¸Å’â€œ (3) Neutral Ã¢â‚¬â€ Balanced state, neither high nor low mood/stress.\n'
+              'Ã¢Å¡Â¡ (4) Tense Ã¢â‚¬â€ Noticeable stress, irritability, or restlessness.\n'
+              'Ã°Å¸Å’Âª (5) Overwhelmed Ã¢â‚¬â€ High stress, low mood, feeling overloaded.\n\n'
+>>>>>>> Stashed changes
               'Wearables: WHOOP (Journal), Garmin (Body Battery + Stress), Fitbit (Mindfulness).\n\n'
               'Manual: Reflect on mood, energy, and stress level; choose the number (and symbol) that feels most accurate.',
         ),

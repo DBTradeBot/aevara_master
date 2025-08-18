@@ -18,8 +18,17 @@ class RecentEventTile extends StatelessWidget {
   String _relative(DateTime when) {
     final now = DateTime.now();
     final diff = now.difference(when);
+<<<<<<< Updated upstream
     if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
     if (diff.inHours < 24) return '${diff.inHours}h ago';
+=======
+    if (diff.inMinutes < 60) {
+      return '${diff.inMinutes}m ago';
+    }
+    if (diff.inHours < 24) {
+      return '${diff.inHours}h ago';
+    }
+>>>>>>> Stashed changes
     return '${diff.inDays}d ago';
   }
 }

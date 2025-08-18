@@ -22,7 +22,11 @@ class _OnboardingBasicsPageState extends State<OnboardingBasicsPage> {
         firstDate: DateTime(1900),
         lastDate: now,
         initialDate: DateTime(now.year - 25));
+<<<<<<< Updated upstream
     if (picked != null) setState(() => dob = picked);
+=======
+if (picked != null) setState(() => dob = picked)
+>>>>>>> Stashed changes
   }
 
   void _switchUnits(String next) {
@@ -98,3 +102,8 @@ class _OnboardingBasicsPageState extends State<OnboardingBasicsPage> {
       ]));
 }
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes

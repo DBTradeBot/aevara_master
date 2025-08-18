@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 enum Provenance { manual, synced, estimated }
@@ -19,4 +23,7 @@ class ProvenanceBadge extends StatelessWidget {
           borderRadius: BorderRadius.circular(8)),
       child: Text(provenance.name));
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

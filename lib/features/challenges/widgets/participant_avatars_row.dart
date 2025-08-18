@@ -13,20 +13,17 @@ class ParticipantAvatarsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final list = names.toList();
-    if (list.isEmpty) {
-      return Text(
+    if (list.isEmpty) return Text(
         'Be the first to join',
         style: Theme.of(context).textTheme.labelSmall,
-      );
-    }
-
+      )
     final visible = list.take(maxVisible).toList();
     final overflow = list.length - visible.length;
 
     return Row(
       children: [
         ...visible.map((n) => _Avatar(name: n)),
-        if (overflow > 0) ...[
+if (overflow > 0) ...[
           const SizedBox(width: 6),
           CircleAvatar(
             radius: 12,
@@ -47,12 +44,12 @@ class ParticipantAvatarsRow extends StatelessWidget {
           ),
         ),
       ],
-    );
+    )
   }
 
   String _label(List<String> list) {
-    if (list.length == 1) return '${list.first} is in';
-    if (list.length == 2) return '${list[0]}, ${list[1]} are in';
+if (list.length == 1) { return '${list.first} is in'; }
+if (list.length == 2) { return '${list[0]}, ${list[1]} are in'; }
     return '${list[0]}, ${list[1]} + ${list.length - 2} more are in';
   }
 }
@@ -80,10 +77,10 @@ class _Avatar extends StatelessWidget {
 
   String _initials(String n) {
     final parts = n.trim().split(RegExp(r'\s+'));
-    if (parts.length >= 2) {
-      return (parts[0].isEmpty ? '' : parts[0][0]) +
-          (parts[1].isEmpty ? '' : parts[1][0]);
-    }
+    if (parts.length >= 2) return (parts[0].isEmpty ? '' : parts[0][0]) +
+          (parts[1].isEmpty ? '' : parts[1][0])
     return n.isEmpty ? '?' : n[0].toUpperCase();
   }
 }
+
+

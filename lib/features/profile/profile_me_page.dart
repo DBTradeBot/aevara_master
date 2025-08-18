@@ -47,10 +47,16 @@ class _ProfileMePageState extends State<ProfileMePage> {
                 },
                 child: const Text('Check')),
           ]),
+<<<<<<< Updated upstream
           if (available != null)
             Padding(
               padding: const EdgeInsets.only(top: 6),
               child: Text(available! ? 'Available âœ”' : 'Taken âœ–',
+=======
+if (available != null) { Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Text(available! ? 'Available Ã¢Å“â€' : 'Taken Ã¢Å“â€“',
+>>>>>>> Stashed changes
                   style:
                       TextStyle(color: available! ? Colors.green : Colors.red)),
             ),
@@ -64,10 +70,15 @@ class _ProfileMePageState extends State<ProfileMePage> {
           const SizedBox(height: 24),
           AevButton.primary('Save', onPressed: () {
             ScaffoldMessenger.of(context)
+<<<<<<< Updated upstream
                 .showSnackBar(const SnackBar(content: Text('Saved (stub).')));
+=======
+                .showSnackBar(const SnackBar(content: Text('Saved (stub).'))); }
+>>>>>>> Stashed changes
           }),
         ],
       ),
     );
   }
 }
+

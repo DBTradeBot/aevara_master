@@ -22,13 +22,13 @@ class ReactionStore extends ChangeNotifier {
     if (prev == emoji) {
       final c = counts[badgeId]!;
       c[emoji] = (c[emoji] ?? 1) - 1;
-      if (c[emoji]! <= 0) c.remove(emoji);
+if (c[emoji]! <= 0) c.remove(emoji)
       userReacted[badgeId] = null;
     } else {
       if (prev != null) {
         final c = counts[badgeId]!;
         c[prev] = (c[prev] ?? 1) - 1;
-        if (c[prev]! <= 0) c.remove(prev);
+if (c[prev]! <= 0) c.remove(prev)
       }
       counts[badgeId]![emoji] = (counts[badgeId]![emoji] ?? 0) + 1;
       userReacted[badgeId] = emoji;
@@ -36,3 +36,5 @@ class ReactionStore extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+

@@ -36,7 +36,7 @@ class ChallengeCard extends StatelessWidget {
                     Wrap(spacing: 6, children: [
                       Chip(label: Text('${c.durationDays}d')),
                       Chip(label: Text(c.focus)),
-                      if (c.groupable) const Chip(label: Text('Group')),
+if (c.groupable) const Chip(label: Text('Group')),
                     ]),
                   ],
                 ),
@@ -47,6 +47,8 @@ class ChallengeCard extends StatelessWidget {
           ),
         ),
       ),
-    );
+    )
   }
 }
+
+

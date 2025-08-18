@@ -48,8 +48,17 @@ class MetricsRow extends StatelessWidget {
   String? _fmtMs(double? v) => v == null ? null : '${v.toStringAsFixed(0)}ms';
   String? _fmtSteps(int? v) => v == null ? null : _compact(v);
   static String _compact(int n) {
+<<<<<<< Updated upstream
     if (n >= 1000000) return '${(n / 1000000).toStringAsFixed(1)}M';
     if (n >= 1000) return '${(n / 1000).toStringAsFixed(1)}k';
+=======
+    if (n >= 1000000) {
+      return '${(n / 1000000).toStringAsFixed(1)}M';
+    }
+    if (n >= 1000) {
+      return '${(n / 1000).toStringAsFixed(1)}k';
+    }
+>>>>>>> Stashed changes
     return n.toString();
   }
 
@@ -164,7 +173,11 @@ class _AdaptiveMetricCard extends StatelessWidget {
         // Font sizes (make missing-value prompt smaller so it never clips)
         final valueFsPresent = _clamp(h * 0.24, 15, 20);
         final valueFsMissing =
+<<<<<<< Updated upstream
             _clamp(h * 0.16, 10, 12); // smaller for â€œTap to addâ€
+=======
+            _clamp(h * 0.16, 10, 12); // smaller for Ã¢â‚¬Å“Tap to addÃ¢â‚¬Â
+>>>>>>> Stashed changes
         final labelFs = _clamp(h * 0.18, 12, 14.5);
 
         // Flex proportions

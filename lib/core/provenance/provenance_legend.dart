@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import 'provenance_badge.dart';
 
@@ -11,4 +15,7 @@ class ProvenanceLegend extends StatelessWidget {
         ProvenanceBadge(provenance: Provenance.estimated),
       ]);
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

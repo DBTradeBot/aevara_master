@@ -39,11 +39,19 @@ class SnapshotCard extends StatelessWidget {
                           child: Row(children: [
                             Text(bigValue,
                                 style: Theme.of(c).textTheme.headlineSmall),
+<<<<<<< Updated upstream
                             if (unit.isNotEmpty) const SizedBox(width: 4),
                             if (unit.isNotEmpty) Text(unit),
                           ]),
                         ),
                       );
+=======
+if (unit.isNotEmpty) const SizedBox(width: 4),
+                            if (unit.isNotEmpty) Text(unit),
+                          ]),
+                        ),
+                      )
+>>>>>>> Stashed changes
                     }),
                     const SizedBox(height: 6),
                     Row(children: [
@@ -57,3 +65,8 @@ class SnapshotCard extends StatelessWidget {
                   ]))));
 }
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes

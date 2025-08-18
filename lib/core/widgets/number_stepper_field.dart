@@ -33,7 +33,11 @@ class _NumberStepperFieldState extends State<NumberStepperField> {
   @override
   void didUpdateWidget(covariant NumberStepperField old) {
     super.didUpdateWidget(old);
+<<<<<<< Updated upstream
     if (old.value != widget.value) _c.text = widget.value.toStringAsFixed(0);
+=======
+if (old.value != widget.value) _c.text = widget.value.toStringAsFixed(0)
+>>>>>>> Stashed changes
   }
 
   void _delta(double d) {
@@ -53,8 +57,12 @@ class _NumberStepperFieldState extends State<NumberStepperField> {
                     labelText: widget.label, suffixText: widget.unit),
                 onChanged: (s) {
                   final v = double.tryParse(s);
+<<<<<<< Updated upstream
                   if (v != null)
                     widget.onChanged(v.clamp(widget.min, widget.max));
+=======
+if (v != null) widget.onChanged(v.clamp(widget.min, widget.max))
+>>>>>>> Stashed changes
                 })),
         const SizedBox(width: 8),
         IconButton.filledTonal(
@@ -66,3 +74,8 @@ class _NumberStepperFieldState extends State<NumberStepperField> {
       ]);
 }
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes

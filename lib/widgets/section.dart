@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import 'package:flutter/material.dart';
+=======
+﻿import 'package:flutter/material.dart';
+>>>>>>> Stashed changes
 
 class Section extends StatelessWidget {
   final String title;
@@ -27,8 +31,7 @@ class Section extends StatelessWidget {
             children: [
               Text(title, style: Theme.of(context).textTheme.titleMedium),
               const Spacer(),
-              if (onSeeAll != null)
-                TextButton(
+if (onSeeAll != null) TextButton(
                   onPressed: onSeeAll,
                   child: Text(actionLabel ?? 'See all'),
                 ),
@@ -37,6 +40,8 @@ class Section extends StatelessWidget {
           child,
         ],
       ),
-    );
+    )
   }
 }
+
+

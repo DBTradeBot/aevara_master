@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {
@@ -11,4 +15,7 @@ class Avatar extends StatelessWidget {
       backgroundImage: url != null ? NetworkImage(url!) : null,
       child: url == null ? const Icon(Icons.person) : null);
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes

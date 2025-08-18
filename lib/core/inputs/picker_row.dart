@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ﻿// ignore_for_file: avoid_renaming_method_parameters
+=======
+// ignore_for_file: avoid_renaming_method_parameters
+>>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 
 class PickerRow extends StatelessWidget {
@@ -17,4 +21,7 @@ class PickerRow extends StatelessWidget {
       trailing: const Icon(Icons.chevron_right),
       onTap: onTap);
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
