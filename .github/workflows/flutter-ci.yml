@@ -19,13 +19,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Debug: show repo files
-        run: |
-          pwd
-          ls -la
-          if [ -d test ]; then echo "test/ exists"; ls -la test; else echo "test/ NOT found"; fi
-          if [ -f pubspec.yaml ]; then echo "pubspec.yaml found"; fi
-
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -33,13 +26,16 @@ jobs:
           channel: stable
           cache: true
 
-      - run: flutter --version
-      - run: flutter pub get
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Pub get
+        run: flutter pub get
 
       - name: Analyze
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
-      - name: Run Flutter tests (only if tests exist)
+      - name: Run tests (skip if none)
         if: ${{ hashFiles('test/**') != '' }}
         run: flutter test --no-pub
 
