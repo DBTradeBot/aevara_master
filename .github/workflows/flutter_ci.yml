@@ -1,25 +1,51 @@
 name: Flutter CI
 
 on:
-  push: { branches: [main, develop] }
+  push:
+    branches: [ main, develop, chore/**, feat/** ]
   pull_request:
+    branches: [ main, develop ]
 
 jobs:
   android:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - name: Checkout (PR-aware)
+        uses: actions/checkout@v4
         with:
-          flutter-version: '3.27.0'   # <— set to your `flutter --version`
+          # Use the PR head on pull_request, otherwise default ref
+          ref: ${{ github.head_ref || github.ref }}
+          fetch-depth: 0
+
+      - name: Debug: show repo root
+        run: |
+          pwd
+          ls -la
+          ls -la test || true
+          cat pubspec.yaml || true
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.0'
           channel: stable
           cache: true
+
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter analyze --no-fatal-infos --no-fatal-warnings
-      - run: flutter test --no-pub
-      - run: flutter build apk --debug
-      - uses: actions/upload-artifact@v4
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+
+      - name: Run Flutter tests (only if tests exist)
+        if: ${{ hashFiles('test/**') != '' }}
+        run: flutter test --no-pub
+
+      - name: Build debug APK
+        run: flutter build apk --debug
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
