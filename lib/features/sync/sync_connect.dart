@@ -1,7 +1,7 @@
-﻿// lib/features/sync/sync_connect.dart
+// lib/features/sync/sync_connect.dart
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import '../../theme/aevara_theme.dart';
+import 'package:aevara_app/theme/aevara_theme.dart';
 
 /// Status for a provider connection. You can expand later (e.g., paused).
 enum SyncStatus { synced, stale, notConnected, error }
@@ -31,11 +31,11 @@ class SyncProviderStatus {
 typedef ProviderTap = void Function(String providerId);
 
 Future<SyncConnectResult?> showSyncConnectSheet(
-    BuildContext context, {
-      List<SyncProviderStatus>? providers,
-      required ProviderTap onProviderTap,
-      required VoidCallback onOpenPrivacy,
-    }) {
+  BuildContext context, {
+  List<SyncProviderStatus>? providers,
+  required ProviderTap onProviderTap,
+  required VoidCallback onOpenPrivacy,
+}) {
   final theme = Theme.of(context);
   final aev = theme.extension<AevaraTheme>();
   bool agreed = false;
@@ -43,12 +43,18 @@ Future<SyncConnectResult?> showSyncConnectSheet(
   // Default list (used if you don't pass providers)
   final List<SyncProviderStatus> provs = providers ??
       const [
-        SyncProviderStatus(id: 'apple',  label: 'Apple Health',        icon: Icons.apple),
-        SyncProviderStatus(id: 'google', label: 'Google Fit / Health', icon: Icons.android),
-        SyncProviderStatus(id: 'fitbit', label: 'Fitbit',              icon: Icons.watch_outlined),
-        SyncProviderStatus(id: 'whoop',  label: 'WHOOP',               icon: Icons.fitness_center),
-        SyncProviderStatus(id: 'garmin', label: 'Garmin',              icon: Icons.gps_fixed),
-        SyncProviderStatus(id: 'oura',   label: 'Oura',                icon: Icons.blur_circular),
+        SyncProviderStatus(
+            id: 'apple', label: 'Apple Health', icon: Icons.apple),
+        SyncProviderStatus(
+            id: 'google', label: 'Google Fit / Health', icon: Icons.android),
+        SyncProviderStatus(
+            id: 'fitbit', label: 'Fitbit', icon: Icons.watch_outlined),
+        SyncProviderStatus(
+            id: 'whoop', label: 'WHOOP', icon: Icons.fitness_center),
+        SyncProviderStatus(
+            id: 'garmin', label: 'Garmin', icon: Icons.gps_fixed),
+        SyncProviderStatus(
+            id: 'oura', label: 'Oura', icon: Icons.blur_circular),
       ];
 
   return showModalBottomSheet<SyncConnectResult>(
@@ -107,11 +113,12 @@ Future<SyncConnectResult?> showSyncConnectSheet(
                   Expanded(
                     child: RichText(
                       text: TextSpan(
-                        style: theme.textTheme.bodyMedium?.copyWith(height: 1.25),
+                        style:
+                            theme.textTheme.bodyMedium?.copyWith(height: 1.25),
                         children: [
                           const TextSpan(
                             text:
-                            'I agree to share data from my connected accounts with Aevara '
+                                'I agree to share data from my connected accounts with Aevara '
                                 'to calculate insights and show my\u00A0metrics. ',
                           ),
                           TextSpan(
@@ -121,7 +128,8 @@ Future<SyncConnectResult?> showSyncConnectSheet(
                               decoration: TextDecoration.underline,
                               fontWeight: FontWeight.w600,
                             ),
-                            recognizer: TapGestureRecognizer()..onTap = onOpenPrivacy,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = onOpenPrivacy,
                           ),
                         ],
                       ),
@@ -134,7 +142,8 @@ Future<SyncConnectResult?> showSyncConnectSheet(
 
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Choose a provider', style: theme.textTheme.labelLarge),
+                child: Text('Choose a provider',
+                    style: theme.textTheme.labelLarge),
               ),
 
               const SizedBox(height: 8),
@@ -143,8 +152,8 @@ Future<SyncConnectResult?> showSyncConnectSheet(
               ...provs.map((p) {
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor:
-                    (aev?.primary ?? theme.colorScheme.primary).withOpacity(0.1),
+                    backgroundColor: (aev?.primary ?? theme.colorScheme.primary)
+                        .withOpacity(0.1),
                     child: Icon(
                       p.icon,
                       color: aev?.primary ?? theme.colorScheme.primary,
@@ -170,8 +179,9 @@ Future<SyncConnectResult?> showSyncConnectSheet(
                   label: const Text('Disconnect (testing)'),
                   style: TextButton.styleFrom(
                     foregroundColor:
-                    (aev?.secondaryText ?? Colors.grey).withOpacity(.7),
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        (aev?.secondaryText ?? Colors.grey).withOpacity(.7),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                     textStyle: theme.textTheme.labelSmall,
                     visualDensity: VisualDensity.compact,
                   ),

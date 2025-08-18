@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class DevicesPage extends StatefulWidget {
   const DevicesPage({super.key});
@@ -20,28 +20,28 @@ class _DevicesPageState extends State<DevicesPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Connected devices')),
-    body: ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        for (final entry in _map.entries) ...[
-          SwitchListTile(
-            title: Text(entry.key),
-            value: entry.value,
-            onChanged: (v) => setState(() => _map[entry.key] = v),
-            secondary: const Icon(Icons.watch_outlined),
-            subtitle: Text(entry.value ? 'Connected' : 'Disconnected'),
-          ),
-          const Divider(height: 1),
-        ],
-        const SizedBox(height: 16),
-        FilledButton(
-          onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Device settings saved (stub)')),
-          ),
-          child: const Text('Save changes'),
+        appBar: AppBar(title: const Text('Connected devices')),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            for (final entry in _map.entries) ...[
+              SwitchListTile(
+                title: Text(entry.key),
+                value: entry.value,
+                onChanged: (v) => setState(() => _map[entry.key] = v),
+                secondary: const Icon(Icons.watch_outlined),
+                subtitle: Text(entry.value ? 'Connected' : 'Disconnected'),
+              ),
+              const Divider(height: 1),
+            ],
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Device settings saved (stub)')),
+              ),
+              child: const Text('Save changes'),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }

@@ -1,7 +1,7 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../theme/aevara_theme.dart';
+import 'package:aevara_app/theme/aevara_theme.dart';
 import 'metric_info_sheet.dart';
 
 class NumberInputSheet extends StatefulWidget {
@@ -86,7 +86,8 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
     super.dispose();
   }
 
-  String _fmt(double v) => _hasDecimal ? v.toStringAsFixed(1) : v.toStringAsFixed(0);
+  String _fmt(double v) =>
+      _hasDecimal ? v.toStringAsFixed(1) : v.toStringAsFixed(0);
 
   double _roundToStep(double x) {
     if (_hasDecimal) return (x * 10).round() / 10.0;
@@ -108,12 +109,13 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
   void _finalizeFromText() {
     final raw = _c.text.trim();
     double? parsed = double.tryParse(raw.replaceAll(',', '.'));
-    if (parsed == null) parsed = _v;
+    parsed ??= _v;
     final next = _roundToStep(parsed).clamp(widget.min, widget.max);
     setState(() {
       _v = next;
       _c.text = _fmt(_v);
-      _c.selection = TextSelection.fromPosition(TextPosition(offset: _c.text.length));
+      _c.selection =
+          TextSelection.fromPosition(TextPosition(offset: _c.text.length));
     });
   }
 
@@ -122,7 +124,8 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
       _v = (_v + sign * widget.step).clamp(widget.min, widget.max);
       _c.text = _fmt(_v);
       if (_focus.hasFocus) {
-        _c.selection = TextSelection.fromPosition(TextPosition(offset: _c.text.length));
+        _c.selection =
+            TextSelection.fromPosition(TextPosition(offset: _c.text.length));
       }
     });
     widget.onChanged?.call(_v);
@@ -147,7 +150,8 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
     if (!_focus.hasFocus) {
       _focus.requestFocus();
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _c.selection = TextSelection(baseOffset: 0, extentOffset: _c.text.length);
+        _c.selection =
+            TextSelection(baseOffset: 0, extentOffset: _c.text.length);
       });
     } else {
       _c.selection = TextSelection(baseOffset: 0, extentOffset: _c.text.length);
@@ -181,10 +185,10 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
                   ),
                 ),
                 const SizedBox(height: 14),
-
                 Row(
                   children: [
-                    Icon(widget.metricIcon ?? Icons.speed, color: a.icon, size: 22),
+                    Icon(widget.metricIcon ?? Icons.speed,
+                        color: a.icon, size: 22),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -213,14 +217,21 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
                               builder: (_) => Container(
                                 decoration: BoxDecoration(
                                   color: a.surface,
-                                  borderRadius: BorderRadius.vertical(top: Radius.circular(a.radius)),
-                                  boxShadow: [BoxShadow(color: a.shadow, blurRadius: 20, offset: const Offset(0, -4))],
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(a.radius)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: a.shadow,
+                                        blurRadius: 20,
+                                        offset: const Offset(0, -4))
+                                  ],
                                 ),
                                 child: MetricInfoSheet(
                                   metricName: widget.metricName,
                                   whatItIs: widget.infoWhat,
                                   whyItMatters: widget.infoWhy,
-                                  whyItMattersLinkLabel: widget.infoWhyLinkLabel,
+                                  whyItMattersLinkLabel:
+                                      widget.infoWhyLinkLabel,
                                   onOpenWhyLink: widget.onOpenInfoWhyLink,
                                   howItAffectsScore: widget.infoHowAffects,
                                   whereToFindIt: widget.infoWhereToFind,
@@ -231,16 +242,15 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
                           child: AnimatedOpacity(
                             duration: const Duration(milliseconds: 120),
                             opacity: _hoverInfo ? 1 : .65,
-                            child: Icon(Icons.info_outline, color: a.icon, size: 22),
+                            child: Icon(Icons.info_outline,
+                                color: a.icon, size: 22),
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 14),
-
                 Align(
                   alignment: Alignment.center,
                   child: ConstrainedBox(
@@ -249,12 +259,14 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
                       behavior: HitTestBehavior.opaque,
                       onTap: _focusAndSelect,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 12),
                         constraints: const BoxConstraints(minHeight: 72),
                         decoration: BoxDecoration(
                           color: a.surfaceAlt,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: a.iconMuted.withOpacity(.25)),
+                          border:
+                              Border.all(color: a.iconMuted.withOpacity(.25)),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -295,7 +307,8 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
                                         autocorrect: false,
                                         enableSuggestions: false,
                                         textInputAction: TextInputAction.done,
-                                        keyboardType: TextInputType.numberWithOptions(
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
                                           decimal: _hasDecimal,
                                           signed: false,
                                         ),
@@ -309,9 +322,11 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
                                           disabledBorder: InputBorder.none,
                                         ),
                                         inputFormatters: [
-                                          FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp(r'[0-9.]')),
                                         ],
-                                        onChanged: (_) => _applyImmediateFromText(),
+                                        onChanged: (_) =>
+                                            _applyImmediateFromText(),
                                         onSubmitted: (_) {
                                           _finalizeFromText();
                                           HapticFeedback.lightImpact();
@@ -363,9 +378,7 @@ class _NumberInputSheetState extends State<NumberInputSheet> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 12),
-
                 Row(
                   children: [
                     Expanded(
@@ -457,8 +470,18 @@ class _HoldButtonState extends State<_HoldButton> {
           borderRadius: BorderRadius.circular(widget.size / 2),
           border: Border.all(color: a.iconMuted.withOpacity(.25)),
           boxShadow: _pressed
-              ? [BoxShadow(color: a.shadow.withOpacity(.4), blurRadius: 6, offset: const Offset(0, 1))]
-              : [BoxShadow(color: a.shadow, blurRadius: 10, offset: const Offset(0, 2))],
+              ? [
+                  BoxShadow(
+                      color: a.shadow.withOpacity(.4),
+                      blurRadius: 6,
+                      offset: const Offset(0, 1))
+                ]
+              : [
+                  BoxShadow(
+                      color: a.shadow,
+                      blurRadius: 10,
+                      offset: const Offset(0, 2))
+                ],
         ),
         child: Icon(widget.icon, color: a.icon),
       ),

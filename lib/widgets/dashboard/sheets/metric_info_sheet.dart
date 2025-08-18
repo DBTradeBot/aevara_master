@@ -1,5 +1,5 @@
-﻿import 'package:flutter/material.dart';
-import '../../../theme/aevara_theme.dart';
+import 'package:flutter/material.dart';
+import 'package:aevara_app/theme/aevara_theme.dart';
 
 class MetricInfoSheet extends StatelessWidget {
   final String metricName;
@@ -36,13 +36,13 @@ class MetricInfoSheet extends StatelessWidget {
     );
 
     Widget section(String titleText, Widget child) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(titleText, style: title),
-        const SizedBox(height: 6),
-        child,
-      ],
-    );
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(titleText, style: title),
+            const SizedBox(height: 6),
+            child,
+          ],
+        );
 
     return SafeArea(
       child: Padding(
@@ -53,7 +53,8 @@ class MetricInfoSheet extends StatelessWidget {
           children: [
             Center(
               child: Container(
-                width: 40, height: 4,
+                width: 40,
+                height: 4,
                 decoration: BoxDecoration(
                   color: a.iconMuted.withOpacity(.35),
                   borderRadius: BorderRadius.circular(2),
@@ -62,13 +63,11 @@ class MetricInfoSheet extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text('About $metricName',
-                style: t.textTheme.titleLarge!
-                    .copyWith(fontWeight: FontWeight.w800, color: a.primaryText)),
+                style: t.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w800, color: a.primaryText)),
             const SizedBox(height: 16),
-
             section('What it is', Text(whatItIs, style: body)),
             const SizedBox(height: 14),
-
             section(
               'Why it matters',
               Wrap(
@@ -86,13 +85,11 @@ class MetricInfoSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-
-            section('How it affects your score', Text(howItAffectsScore, style: body)),
+            section('How it affects your score',
+                Text(howItAffectsScore, style: body)),
             const SizedBox(height: 14),
-
             section('Where to find it', Text(whereToFindIt, style: body)),
             const SizedBox(height: 16),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

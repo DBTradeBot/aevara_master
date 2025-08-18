@@ -1,18 +1,26 @@
-﻿
 import 'package:flutter/material.dart';
 
 const categories = [
-  'All','Sleep','Steps','Heart','Mood','Nutrition','Mindfulness','Challenges','Special'
+  'All',
+  'Sleep',
+  'Steps',
+  'Heart',
+  'Mood',
+  'Nutrition',
+  'Mindfulness',
+  'Challenges',
+  'Special'
 ];
 
 class TierFilterBar extends StatelessWidget {
   final String selectedTier;
   final ValueChanged<String> onChanged;
-  const TierFilterBar({super.key, required this.selectedTier, required this.onChanged});
+  const TierFilterBar(
+      {super.key, required this.selectedTier, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
-    final tiers = ['All','Bronze','Silver','Gold','Platinum','Diamond'];
+    final tiers = ['All', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -36,7 +44,8 @@ class TierFilterBar extends StatelessWidget {
 class CategoryChips extends StatelessWidget {
   final String selected;
   final ValueChanged<String> onChanged;
-  const CategoryChips({super.key, required this.selected, required this.onChanged});
+  const CategoryChips(
+      {super.key, required this.selected, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {

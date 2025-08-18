@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 /// Community RankTile (emoji/URL-aware).
 /// Keep this at: lib/features/community/widgets/rank_tile.dart
@@ -6,7 +6,7 @@ class RankTile extends StatelessWidget {
   final int rank;
   final String name;
   final String? avatarEmoji; // preferred for your mocks
-  final String? avatarUrl;   // optional if you switch to images later
+  final String? avatarUrl; // optional if you switch to images later
   final String scoreLabel;
   final VoidCallback? onTap;
   final Widget? trailing;
@@ -45,7 +45,7 @@ class RankTile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: theme.colorScheme.surfaceVariant,
+              color: theme.colorScheme.surfaceContainerHighest,
             ),
             child: Text('#$rank', style: theme.textTheme.labelSmall),
           ),

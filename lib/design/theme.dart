@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 ThemeData _base(Color seed, Brightness b) {
   final scheme = ColorScheme.fromSeed(seedColor: seed, brightness: b);
@@ -40,5 +40,5 @@ ThemeData _base(Color seed, Brightness b) {
 
 class AeTheme {
   static ThemeData light() => _base(const Color(0xFF00FFD1), Brightness.light);
-  static ThemeData dark()  => _base(const Color(0xFF00FFD1), Brightness.dark);
+  static ThemeData dark() => _base(const Color(0xFF00FFD1), Brightness.dark);
 }

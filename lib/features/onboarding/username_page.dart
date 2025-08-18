@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../state/stubs.dart';
 
 class UsernamePage extends StatefulWidget {
@@ -13,13 +13,22 @@ class _UsernamePageState extends State<UsernamePage> {
   bool checking = false;
 
   @override
-  void dispose() { _u.dispose(); super.dispose(); }
+  void dispose() {
+    _u.dispose();
+    super.dispose();
+  }
 
   Future<void> _check() async {
-    setState(() { checking = true; available = null; });
+    setState(() {
+      checking = true;
+      available = null;
+    });
     final ok = await isUsernameAvailable(_u.text);
     if (!mounted) return;
-    setState(() { available = ok; checking = false; });
+    setState(() {
+      available = ok;
+      checking = false;
+    });
   }
 
   @override
@@ -68,7 +77,7 @@ class _UsernamePageState extends State<UsernamePage> {
             const SizedBox(height: 24),
 
             // Navigation (use ButtonBar instead of Row to avoid layout traps)
-            ButtonBar(
+            OverflowBar(
               alignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(

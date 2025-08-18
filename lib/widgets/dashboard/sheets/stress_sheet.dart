@@ -1,13 +1,13 @@
-﻿import 'package:flutter/material.dart';
-import '../../../theme/aevara_theme.dart';
+import 'package:flutter/material.dart';
+import 'package:aevara_app/theme/aevara_theme.dart';
 import 'number_input_sheet.dart';
 
 Future<void> showStressSheet(
-    BuildContext context, {
-      required double initialLevel, // 1â€“5
-      ValueChanged<double>? onSave,
-      ValueChanged<double>? onChanged,
-    }) {
+  BuildContext context, {
+  required double initialLevel, // 1â€“5
+  ValueChanged<double>? onSave,
+  ValueChanged<double>? onChanged,
+}) {
   final a = context.aevara;
   return showModalBottomSheet(
     context: context,
@@ -17,7 +17,10 @@ Future<void> showStressSheet(
       decoration: BoxDecoration(
         color: a.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(a.radius)),
-        boxShadow: [BoxShadow(color: a.shadow, blurRadius: 24, offset: const Offset(0, -6))],
+        boxShadow: [
+          BoxShadow(
+              color: a.shadow, blurRadius: 24, offset: const Offset(0, -6))
+        ],
       ),
       child: NumberInputSheet(
         metricName: 'Stress',
@@ -31,13 +34,13 @@ Future<void> showStressSheet(
         onSave: onSave,
         infoWhat: 'Perceived stress today on a 1â€“5 scale.',
         infoWhy:
-        'Higher stress can reduce recovery quality and affect sleep and choices.',
+            'Higher stress can reduce recovery quality and affect sleep and choices.',
         infoWhyLinkLabel: 'Learn more',
         onOpenInfoWhyLink: () {},
         infoHowAffects:
-        'High stress adds a small penalty; lower stress removes it. Caps prevent large swings.',
+            'High stress adds a small penalty; lower stress removes it. Caps prevent large swings.',
         infoWhereToFind:
-        'Manual: pick a value in the Stress sheet. Wearables: optional stress integrations later.',
+            'Manual: pick a value in the Stress sheet. Wearables: optional stress integrations later.',
       ),
     ),
   );

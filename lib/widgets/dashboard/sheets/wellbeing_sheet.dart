@@ -1,6 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../theme/aevara_theme.dart';
+import 'package:aevara_app/theme/aevara_theme.dart';
 import 'metric_info_sheet.dart';
 
 /// Combined Mood + Stress selection (1..5) using symbols:
@@ -13,11 +13,11 @@ import 'metric_info_sheet.dart';
 /// Usage:
 /// await showWellbeingSheet(context, initialValue: 3, onSave: (v) { /* persist v (1..5) */ });
 Future<void> showWellbeingSheet(
-    BuildContext context, {
-      required int initialValue, // 1..5
-      ValueChanged<int>? onChanged,
-      ValueChanged<int>? onSave,
-    }) {
+  BuildContext context, {
+  required int initialValue, // 1..5
+  ValueChanged<int>? onChanged,
+  ValueChanged<int>? onSave,
+}) {
   final a = context.aevara;
   return showModalBottomSheet(
     context: context,
@@ -27,7 +27,10 @@ Future<void> showWellbeingSheet(
       decoration: BoxDecoration(
         color: a.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(a.radius)),
-        boxShadow: [BoxShadow(color: a.shadow, blurRadius: 24, offset: const Offset(0, -6))],
+        boxShadow: [
+          BoxShadow(
+              color: a.shadow, blurRadius: 24, offset: const Offset(0, -6))
+        ],
       ),
       child: _WellbeingSheetBody(
         initialValue: initialValue,
@@ -117,21 +120,23 @@ class _WellbeingSheetBodyState extends State<_WellbeingSheetBody> {
         decoration: BoxDecoration(
           color: a.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(a.radius)),
-          boxShadow: [BoxShadow(color: a.shadow, blurRadius: 20, offset: const Offset(0, -4))],
+          boxShadow: [
+            BoxShadow(
+                color: a.shadow, blurRadius: 20, offset: const Offset(0, -4))
+          ],
         ),
-        child: MetricInfoSheet(
+        child: const MetricInfoSheet(
           metricName: 'Wellbeing',
           whatItIs:
-          'Your self-rated mental and emotional state today, on a scale from 1 (very poor) to 5 (excellent). '
+              'Your self-rated mental and emotional state today, on a scale from 1 (very poor) to 5 (excellent). '
               'This combines both Mood and Stress into one selection.',
           whyItMatters:
-          'Your perceived wellbeing influences stress response, recovery, and long-term health. '
+              'Your perceived wellbeing influences stress response, recovery, and long-term health. '
               'Itâ€™s a key part of your overall healthy days score.',
           howItAffectsScore:
-          'We combine your wellbeing rating with other affective metrics to adjust healthy days. '
+              'We combine your wellbeing rating with other affective metrics to adjust healthy days. '
               'Low ratings may reduce your score; consistently high ratings improve it.',
-          whereToFindIt:
-          'Symbols and meanings:\n'
+          whereToFindIt: 'Symbols and meanings:\n'
               'ðŸŒ¿ (1) Calm & Happy â€” Feeling relaxed, positive, and at ease.\n'
               'ðŸƒ (2) Content â€” Generally good mood, low stress, steady.\n'
               'ðŸŒ“ (3) Neutral â€” Balanced state, neither high nor low mood/stress.\n'
@@ -280,16 +285,23 @@ class _WellbeingRow extends StatelessWidget {
                 width: isSelected ? 1.4 : 1,
               ),
               boxShadow: isSelected
-                  ? [BoxShadow(color: a.shadow, blurRadius: 10, offset: const Offset(0, 2))]
+                  ? [
+                      BoxShadow(
+                          color: a.shadow,
+                          blurRadius: 10,
+                          offset: const Offset(0, 2))
+                    ]
                   : [],
             ),
             child: Column(
               children: [
-                Text(it.symbol, style: const TextStyle(fontSize: 22, height: 1.05)),
+                Text(it.symbol,
+                    style: const TextStyle(fontSize: 22, height: 1.05)),
                 const SizedBox(height: 4),
                 Text(
                   it.shortLabel,
-                  style: t.textTheme.labelSmall!.copyWith(color: a.secondaryText),
+                  style:
+                      t.textTheme.labelSmall!.copyWith(color: a.secondaryText),
                 ),
               ],
             ),
@@ -308,7 +320,7 @@ class _WellbeingDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final a = context.aevara;
-    final items = _WellbeingSheetBodyState._items;
+    const items = _WellbeingSheetBodyState._items;
 
     return PopupMenuButton<int>(
       tooltip: 'Select state',
@@ -317,16 +329,16 @@ class _WellbeingDropdown extends StatelessWidget {
         return items
             .map(
               (it) => PopupMenuItem<int>(
-            value: it.value,
-            child: Row(
-              children: [
-                Text(it.symbol, style: const TextStyle(fontSize: 18)),
-                const SizedBox(width: 8),
-                Text(it.label),
-              ],
-            ),
-          ),
-        )
+                value: it.value,
+                child: Row(
+                  children: [
+                    Text(it.symbol, style: const TextStyle(fontSize: 18)),
+                    const SizedBox(width: 8),
+                    Text(it.label),
+                  ],
+                ),
+              ),
+            )
             .toList();
       },
       child: Container(
@@ -358,7 +370,8 @@ class _SelectedDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     final a = context.aevara;
     final t = Theme.of(context);
-    final it = _WellbeingSheetBodyState._items.firstWhere((e) => e.value == value);
+    final it =
+        _WellbeingSheetBodyState._items.firstWhere((e) => e.value == value);
 
     return Container(
       width: double.infinity,
@@ -377,11 +390,12 @@ class _SelectedDescription extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(it.label,
-                    style: t.textTheme.labelLarge!
-                        .copyWith(color: a.primaryText, fontWeight: FontWeight.w700)),
+                    style: t.textTheme.labelLarge!.copyWith(
+                        color: a.primaryText, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 2),
                 Text(it.description,
-                    style: t.textTheme.bodySmall!.copyWith(color: a.secondaryText)),
+                    style: t.textTheme.bodySmall!
+                        .copyWith(color: a.secondaryText)),
               ],
             ),
           ),
@@ -394,8 +408,8 @@ class _SelectedDescription extends StatelessWidget {
 class _WBItem {
   final int value;
   final String symbol;
-  final String label;       // Full label
-  final String shortLabel;  // Compact label for chip
+  final String label; // Full label
+  final String shortLabel; // Compact label for chip
   final String description;
 
   const _WBItem({

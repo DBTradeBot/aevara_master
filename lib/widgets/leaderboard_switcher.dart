@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 /// Compact, overflow-safe switcher for Leaderboards.
 /// Uses strings (no enum dependency) to avoid type drift.
@@ -15,10 +15,14 @@ class LeaderboardSwitcher extends StatelessWidget {
   final ValueChanged<String> onScope;
 
   static const List<String> boardTypeOptions = <String>[
-    'Weekly', 'Monthly', 'All-time'
+    'Weekly',
+    'Monthly',
+    'All-time'
   ];
   static const List<String> scopeOptions = <String>[
-    'Friends', 'Global', 'Clubs'
+    'Friends',
+    'Global',
+    'Clubs'
   ];
 
   const LeaderboardSwitcher({
@@ -48,9 +52,9 @@ class LeaderboardSwitcher extends StatelessWidget {
                 onChanged: (v) => v != null ? onBoardType(v) : null,
                 items: boardTypeOptions
                     .map((bt) => DropdownMenuItem<String>(
-                  value: bt,
-                  child: Text(bt, style: textStyle),
-                ))
+                          value: bt,
+                          child: Text(bt, style: textStyle),
+                        ))
                     .toList(),
               ),
             ),
@@ -64,9 +68,9 @@ class LeaderboardSwitcher extends StatelessWidget {
                 onChanged: (v) => v != null ? onScope(v) : null,
                 items: scopeOptions
                     .map((sc) => DropdownMenuItem<String>(
-                  value: sc,
-                  child: Text(sc, style: textStyle),
-                ))
+                          value: sc,
+                          child: Text(sc, style: textStyle),
+                        ))
                     .toList(),
               ),
             ),

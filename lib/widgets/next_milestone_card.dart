@@ -1,4 +1,3 @@
-﻿
 import 'package:flutter/material.dart';
 import '../data/mock_community_data.dart';
 
@@ -27,9 +26,10 @@ class NextMilestoneCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Your next milestone', style: Theme.of(context).textTheme.titleSmall),
+                  Text('Your next milestone',
+                      style: Theme.of(context).textTheme.titleSmall),
                   const SizedBox(height: 4),
-                  Text('${badge!.name} â€¢ ${(badge!.progress*100).round()}%',
+                  Text('${badge!.name} â€¢ ${(badge!.progress * 100).round()}%',
                       style: Theme.of(context).textTheme.bodyMedium),
                 ],
               ),

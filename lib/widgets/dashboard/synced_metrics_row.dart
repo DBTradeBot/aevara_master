@@ -1,4 +1,4 @@
-﻿// lib/widgets/dashboard/synced_metrics_row.dart
+// lib/widgets/dashboard/synced_metrics_row.dart
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:aevara_app/theme/aevara_theme.dart';
@@ -16,9 +16,9 @@ class SyncedMetricsRow extends StatelessWidget {
   final int stepsGoal;
 
   // Cardio Fitness
-  final double? vo2max;               // if available
-  final double? fitnessAge;           // alternative
-  final double? baselineFitnessAge;   // optional for delta display
+  final double? vo2max; // if available
+  final double? fitnessAge; // alternative
+  final double? baselineFitnessAge; // optional for delta display
 
   const SyncedMetricsRow({
     super.key,
@@ -38,7 +38,8 @@ class SyncedMetricsRow extends StatelessWidget {
 
   static String _fmtSteps(int v) {
     if (v >= 1000000) return '${(v / 1000000).toStringAsFixed(1)}M';
-    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1).replaceAll('.0', '')}k';
+    if (v >= 1000)
+      return '${(v / 1000).toStringAsFixed(1).replaceAll('.0', '')}k';
     return v.toString();
   }
 
@@ -68,9 +69,8 @@ class SyncedMetricsRow extends StatelessWidget {
         ? (sleepHours! / sleepGoalHours.clamp(0.1, 24.0))
         : 0.0;
 
-    final stepsRatio = (steps != null && stepsGoal > 0)
-        ? steps!.toDouble() / stepsGoal
-        : 0.0;
+    final stepsRatio =
+        (steps != null && stepsGoal > 0) ? steps!.toDouble() / stepsGoal : 0.0;
 
     // Cardio main + delta
     final cardioValue = (vo2max != null)
@@ -80,8 +80,8 @@ class SyncedMetricsRow extends StatelessWidget {
     final cardioSublabel = (vo2max != null)
         ? 'VOâ‚‚max'
         : (baselineFitnessAge != null && fitnessAge != null
-        ? 'vs ${baselineFitnessAge!.toStringAsFixed(0)}'
-        : '');
+            ? 'vs ${baselineFitnessAge!.toStringAsFixed(0)}'
+            : '');
 
     return Row(
       children: [
@@ -105,7 +105,9 @@ class SyncedMetricsRow extends StatelessWidget {
             icon: Icons.monitor_heart,
             iconColor: _byReadiness(context, readinessScore),
             label: 'Recovery',
-            value: readinessScore != null ? '${readinessScore!.clamp(0, 100)}' : '--',
+            value: readinessScore != null
+                ? '${readinessScore!.clamp(0, 100)}'
+                : '--',
             sublabel: '/100',
           ),
         ),
@@ -119,7 +121,8 @@ class SyncedMetricsRow extends StatelessWidget {
             iconColor: _byGoal(context, stepsRatio),
             label: 'Activity',
             value: steps != null ? _fmtSteps(steps!) : '--',
-            sublabel: '${(stepsRatio * 100).clamp(0, 999).toStringAsFixed(0)}% goal',
+            sublabel:
+                '${(stepsRatio * 100).clamp(0, 999).toStringAsFixed(0)}% goal',
           ),
         ),
         const SizedBox(width: 8),
@@ -145,8 +148,9 @@ class _SyncedMetricCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
   final String label;
-  final String value;      // main number (e.g., "6.9h", "82", "8.5k", "42.0")
-  final String sublabel;   // small helper (e.g., "vs 7.5h", "/100", "85% goal", "VOâ‚‚max")
+  final String value; // main number (e.g., "6.9h", "82", "8.5k", "42.0")
+  final String
+      sublabel; // small helper (e.g., "vs 7.5h", "/100", "85% goal", "VOâ‚‚max")
 
   const _SyncedMetricCard({
     required this.radius,
@@ -165,20 +169,20 @@ class _SyncedMetricCard extends StatelessWidget {
     final aev = context.aevara;
 
     // Consistent card height with comfortable internal spacing
-    final h = 78.0;
+    const h = 78.0;
 
     // Fixed-width slot for the value+sublabel so all four cards render uniformly.
     const double kValueSlotWidth = 72.0;
 
-    final padV     = _clamp(h * 0.08, 4, 10);
-    final iconOuter= _clamp(h * 0.34, 18, 32);
-    final iconGlyph= _clamp(iconOuter * 0.66, 12, 20);
-    final labelFs  = _clamp(h * 0.18, 12, 14.5);
+    final padV = _clamp(h * 0.08, 4, 10);
+    final iconOuter = _clamp(h * 0.34, 18, 32);
+    final iconGlyph = _clamp(iconOuter * 0.66, 12, 20);
+    final labelFs = _clamp(h * 0.18, 12, 14.5);
 
-    const iconFlex   = 320;
+    const iconFlex = 320;
     const spacerFlex = 50;
-    const valueFlex  = 360;
-    const labelFlex  = 220;
+    const valueFlex = 360;
+    const labelFlex = 220;
 
     return Container(
       height: h,
@@ -187,8 +191,10 @@ class _SyncedMetricCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(aev.radius),
         border: Border.all(color: Colors.black12.withOpacity(0.08), width: 1),
         boxShadow: const [
-          BoxShadow(color: Color(0x1F000000), blurRadius: 8, offset: Offset(0, 4)),
-          BoxShadow(color: Color(0x0D000000), blurRadius: 2, offset: Offset(0, 1)),
+          BoxShadow(
+              color: Color(0x1F000000), blurRadius: 8, offset: Offset(0, 4)),
+          BoxShadow(
+              color: Color(0x0D000000), blurRadius: 2, offset: Offset(0, 1)),
         ],
       ),
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: padV),
@@ -231,7 +237,8 @@ class _SyncedMetricCard extends StatelessWidget {
                         softWrap: false,
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 18, // base; will scale down uniformly if needed
+                          fontSize:
+                              18, // base; will scale down uniformly if needed
                           color: Colors.black87,
                           height: 1.0,
                         ),

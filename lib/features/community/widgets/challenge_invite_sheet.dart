@@ -1,14 +1,12 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 /// Returns the list of picked handles (e.g. ['@mia', '@sam']) or null if canceled.
 Future<List<String>?> showChallengeInviteSheet(
-    BuildContext context, {
-      String? challengeTitle,
-    }) {
+  BuildContext context, {
+  String? challengeTitle,
+}) {
   // Simple mock list â€” swap with your friends list later
-  final friends = const [
-    '@alex', '@mia', '@sam', '@li', '@ron', '@jordan', '@kira'
-  ];
+  const friends = ['@alex', '@mia', '@sam', '@li', '@ron', '@jordan', '@kira'];
   final selected = <String>{};
 
   return showModalBottomSheet<List<String>>(
@@ -29,14 +27,18 @@ Future<List<String>?> showChallengeInviteSheet(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 36, height: 4,
+            width: 36,
+            height: 4,
             decoration: BoxDecoration(
-              color: Colors.black12, borderRadius: BorderRadius.circular(999),
+              color: Colors.black12,
+              borderRadius: BorderRadius.circular(999),
             ),
           ),
           const SizedBox(height: 12),
           Text(
-            challengeTitle == null ? 'Invite friends' : 'Invite friends to â€œ$challengeTitleâ€',
+            challengeTitle == null
+                ? 'Invite friends'
+                : 'Invite friends to â€œ$challengeTitleâ€',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
@@ -49,7 +51,9 @@ Future<List<String>?> showChallengeInviteSheet(
                 final f = friends[i];
                 final checked = selected.contains(f);
                 return ListTile(
-                  leading: CircleAvatar(child: Text(f.replaceAll('@', '').substring(0,1).toUpperCase())),
+                  leading: CircleAvatar(
+                      child: Text(
+                          f.replaceAll('@', '').substring(0, 1).toUpperCase())),
                   title: Text(f),
                   trailing: Checkbox(
                     value: checked,

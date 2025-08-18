@@ -1,1 +1,25 @@
-﻿import 'package:flutter/material.dart'; class LeaderboardRow extends StatelessWidget{final int rank; final String name; final String score; final VoidCallback? onCheer; const LeaderboardRow({super.key, required this.rank, required this.name, required this.score, this.onCheer}); @override Widget build(BuildContext c)=>ListTile(leading: Text('#$rank'), title: Text(name), trailing: Row(mainAxisSize: MainAxisSize.min, children:[Text(score), IconButton(onPressed: onCheer, icon: const Icon(Icons.emoji_emotions_outlined))]));}
+﻿// ignore_for_file: avoid_renaming_method_parameters
+import 'package:flutter/material.dart';
+
+class LeaderboardRow extends StatelessWidget {
+  final int rank;
+  final String name;
+  final String score;
+  final VoidCallback? onCheer;
+  const LeaderboardRow(
+      {super.key,
+      required this.rank,
+      required this.name,
+      required this.score,
+      this.onCheer});
+  @override
+  Widget build(BuildContext c) => ListTile(
+      leading: Text('#$rank'),
+      title: Text(name),
+      trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+        Text(score),
+        IconButton(
+            onPressed: onCheer, icon: const Icon(Icons.emoji_emotions_outlined))
+      ]));
+}
+

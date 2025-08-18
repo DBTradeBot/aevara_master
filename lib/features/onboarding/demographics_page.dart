@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../widgets/atoms/aev_text_field.dart';
 
 class DemographicsPage extends StatefulWidget {
@@ -61,7 +61,7 @@ class _DemographicsPageState extends State<DemographicsPage> {
                     controller: _height,
                     label: 'Height ($heightUnit)',
                     keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                        const TextInputType.numberWithOptions(decimal: true),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -86,7 +86,7 @@ class _DemographicsPageState extends State<DemographicsPage> {
                     controller: _weight,
                     label: 'Weight ($weightUnit)',
                     keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                        const TextInputType.numberWithOptions(decimal: true),
                   ),
                 ),
                 const SizedBox(width: 8),

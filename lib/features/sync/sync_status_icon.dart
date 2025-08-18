@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 enum SyncState { unsynced, partial, synced }
 
@@ -20,7 +20,9 @@ class SyncStatusIcon extends StatelessWidget {
         final ts = lastSync != null ? ' at ${_fmtTime(lastSync!)}' : '';
         return 'Data synced$ts';
       case SyncState.partial:
-        final ts = lastSync != null ? ' â€” last full sync ${_fmtTime(lastSync!)}' : '';
+        final ts = lastSync != null
+            ? ' â€” last full sync ${_fmtTime(lastSync!)}'
+            : '';
         return 'Partial data$ts';
       case SyncState.unsynced:
       default:

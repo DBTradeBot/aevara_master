@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../../data/mock_community_data.dart';
 
 /// Compact Community Home summary:
@@ -54,7 +54,8 @@ class BadgeSummaryCard extends StatelessWidget {
             if (recent != null) ...[
               const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
                   color: cs.primaryContainer,
                   borderRadius: BorderRadius.circular(999),
@@ -125,7 +126,7 @@ class BadgeSummaryCard extends StatelessWidget {
 /// - If neither is present, it shows a generic trophy icon.
 class BadgeThumb extends StatelessWidget {
   final String? assetPath; // optional future-proof asset
-  final String? emoji;     // current placeholder from mock
+  final String? emoji; // current placeholder from mock
   final double size;
 
   const BadgeThumb({
@@ -137,7 +138,7 @@ class BadgeThumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = Theme.of(context).colorScheme.surfaceVariant;
+    final bg = Theme.of(context).colorScheme.surfaceContainerHighest;
 
     Widget inner;
 

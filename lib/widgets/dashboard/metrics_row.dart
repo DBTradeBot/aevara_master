@@ -1,17 +1,17 @@
-﻿import 'dart:math' as math;
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:aevara_app/theme/aevara_theme.dart';
 import 'package:aevara_app/tiles/sync_tile.dart';
 
 // Icon accent colors for the metric badges
 const _sleepIcon = Color(0xFF3F87A6);
-const _hrvIcon   = Color(0xFF8E66B6);
+const _hrvIcon = Color(0xFF8E66B6);
 const _stepsIcon = Color(0xFFF6A04A);
 
 class MetricsRow extends StatelessWidget {
-  final double? sleepHours;          // e.g., 6.0
-  final double? hrvRmssdMs;          // e.g., 45.0
-  final int? stepsCount;             // e.g., 6500
+  final double? sleepHours; // e.g., 6.0
+  final double? hrvRmssdMs; // e.g., 45.0
+  final int? stepsCount; // e.g., 6500
   final bool isAnyProviderConnected; // passed to SyncTile
 
   final VoidCallback onSleepTap;
@@ -21,7 +21,7 @@ class MetricsRow extends StatelessWidget {
 
   // For Sync status color (just forwarded)
   final DateTime? lastSyncUtc; // null => disconnected/never
-  final bool syncError;        // true => red
+  final bool syncError; // true => red
 
   final EdgeInsetsGeometry padding;
   final double spacing;
@@ -45,11 +45,11 @@ class MetricsRow extends StatelessWidget {
   // ---- Format helpers (NO SPACES in units) ----
   String? _fmtSleep(double? v) =>
       v == null ? null : '${v.toStringAsFixed(v % 1 == 0 ? 0 : 1)}h';
-  String? _fmtMs(double? v)    => v == null ? null : '${v.toStringAsFixed(0)}ms';
-  String? _fmtSteps(int? v)    => v == null ? null : _compact(v);
+  String? _fmtMs(double? v) => v == null ? null : '${v.toStringAsFixed(0)}ms';
+  String? _fmtSteps(int? v) => v == null ? null : _compact(v);
   static String _compact(int n) {
     if (n >= 1000000) return '${(n / 1000000).toStringAsFixed(1)}M';
-    if (n >= 1000)    return '${(n / 1000).toStringAsFixed(1)}k';
+    if (n >= 1000) return '${(n / 1000).toStringAsFixed(1)}k';
     return n.toString();
   }
 
@@ -151,7 +151,8 @@ class _AdaptiveMetricCard extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, c) {
         // If unconstrained, use a sensible default height.
-        final h = (c.maxHeight.isFinite && c.maxHeight > 0) ? c.maxHeight : 74.0;
+        final h =
+            (c.maxHeight.isFinite && c.maxHeight > 0) ? c.maxHeight : 74.0;
 
         // Vertical padding
         final padV = _clamp(h * 0.08, 4, 10);
@@ -162,21 +163,23 @@ class _AdaptiveMetricCard extends StatelessWidget {
 
         // Font sizes (make missing-value prompt smaller so it never clips)
         final valueFsPresent = _clamp(h * 0.24, 15, 20);
-        final valueFsMissing = _clamp(h * 0.16, 10, 12); // smaller for â€œTap to addâ€
-        final labelFs        = _clamp(h * 0.18, 12, 14.5);
+        final valueFsMissing =
+            _clamp(h * 0.16, 10, 12); // smaller for â€œTap to addâ€
+        final labelFs = _clamp(h * 0.18, 12, 14.5);
 
         // Flex proportions
-        const iconFlex   = 340;
+        const iconFlex = 340;
         const spacerFlex = 60;
-        const valueFlex  = 300;
-        const labelFlex  = 220;
+        const valueFlex = 300;
+        const labelFlex = 220;
 
         return Container(
           height: h,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(radius),
-            border: Border.all(color: Colors.black12.withOpacity(0.08), width: 1),
+            border:
+                Border.all(color: Colors.black12.withOpacity(0.08), width: 1),
             boxShadow: const [
               BoxShadow(
                 color: Color(0x1F000000),
@@ -224,9 +227,11 @@ class _AdaptiveMetricCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontWeight: hasValue ? FontWeight.w600 : FontWeight.w500,
+                        fontWeight:
+                            hasValue ? FontWeight.w600 : FontWeight.w500,
                         fontSize: hasValue ? valueFsPresent : valueFsMissing,
-                        fontStyle: hasValue ? FontStyle.normal : FontStyle.italic,
+                        fontStyle:
+                            hasValue ? FontStyle.normal : FontStyle.italic,
                         color: hasValue ? Colors.black87 : Colors.black54,
                         height: 1.0,
                       ),

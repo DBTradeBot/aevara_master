@@ -1,12 +1,15 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class AevButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final bool primary;
   final Widget? leading;
-  const AevButton.primary(this.label, {super.key, this.onPressed, this.leading}) : primary = true;
-  const AevButton.secondary(this.label, {super.key, this.onPressed, this.leading}) : primary = false;
+  const AevButton.primary(this.label, {super.key, this.onPressed, this.leading})
+      : primary = true;
+  const AevButton.secondary(this.label,
+      {super.key, this.onPressed, this.leading})
+      : primary = false;
 
   @override
   Widget build(BuildContext context) {

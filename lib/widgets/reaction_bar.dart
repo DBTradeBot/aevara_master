@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class ReactionBar extends StatelessWidget {
   final void Function(String)? onReact;
@@ -7,7 +7,7 @@ class ReactionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,           // <-- critical for ListTile.trailing
+      mainAxisSize: MainAxisSize.min, // <-- critical for ListTile.trailing
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(

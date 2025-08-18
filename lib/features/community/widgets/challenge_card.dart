@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../models.dart';
 import 'progress_ring.dart';
 
@@ -8,7 +8,8 @@ class ChallengeCard extends StatelessWidget {
   final VoidCallback? onPreview;
   final double? progress;
 
-  const ChallengeCard({super.key, required this.c, this.onJoin, this.onPreview, this.progress});
+  const ChallengeCard(
+      {super.key, required this.c, this.onJoin, this.onPreview, this.progress});
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +27,11 @@ class ChallengeCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(c.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+                    Text(c.title,
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
                     const SizedBox(height: 4),
-                    Text(c.subtitle, style: const TextStyle(color: Colors.black54)),
+                    Text(c.subtitle,
+                        style: const TextStyle(color: Colors.black54)),
                     const SizedBox(height: 6),
                     Wrap(spacing: 6, children: [
                       Chip(label: Text('${c.durationDays}d')),

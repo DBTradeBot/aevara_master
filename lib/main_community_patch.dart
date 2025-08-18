@@ -1,4 +1,3 @@
-﻿
 import 'package:flutter/material.dart';
 
 import 'features/community/community_home_page.dart';
@@ -20,7 +19,8 @@ class AevaraApp extends StatelessWidget {
     return MaterialApp(
       title: 'Aevara',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: const Color(0xFF5B6CFF)),
+      theme: ThemeData(
+          useMaterial3: true, colorSchemeSeed: const Color(0xFF5B6CFF)),
       initialRoute: '/community',
       routes: {
         '/community': (c) => const CommunityHomePage(),

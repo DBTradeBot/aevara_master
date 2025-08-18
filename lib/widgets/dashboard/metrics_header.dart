@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:aevara_app/features/sync/sync_status_icon.dart';
 
 class MetricsHeader extends StatelessWidget {
@@ -21,7 +21,8 @@ class MetricsHeader extends StatelessWidget {
 
     // Keep it super subtle and compact
     final label = state == SyncState.synced ? 'Synced' : 'Sync';
-    const labelColor = Color(0xFF6B7280); // faint gray that matches your existing copy
+    const labelColor =
+        Color(0xFF6B7280); // faint gray that matches your existing copy
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +43,8 @@ class MetricsHeader extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Your existing status dot API: (state, lastSync, onTap)
-                    SyncStatusIcon(state: state, lastSync: lastSync, onTap: onSyncTap),
+                    SyncStatusIcon(
+                        state: state, lastSync: lastSync, onTap: onSyncTap),
                     const SizedBox(width: 6),
                     Text(
                       label,

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../widgets/leaderboard_switcher.dart';
 import '../../data/mock_community_data.dart'; // for demoLeaderboard list
 import 'widgets/rank_tile.dart' as community;
@@ -26,7 +26,8 @@ class _LeaderboardsPageState extends State<LeaderboardsPage> {
   @override
   Widget build(BuildContext context) {
     final entries = demoLeaderboard
-        .where((e) => _q.isEmpty || e.name.toLowerCase().contains(_q.toLowerCase()))
+        .where((e) =>
+            _q.isEmpty || e.name.toLowerCase().contains(_q.toLowerCase()))
         .toList();
 
     return SafeArea(
@@ -75,7 +76,7 @@ class _LeaderboardsPageState extends State<LeaderboardsPage> {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                    (context, i) {
+                (context, i) {
                   final e = entries[i];
                   return Column(
                     children: [

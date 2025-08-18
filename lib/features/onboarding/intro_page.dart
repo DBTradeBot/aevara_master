@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
@@ -12,14 +12,19 @@ class IntroPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Your AI-powered longevity companion.', style: Theme.of(context).textTheme.headlineMedium),
+            Text('Your AI-powered longevity companion.',
+                style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 8),
-            const Text('Track recovery, sleep, activity, and wellbeing with clarity and transparency.'),
+            const Text(
+                'Track recovery, sleep, activity, and wellbeing with clarity and transparency.'),
             const Spacer(),
             Row(
               children: [
                 const Spacer(),
-                FilledButton(onPressed: () => Navigator.pushNamed(context, '/onboarding/identity'), child: const Text('Next')),
+                FilledButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/onboarding/identity'),
+                    child: const Text('Next')),
               ],
             )
           ],

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class AevStatusDot extends StatelessWidget {
   final Color color;
@@ -8,7 +8,8 @@ class AevStatusDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: size, height: size,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         color: color,
         shape: BoxShape.circle,

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class ConnectPage extends StatelessWidget {
   const ConnectPage({super.key});
@@ -64,7 +64,8 @@ class ConnectPage extends StatelessWidget {
                           child: OutlinedButton(
                             onPressed: () {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Connect ${p.name} (stub)')),
+                                SnackBar(
+                                    content: Text('Connect ${p.name} (stub)')),
                               );
                             },
                             child: const Text('Connect'),
@@ -86,8 +87,8 @@ class ConnectPage extends StatelessWidget {
                   child: const Text('Back'),
                 ),
                 FilledButton(
-                  onPressed: () =>
-                      Navigator.pushReplacementNamed(context, '/onboarding/ready'),
+                  onPressed: () => Navigator.pushReplacementNamed(
+                      context, '/onboarding/ready'),
                   child: const Text('Next'),
                 ),
               ],

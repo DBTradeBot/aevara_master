@@ -1,1 +1,15 @@
-﻿import 'package:flutter/material.dart'; class GoogleSignInButton extends StatelessWidget{final VoidCallback? onPressed; final String label; const GoogleSignInButton({super.key, this.onPressed, this.label='Continue with Google'}); @override Widget build(BuildContext c)=>OutlinedButton.icon(onPressed:onPressed, icon: const Icon(Icons.g_mobiledata), label: Text(label));}
+﻿// ignore_for_file: avoid_renaming_method_parameters
+import 'package:flutter/material.dart';
+
+class GoogleSignInButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final String label;
+  const GoogleSignInButton(
+      {super.key, this.onPressed, this.label = 'Continue with Google'});
+  @override
+  Widget build(BuildContext c) => OutlinedButton.icon(
+      onPressed: onPressed,
+      icon: const Icon(Icons.g_mobiledata),
+      label: Text(label));
+}
+

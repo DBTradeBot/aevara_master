@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class HomePlaceholderPage extends StatelessWidget {
   const HomePlaceholderPage({super.key});
@@ -9,8 +9,12 @@ class HomePlaceholderPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Dashboard (Placeholder)'),
         actions: [
-          IconButton(onPressed: ()=> Navigator.pushNamed(context, '/dev'), icon: const Icon(Icons.bug_report_outlined)),
-          IconButton(onPressed: ()=> Scaffold.of(context).openEndDrawer(), icon: const Icon(Icons.settings_outlined)),
+          IconButton(
+              onPressed: () => Navigator.pushNamed(context, '/dev'),
+              icon: const Icon(Icons.bug_report_outlined)),
+          IconButton(
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+              icon: const Icon(Icons.settings_outlined)),
         ],
       ),
       endDrawer: const _SimpleSettingsDrawer(),
@@ -24,9 +28,17 @@ class HomePlaceholderPage extends StatelessWidget {
             Wrap(
               spacing: 12,
               children: [
-                FilledButton(onPressed: ()=> Navigator.pushNamed(context, '/app/data-hub'), child: const Text('Go to Data Hub')),
-                FilledButton(onPressed: ()=> Navigator.pushNamed(context, '/experiments'), child: const Text('Go to Experiments')),
-                FilledButton(onPressed: ()=> Navigator.pushNamed(context, '/community'), child: const Text('Go to Community')),
+                FilledButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/app/data-hub'),
+                    child: const Text('Go to Data Hub')),
+                FilledButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/experiments'),
+                    child: const Text('Go to Experiments')),
+                FilledButton(
+                    onPressed: () => Navigator.pushNamed(context, '/community'),
+                    child: const Text('Go to Community')),
               ],
             ),
           ],
@@ -46,9 +58,19 @@ class _SimpleSettingsDrawer extends StatelessWidget {
         padding: const EdgeInsets.only(top: 24),
         children: [
           const ListTile(title: Text('Quick Settings')),
-          ListTile(leading: const Icon(Icons.person_outline), title: const Text('My Profile'), onTap: ()=> Navigator.pushNamed(context, '/profile/me')),
-          ListTile(leading: const Icon(Icons.settings_outlined), title: const Text('Open full settings'), onTap: ()=> Navigator.pushNamed(context, '/settings')),
-          ListTile(leading: const Icon(Icons.logout), title: const Text('Sign out'), onTap: ()=> Navigator.pushNamedAndRemoveUntil(context, '/auth/signin', (_) => false)),
+          ListTile(
+              leading: const Icon(Icons.person_outline),
+              title: const Text('My Profile'),
+              onTap: () => Navigator.pushNamed(context, '/profile/me')),
+          ListTile(
+              leading: const Icon(Icons.settings_outlined),
+              title: const Text('Open full settings'),
+              onTap: () => Navigator.pushNamed(context, '/settings')),
+          ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Sign out'),
+              onTap: () => Navigator.pushNamedAndRemoveUntil(
+                  context, '/auth/signin', (_) => false)),
         ],
       ),
     );

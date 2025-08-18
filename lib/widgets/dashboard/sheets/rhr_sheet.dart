@@ -1,13 +1,13 @@
-﻿import 'package:flutter/material.dart';
-import '../../../theme/aevara_theme.dart';
+import 'package:flutter/material.dart';
+import 'package:aevara_app/theme/aevara_theme.dart';
 import 'number_input_sheet.dart';
 
 Future<void> showRhrSheet(
-    BuildContext context, {
-      required double initialBpm,
-      ValueChanged<double>? onChanged,
-      ValueChanged<double>? onSave,
-    }) {
+  BuildContext context, {
+  required double initialBpm,
+  ValueChanged<double>? onChanged,
+  ValueChanged<double>? onSave,
+}) {
   final a = context.aevara;
   return showModalBottomSheet(
     context: context,
@@ -17,7 +17,10 @@ Future<void> showRhrSheet(
       decoration: BoxDecoration(
         color: a.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(a.radius)),
-        boxShadow: [BoxShadow(color: a.shadow, blurRadius: 24, offset: const Offset(0, -6))],
+        boxShadow: [
+          BoxShadow(
+              color: a.shadow, blurRadius: 24, offset: const Offset(0, -6))
+        ],
       ),
       child: NumberInputSheet(
         metricName: 'Resting HR',
@@ -30,13 +33,13 @@ Future<void> showRhrSheet(
         onChanged: onChanged,
         onSave: onSave,
         infoWhat:
-        'Your heart rate when you are at complete rest, typically measured in beats per minute upon waking or during deep sleep.',
+            'Your heart rate when you are at complete rest, typically measured in beats per minute upon waking or during deep sleep.',
         infoWhy:
-        'Lower RHR generally indicates better cardiovascular fitness. Elevated RHR can signal stress, fatigue, illness, or overtraining.',
+            'Lower RHR generally indicates better cardiovascular fitness. Elevated RHR can signal stress, fatigue, illness, or overtraining.',
         infoHowAffects:
-        'We factor RHR alongside HRV in your recovery score. High RHR relative to your baseline may reduce your healthy days; lower-than-usual can improve them.',
+            'We factor RHR alongside HRV in your recovery score. High RHR relative to your baseline may reduce your healthy days; lower-than-usual can improve them.',
         infoWhereToFind:
-        'Wearables: Apple Watch (Health â†’ Heart â†’ Resting Rate), Fitbit (Today â†’ Heart Rate â†’ Resting), Garmin (Heart Rate â†’ Resting), Oura (Readiness).\n\n'
+            'Wearables: Apple Watch (Health â†’ Heart â†’ Resting Rate), Fitbit (Today â†’ Heart Rate â†’ Resting), Garmin (Heart Rate â†’ Resting), Oura (Readiness).\n\n'
             'Manual/estimate: Measure your pulse for 60 seconds right after waking, before getting out of bed.',
       ),
     ),

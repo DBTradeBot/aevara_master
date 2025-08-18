@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class DevMenuPage extends StatelessWidget {
   const DevMenuPage({super.key});
@@ -27,11 +27,14 @@ class DevMenuPage extends StatelessWidget {
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: navs.length,
-        separatorBuilder: (_, __)=> const SizedBox(height: 8),
-        itemBuilder: (_, i){
+        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        itemBuilder: (_, i) {
           final n = navs[i];
-          return Card(child: ListTile(title: Text(n.$1), trailing: const Icon(Icons.chevron_right),
-            onTap: ()=> Navigator.pushNamed(context, n.$2)));
+          return Card(
+              child: ListTile(
+                  title: Text(n.$1),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.pushNamed(context, n.$2)));
         },
       ),
     );
