@@ -3,25 +3,18 @@ name: Flutter CI
 on:
   push:
     branches:
-      - main
-      - develop
-      - chore/**
-      - feat/**
+      - '**'            # run on all branches
   pull_request:
     branches:
-      - main
-      - develop
+      - '**'            # run on all PRs
 
 jobs:
   android:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout (PR-aware)
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          # Use PR head on pull_request, otherwise default ref on push
-          ref: ${{ github.head_ref != '' && github.event_name == 'pull_request' && github.head_ref || github.ref }}
           fetch-depth: 0
 
       - name: Debug: show repo root
