@@ -1,11 +1,17 @@
+# Flutter/Dart/Pub
 .dart_tool/
 .packages
-.pub/
+.pub-cache/
 build/
-**/GeneratedPluginRegistrant.*
+flutter_*.yaml
+Generated.xcconfig
+*.lock
+
+# IDEs
 .idea/
 .vscode/
 *.iml
-android/.gradle/
-android/local.properties
-ios/Pods/
+
+# OS
+.DS_Store
+Thumbs.db
