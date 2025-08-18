@@ -2,27 +2,29 @@ name: Flutter CI
 
 on:
   push:
-    branches: [ main, develop, chore/**, feat/** ]
+    branches:
+      - main
+      - develop
+      - 'feat/**'
+      - 'chore/**'
   pull_request:
-    branches: [ main, develop ]
+    branches:
+      - main
+      - develop
 
 jobs:
   android:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (PR-aware)
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          # Use the PR head on pull_request, otherwise default ref
-          ref: ${{ github.head_ref || github.ref }}
-          fetch-depth: 0
 
-      - name: Debug: show repo root
+      - name: Debug: show repo files
         run: |
           pwd
           ls -la
-          ls -la test || true
-          cat pubspec.yaml || true
+          if [ -d test ]; then echo "test/ exists"; ls -la test; else echo "test/ NOT found"; fi
+          if [ -f pubspec.yaml ]; then echo "pubspec.yaml found"; fi
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
