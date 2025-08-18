@@ -2,33 +2,30 @@ name: Flutter CI
 
 on:
   push:
-    branches: ['**']
+    branches: [ main, develop, chore/**, feat/** ]
   pull_request:
-    branches: ['**']
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+    branches: [ main, develop ]
 
 jobs:
   android:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout (PR-aware)
+        uses: actions/checkout@v4
         with:
+          # Use the PR head on pull_request, otherwise default ref
+          ref: ${{ github.head_ref || github.ref }}
           fetch-depth: 0
 
-      - name: Debug: list repo & android dir
+      - name: Debug: show repo root
         run: |
           pwd
           ls -la
-          ls -la android || true
-          ls -la android/gradle || true
           ls -la test || true
-          git status --porcelain
-          git ls-files | sed -n '1,50p'
+          cat pubspec.yaml || true
 
-      - uses: subosito/flutter-action@v2
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.0'
           channel: stable
@@ -36,31 +33,18 @@ jobs:
 
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter analyze --no-fatal-infos --no-fatal-warnings
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
       - name: Run Flutter tests (only if tests exist)
         if: ${{ hashFiles('test/**') != '' }}
         run: flutter test --no-pub
 
-      # Android SDK only matters if we actually have the wrapper
-      - name: Set up Android SDK
-        if: ${{ hashFiles('android/gradlew') != '' }}
-        uses: android-actions/setup-android@v3
-
-      - name: Accept Android licenses
-        if: ${{ hashFiles('android/gradlew') != '' }}
-        run: yes | sdkmanager --licenses
-
-      - name: Make gradlew executable
-        if: ${{ hashFiles('android/gradlew') != '' }}
-        run: chmod +x ./android/gradlew
-
       - name: Build debug APK
-        if: ${{ hashFiles('android/gradlew') != '' }}
         run: flutter build apk --debug
 
       - name: Upload debug APK
-        if: ${{ hashFiles('android/gradlew') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: app-debug-apk
