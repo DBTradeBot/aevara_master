@@ -661,6 +661,17 @@ methods\_copy.dart
 \- 2025‑08‑18: Locked single router (`routing/`), deprecated `app\_routes.dart`. Added this structure map.
 
 
+### Core Dependencies
+
+- flutter: sdk
+- cupertino_icons: ^1.0.6
+- google_fonts: ^6.2.1
+- flutter_riverpod: ^2.6.1
+- firebase_core: ^3.8.0
+- firebase_auth: ^5.3.0
+- cloud_firestore: ^5.4.4
+- firebase_analytics: ^11.3.3
+- intl: ^0.19.0   ← NEW (for date/time formatting in HeroHeader and elsewhere)
 
 ---
 

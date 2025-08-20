@@ -1,0 +1,126 @@
+{
+  "project_info": {
+    "project_number": "74116747347",
+    "project_id": "vitalis-a8577",
+    "storage_bucket": "vitalis-a8577.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74116747347:android:94db01e6fe6ea1ffd476a6",
+        "android_client_info": {
+          "package_name": "com.example.aevara_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74116747347-4bseq2q190beoapu6t4q0dkftfuehfs4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwe3zo68oHQUN9hWJ8d-WH1uNnjMg_pLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74116747347-4bseq2q190beoapu6t4q0dkftfuehfs4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "74116747347-or64kcgfcebuknoeo6evakh4hd4ni668.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.vitalismvp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74116747347:android:e0e58338d570fce1d476a6",
+        "android_client_info": {
+          "package_name": "com.example.aevara_master"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74116747347-4bseq2q190beoapu6t4q0dkftfuehfs4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwe3zo68oHQUN9hWJ8d-WH1uNnjMg_pLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74116747347-4bseq2q190beoapu6t4q0dkftfuehfs4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "74116747347-or64kcgfcebuknoeo6evakh4hd4ni668.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.vitalismvp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74116747347:android:614d1901d909ea7cd476a6",
+        "android_client_info": {
+          "package_name": "com.mycompany.vitalismvp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74116747347-sg8vis9p47r72omfj6ndu48iscikue7n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.vitalismvp",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "74116747347-4bseq2q190beoapu6t4q0dkftfuehfs4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwe3zo68oHQUN9hWJ8d-WH1uNnjMg_pLA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74116747347-4bseq2q190beoapu6t4q0dkftfuehfs4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "74116747347-or64kcgfcebuknoeo6evakh4hd4ni668.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.vitalismvp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,24 @@
+# Normalize line endings to LF everywhere
+* text=auto eol=lf
+
+# Treat source/text files as UTF‑8 text
+*.dart   text working-tree-encoding=UTF-8
+*.md     text
+*.yaml   text
+*.yml    text
+*.json   text
+*.gradle text
+*.ps1    text
+*.bat    text
+*.sh     text
+
+# Binary assets
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.gif  binary
+*.ttf  binary
+*.otf  binary
+*.woff binary
+*.woff2 binary
