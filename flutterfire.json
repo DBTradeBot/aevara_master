@@ -1,0 +1,21 @@
+﻿{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "vitalis-a8577",
+          "appId": "1:74116747347:android:94db01e6fe6ea1ffd476a6",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "vitalis-a8577",
+          "configurations": {
+            "android": "1:74116747347:android:94db01e6fe6ea1ffd476a6"
+          }
+        }
+      }
+    }
+  }
+}

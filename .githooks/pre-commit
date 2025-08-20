@@ -1,0 +1,9 @@
+@echo off
+powershell -NoProfile -Command ^
+  "$hits = Select-String -Path lib\**\*.dart,test\**\*.dart -Pattern 'package:aevara_master' -ErrorAction SilentlyContinue; ^
+   if ($hits) { ^
+     Write-Host '? Found old import prefix (package:aevara_master).' -ForegroundColor Red; ^
+     $hits | ForEach-Object { Write-Host ('  ' + $_.Path + ':' + $_.LineNumber + ' ? ' + $_.Line.Trim()) }; ^
+     exit 1 ^
+   }"
+if %errorlevel% neq 0 exit /b %errorlevel%
