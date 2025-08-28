@@ -26,12 +26,14 @@ class InfoVitalityAgeSheet extends StatelessWidget {
             Row(children: [
               Text('About Vitality age', style: tt.titleLarge),
               const Spacer(),
-              IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close)),
+              IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close)),
             ]),
             const SizedBox(height: 8),
             Text(
               'Vitality age is a model-based estimate of your biological fitness age using sleep, HRV, resting HR, and recent activity. '
-                  'Lower is better. We compare it to your chronological age to show +/− delta.',
+              'Lower is better. We compare it to your chronological age to show +/− delta.',
               style: tt.bodyMedium,
             ),
             const SizedBox(height: 12),

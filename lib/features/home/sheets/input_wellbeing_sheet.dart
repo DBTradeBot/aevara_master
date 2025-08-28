@@ -1,4 +1,4 @@
-﻿// lib/features/home/sheets/input_wellbeing_sheet.dart
+// lib/features/home/sheets/input_wellbeing_sheet.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../state/today_actions.dart';
@@ -6,7 +6,8 @@ import '../../../state/today_actions.dart';
 class InputWellbeingSheet extends ConsumerStatefulWidget {
   const InputWellbeingSheet({super.key});
   @override
-  ConsumerState<InputWellbeingSheet> createState() => _InputWellbeingSheetState();
+  ConsumerState<InputWellbeingSheet> createState() =>
+      _InputWellbeingSheetState();
 }
 
 class _InputWellbeingSheetState extends ConsumerState<InputWellbeingSheet> {
@@ -30,7 +31,10 @@ class _InputWellbeingSheetState extends ConsumerState<InputWellbeingSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 48, height: 4, margin: const EdgeInsets.only(bottom: 12),
+            Container(
+              width: 48,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(2),
@@ -48,7 +52,10 @@ class _InputWellbeingSheetState extends ConsumerState<InputWellbeingSheet> {
                 const Spacer(),
                 DropdownButton<int>(
                   value: _mood,
-                  items: List.generate(5, (i) => DropdownMenuItem(value: i + 1, child: Text('${i + 1}'))),
+                  items: List.generate(
+                      5,
+                      (i) => DropdownMenuItem(
+                          value: i + 1, child: Text('${i + 1}'))),
                   onChanged: (v) => setState(() => _mood = v ?? 3),
                 ),
               ],
@@ -59,7 +66,10 @@ class _InputWellbeingSheetState extends ConsumerState<InputWellbeingSheet> {
                 const Spacer(),
                 DropdownButton<int>(
                   value: _stress,
-                  items: List.generate(5, (i) => DropdownMenuItem(value: i + 1, child: Text('${i + 1}'))),
+                  items: List.generate(
+                      5,
+                      (i) => DropdownMenuItem(
+                          value: i + 1, child: Text('${i + 1}'))),
                   onChanged: (v) => setState(() => _stress = v ?? 3),
                 ),
               ],
@@ -69,18 +79,20 @@ class _InputWellbeingSheetState extends ConsumerState<InputWellbeingSheet> {
               controller: _moodCtrl,
               maxLines: 2,
               decoration: const InputDecoration(
-                hintText: 'Want to share more? Tell Aevara what’s on your mind.',
+                hintText:
+                    'Want to share more? Tell Aevara what’s on your mind.',
               ),
             ),
             const SizedBox(height: 8),
             FilledButton(
               onPressed: () async {
                 await ref.read(todayActionsProvider).setWellbeing(
-                  mood1to5: _mood,
-                  stress1to5: _stress,
-                  notesMood: _moodCtrl.text.isEmpty ? null : _moodCtrl.text,
-                );
-                if (context.mounted) Navigator.pop(context, {'mood': _mood, 'stress': _stress});
+                      mood1to5: _mood,
+                      stress1to5: _stress,
+                      notesMood: _moodCtrl.text.isEmpty ? null : _moodCtrl.text,
+                    );
+                if (context.mounted)
+                  Navigator.pop(context, {'mood': _mood, 'stress': _stress});
               },
               child: const Text('Save'),
             ),

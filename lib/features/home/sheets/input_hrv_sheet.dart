@@ -30,7 +30,10 @@ class _InputHrvSheetState extends ConsumerState<InputHrvSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 48, height: 4, margin: const EdgeInsets.only(bottom: 12),
+            Container(
+              width: 48,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(2),
@@ -40,12 +43,14 @@ class _InputHrvSheetState extends ConsumerState<InputHrvSheet> {
               children: [
                 Text('Add HRV (rMSSD)', style: theme.textTheme.titleMedium),
                 const Spacer(),
-                Text('${_rmssd.toStringAsFixed(0)} ms', style: theme.textTheme.titleMedium),
+                Text('${_rmssd.toStringAsFixed(0)} ms',
+                    style: theme.textTheme.titleMedium),
               ],
             ),
             Slider(
               value: _rmssd,
-              min: 5, max: 250,
+              min: 5,
+              max: 250,
               divisions: 245,
               label: _rmssd.toStringAsFixed(0),
               onChanged: (v) => setState(() => _rmssd = v),

@@ -14,7 +14,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   Future<void> _send() async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: _email.text.trim());
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: _email.text.trim());
       setState(() => _info = 'Email sent. Check your inbox.');
     } catch (e) {
       setState(() => _info = 'Failed: $e');
@@ -30,12 +31,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Text("We'll send you an email with a link to reset your password."),
+            const Text(
+                "We'll send you an email with a link to reset your password."),
             const SizedBox(height: 12),
             TextField(
               controller: _email,
               keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(labelText: 'Your email address...'),
+              decoration:
+                  const InputDecoration(labelText: 'Your email address...'),
             ),
             const SizedBox(height: 12),
             FilledButton(onPressed: _send, child: const Text('Send Link')),

@@ -26,7 +26,9 @@ class InfoHealthyDaysSheet extends StatelessWidget {
             Row(children: [
               Text('About Healthy days', style: tt.titleLarge),
               const Spacer(),
-              IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close)),
+              IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close)),
             ]),
             const SizedBox(height: 8),
             Text(

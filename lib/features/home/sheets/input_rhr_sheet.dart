@@ -1,4 +1,4 @@
-﻿// lib/features/home/sheets/input_rhr_sheet.dart
+// lib/features/home/sheets/input_rhr_sheet.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../state/today_actions.dart';
@@ -30,7 +30,10 @@ class _InputRhrSheetState extends ConsumerState<InputRhrSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 48, height: 4, margin: const EdgeInsets.only(bottom: 12),
+            Container(
+              width: 48,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(2),
@@ -45,7 +48,8 @@ class _InputRhrSheetState extends ConsumerState<InputRhrSheet> {
             ),
             Slider(
               value: _bpm.toDouble(),
-              min: 30, max: 110,
+              min: 30,
+              max: 110,
               divisions: 80,
               label: '$_bpm',
               onChanged: (v) => setState(() => _bpm = v.round()),

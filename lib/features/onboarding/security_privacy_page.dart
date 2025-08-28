@@ -14,9 +14,13 @@ class SecurityPrivacyPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Text('We protect your data. You can export or delete data anytime in Profile → Privacy Dashboard.'),
+            const Text(
+                'We protect your data. You can export or delete data anytime in Profile → Privacy Dashboard.'),
             const Spacer(),
-            PrimarySubmitButton(label: 'Continue', onPressed: ()=>Navigator.pushNamed(context, RoutePaths.connect)),
+            PrimarySubmitButton(
+                label: 'Continue',
+                onPressed: () =>
+                    Navigator.pushNamed(context, RoutePaths.connect)),
           ],
         ),
       ),

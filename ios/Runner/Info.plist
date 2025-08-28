@@ -28,6 +28,14 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+
+	<!-- iOS Privacy Permissions for avatar picker -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This lets you choose a profile photo.</string>
+	<!-- Only needed if you allow taking a photo with the camera -->
+	<key>NSCameraUsageDescription</key>
+	<string>This lets you take a profile photo.</string>
+
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

@@ -12,8 +12,8 @@ class AuthAltLinksRow extends StatelessWidget {
       spacing: 12,
       children: [
         TextButton(
-          onPressed: () =>
-              Navigator.of(context).pushNamed(isSignin ? RoutePaths.signup : RoutePaths.signin),
+          onPressed: () => Navigator.of(context)
+              .pushNamed(isSignin ? RoutePaths.signup : RoutePaths.signin),
           child: Text(isSignin ? 'Create account' : 'Have an account? Sign in'),
         ),
         TextButton(

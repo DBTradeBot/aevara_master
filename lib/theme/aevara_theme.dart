@@ -29,7 +29,6 @@ class AevaraTheme {
       textTheme: text,
       iconTheme: IconThemeData(color: c.textPrimary),
       dividerTheme: DividerThemeData(color: c.divider, thickness: 1),
-
       appBarTheme: AppBarTheme(
         backgroundColor: c.background,
         elevation: 0,
@@ -38,7 +37,6 @@ class AevaraTheme {
         foregroundColor: c.textPrimary,
         titleTextStyle: text.titleLarge?.copyWith(color: c.textPrimary),
       ),
-
       cardTheme: CardThemeData(
         color: c.surface,
         elevation: 0,
@@ -48,7 +46,6 @@ class AevaraTheme {
           borderRadius: BorderRadius.circular(radiusCard),
         ),
       ),
-
       dialogTheme: DialogThemeData(
         backgroundColor: c.surface,
         surfaceTintColor: Colors.transparent,
@@ -56,24 +53,26 @@ class AevaraTheme {
           borderRadius: BorderRadius.circular(radiusSheet),
         ),
       ),
-
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: c.background,
         indicatorColor: colorScheme.primary.withValues(alpha: 0.10),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           final sel = states.contains(WidgetState.selected);
           final base = text.labelLarge!;
-          return sel ? base.copyWith(color: colorScheme.primary) : base.copyWith(color: c.textSecondary);
+          return sel
+              ? base.copyWith(color: colorScheme.primary)
+              : base.copyWith(color: c.textSecondary);
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           final sel = states.contains(WidgetState.selected);
-          return IconThemeData(color: sel ? colorScheme.primary : c.textSecondary);
+          return IconThemeData(
+              color: sel ? colorScheme.primary : c.textSecondary);
         }),
       ),
-
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         filled: true,
         fillColor: c.surfaceAlt,
         border: OutlineInputBorder(
@@ -91,7 +90,6 @@ class AevaraTheme {
         hintStyle: text.bodyMedium?.copyWith(color: c.textSecondary),
         labelStyle: text.labelLarge?.copyWith(color: c.textSecondary),
       ),
-
       chipTheme: ChipThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -102,42 +100,39 @@ class AevaraTheme {
         labelStyle: text.labelLarge!,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       ),
-
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: colorScheme.primary,
           foregroundColor: c.onPrimary,
           textStyle: text.labelLarge,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           minimumSize: const Size(44, 44),
         ),
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: c.secondary,
           foregroundColor: c.onSecondary,
           textStyle: text.labelLarge,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           minimumSize: const Size(44, 44),
           elevation: 0,
         ),
       ),
-
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: colorScheme.primary,
           textStyle: text.labelLarge,
         ),
       ),
-
       listTileTheme: ListTileThemeData(
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         iconColor: c.textSecondary,
         titleTextStyle: text.bodyLarge?.copyWith(color: c.textPrimary),
         subtitleTextStyle: text.bodyMedium?.copyWith(color: c.textSecondary),
       ),
-
       tooltipTheme: TooltipThemeData(
         textStyle: text.bodySmall?.copyWith(color: Colors.white),
         decoration: BoxDecoration(
@@ -166,7 +161,6 @@ class AevaraTheme {
       textTheme: text,
       iconTheme: IconThemeData(color: c.textPrimary),
       dividerTheme: DividerThemeData(color: c.divider, thickness: 1),
-
       appBarTheme: AppBarTheme(
         backgroundColor: c.background,
         elevation: 0,
@@ -175,7 +169,6 @@ class AevaraTheme {
         foregroundColor: c.textPrimary,
         titleTextStyle: text.titleLarge?.copyWith(color: c.textPrimary),
       ),
-
       cardTheme: CardThemeData(
         color: c.surface,
         elevation: 0,
@@ -185,7 +178,6 @@ class AevaraTheme {
           borderRadius: BorderRadius.circular(radiusSheet),
         ),
       ),
-
       dialogTheme: DialogThemeData(
         backgroundColor: c.surface,
         surfaceTintColor: Colors.transparent,
@@ -193,24 +185,26 @@ class AevaraTheme {
           borderRadius: BorderRadius.circular(radiusSheet),
         ),
       ),
-
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: c.background,
         indicatorColor: colorScheme.primary.withValues(alpha: 0.15),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           final sel = states.contains(WidgetState.selected);
           final base = text.labelLarge!;
-          return sel ? base.copyWith(color: colorScheme.primary) : base.copyWith(color: c.textSecondary);
+          return sel
+              ? base.copyWith(color: colorScheme.primary)
+              : base.copyWith(color: c.textSecondary);
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           final sel = states.contains(WidgetState.selected);
-          return IconThemeData(color: sel ? colorScheme.primary : c.textSecondary);
+          return IconThemeData(
+              color: sel ? colorScheme.primary : c.textSecondary);
         }),
       ),
-
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         filled: true,
         fillColor: c.surfaceAlt,
         border: OutlineInputBorder(
@@ -228,7 +222,6 @@ class AevaraTheme {
         hintStyle: text.bodyMedium?.copyWith(color: c.textSecondary),
         labelStyle: text.labelLarge?.copyWith(color: c.textSecondary),
       ),
-
       chipTheme: ChipThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -239,42 +232,39 @@ class AevaraTheme {
         labelStyle: text.labelLarge!,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       ),
-
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: colorScheme.primary,
           foregroundColor: c.onPrimary,
           textStyle: text.labelLarge,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           minimumSize: const Size(44, 44),
         ),
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: c.secondary,
           foregroundColor: c.onSecondary,
           textStyle: text.labelLarge,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           minimumSize: const Size(44, 44),
           elevation: 0,
         ),
       ),
-
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: colorScheme.primary,
           textStyle: text.labelLarge,
         ),
       ),
-
       listTileTheme: ListTileThemeData(
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         iconColor: c.textSecondary,
         titleTextStyle: text.bodyLarge?.copyWith(color: c.textPrimary),
         subtitleTextStyle: text.bodyMedium?.copyWith(color: c.textSecondary),
       ),
-
       tooltipTheme: TooltipThemeData(
         textStyle: text.bodySmall?.copyWith(color: Colors.white),
         decoration: BoxDecoration(

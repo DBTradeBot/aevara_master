@@ -15,11 +15,12 @@ Future<T?> pushNamed<T extends Object?>(String routeName, {Object? arguments}) {
 }
 
 Future<T?> pushReplacementNamed<T extends Object?, TO extends Object?>(
-    String routeName, {
-      TO? result,
-      Object? arguments,
-    }) {
-  return nav!.pushReplacementNamed<T, TO>(routeName, result: result, arguments: arguments);
+  String routeName, {
+  TO? result,
+  Object? arguments,
+}) {
+  return nav!.pushReplacementNamed<T, TO>(routeName,
+      result: result, arguments: arguments);
 }
 
 void pop<T extends Object?>([T? result]) => nav?.pop<T>(result);

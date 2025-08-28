@@ -116,7 +116,7 @@ class SyncTransparencySheet extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               'Fresh data improves your readiness, sleep, and activity insights. '
-                  'If a source is stale, some metrics may show lower confidence.',
+              'If a source is stale, some metrics may show lower confidence.',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -128,7 +128,8 @@ class SyncTransparencySheet extends StatelessWidget {
   }
 
   ProviderFreshness _computeOverall(List<_Row> rows) {
-    final anyConnected = rows.any((r) => r.freshness != ProviderFreshness.notConnected);
+    final anyConnected =
+        rows.any((r) => r.freshness != ProviderFreshness.notConnected);
     if (!anyConnected) return ProviderFreshness.notConnected;
     final anyStale = rows.any((r) => r.freshness == ProviderFreshness.stale);
     if (anyStale) return ProviderFreshness.stale;
@@ -173,14 +174,17 @@ class _ProviderRow extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 10, height: 10,
+              width: 10,
+              height: 10,
               decoration: BoxDecoration(color: dot, shape: BoxShape.circle),
             ),
             const SizedBox(width: 12),
             Expanded(child: Text(name, style: theme.textTheme.titleMedium)),
             const SizedBox(width: 12),
             Text(
-              freshness == ProviderFreshness.notConnected ? label : '$label (${detail.isEmpty ? '—' : detail})',
+              freshness == ProviderFreshness.notConnected
+                  ? label
+                  : '$label (${detail.isEmpty ? '—' : detail})',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

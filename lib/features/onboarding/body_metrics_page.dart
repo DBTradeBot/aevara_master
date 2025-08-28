@@ -80,7 +80,8 @@ class _BodyMetricsPageState extends ConsumerState<BodyMetricsPage> {
                 Expanded(
                   child: TextField(
                     controller: _height,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
                     decoration: const InputDecoration(
                       labelText: 'Height',
                       hintText: 'e.g. 180',
@@ -90,7 +91,8 @@ class _BodyMetricsPageState extends ConsumerState<BodyMetricsPage> {
                 const SizedBox(width: 12),
                 DropdownButton<LengthUnit>(
                   value: _lengthUnit,
-                  onChanged: (u) => setState(() => _lengthUnit = u ?? _lengthUnit),
+                  onChanged: (u) =>
+                      setState(() => _lengthUnit = u ?? _lengthUnit),
                   items: const [
                     DropdownMenuItem(value: LengthUnit.cm, child: Text('cm')),
                     DropdownMenuItem(value: LengthUnit.inch, child: Text('in')),
@@ -104,7 +106,8 @@ class _BodyMetricsPageState extends ConsumerState<BodyMetricsPage> {
                 Expanded(
                   child: TextField(
                     controller: _weight,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
                     decoration: const InputDecoration(
                       labelText: 'Weight',
                       hintText: 'e.g. 78',
@@ -114,7 +117,8 @@ class _BodyMetricsPageState extends ConsumerState<BodyMetricsPage> {
                 const SizedBox(width: 12),
                 DropdownButton<WeightUnit>(
                   value: _weightUnit,
-                  onChanged: (u) => setState(() => _weightUnit = u ?? _weightUnit),
+                  onChanged: (u) =>
+                      setState(() => _weightUnit = u ?? _weightUnit),
                   items: const [
                     DropdownMenuItem(value: WeightUnit.kg, child: Text('kg')),
                     DropdownMenuItem(value: WeightUnit.lb, child: Text('lb')),
@@ -126,8 +130,12 @@ class _BodyMetricsPageState extends ConsumerState<BodyMetricsPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: (profile == null || _loading) ? null : () => _submit(profile),
-                child: _loading ? const CircularProgressIndicator.adaptive() : const Text('Continue'),
+                onPressed: (profile == null || _loading)
+                    ? null
+                    : () => _submit(profile),
+                child: _loading
+                    ? const CircularProgressIndicator.adaptive()
+                    : const Text('Continue'),
               ),
             ),
           ],

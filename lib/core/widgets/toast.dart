@@ -15,6 +15,8 @@ class AppToast {
       );
   }
 
-  static void success(BuildContext context, String message) => show(context, message);
-  static void error(BuildContext context, String message) => show(context, message);
+  static void success(BuildContext context, String message) =>
+      show(context, message);
+  static void error(BuildContext context, String message) =>
+      show(context, message);
 }

@@ -25,13 +25,13 @@ class _ConsentPageState extends ConsumerState<ConsentPage> {
       final svc = ref.read(userProfileServiceProvider);
       final profile = await svc.watchProfile(uid).first;
       final updated = (profile ??
-          UserProfile(
-            uid: uid,
-            email: '',
-            username: '',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ))
+              UserProfile(
+                uid: uid,
+                email: '',
+                username: '',
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              ))
           .copyWith(
         sharing: SharingPrefs(
           shareAnonymized: _anonymized,
@@ -73,7 +73,9 @@ class _ConsentPageState extends ConsumerState<ConsentPage> {
             const Spacer(),
             FilledButton(
               onPressed: _saving ? null : _save,
-              child: _saving ? const CircularProgressIndicator() : const Text('Continue'),
+              child: _saving
+                  ? const CircularProgressIndicator()
+                  : const Text('Continue'),
             ),
           ],
         ),

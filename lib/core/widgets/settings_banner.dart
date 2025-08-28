@@ -7,14 +7,16 @@ import '../../state/user_providers.dart';
 import '../../state/theme_providers.dart';
 
 class SettingsBanner extends ConsumerWidget {
-  const SettingsBanner({super.key});
+  const SettingsBanner({super.key, required this.onReturnToShell});
+
+  /// Called after a pushed settings page pops, so we reopen the banner.
+  final VoidCallback onReturnToShell;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(currentUserProfileProvider);
     final profile = profileAsync.asData?.value;
 
-    // Avoid null-aware warnings by working with a local var.
     final uname = profile?.username;
     final displayUsername =
     (uname != null && uname.isNotEmpty) ? '@$uname' : 'Set username';
@@ -22,8 +24,11 @@ class SettingsBanner extends ConsumerWidget {
     final themeMode = ref.watch(themeModeProvider);
 
     void go(String route) {
-      Navigator.of(context).pop(); // close drawer first
-      Navigator.of(context).pushNamed(route);
+      // Close drawer, push page, then reopen the drawer when returning.
+      Navigator.of(context).pop();
+      Navigator.of(context)
+          .pushNamed(route)
+          .then((_) => onReturnToShell());
     }
 
     final text = Theme.of(context).textTheme;
@@ -31,7 +36,7 @@ class SettingsBanner extends ConsumerWidget {
     return SafeArea(
       bottom: false,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 24),
         children: [
           Row(
             children: [
@@ -57,7 +62,7 @@ class SettingsBanner extends ConsumerWidget {
           _Tile(
             icon: Icons.badge_outlined,
             title: 'Update profile details',
-            onTap: () => go(RoutePaths.profileEdit),
+            onTap: () => go(RoutePaths.updateProfile), // ✅ uses new route
           ),
           _Tile(
             icon: Icons.mail_outlined,
@@ -177,19 +182,21 @@ class _Tile extends StatelessWidget {
   final String title;
   final String? subtitle;
   final VoidCallback onTap;
-  const _Tile(
-      {required this.icon,
-        required this.title,
-        this.subtitle,
-        required this.onTap});
+  const _Tile({
+    required this.icon,
+    required this.title,
+    this.subtitle,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(icon),
       title: Text(title),
-      subtitle:
-      (subtitle != null && subtitle!.isNotEmpty) ? Text(subtitle!) : null,
+      subtitle: (subtitle != null && subtitle!.isNotEmpty)
+          ? Text(subtitle!)
+          : null,
       trailing: const Icon(Icons.chevron_right),
       onTap: onTap,
     );

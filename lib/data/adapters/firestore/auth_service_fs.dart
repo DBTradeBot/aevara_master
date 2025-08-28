@@ -21,7 +21,8 @@ class AuthServiceFs implements AuthService {
   }
 
   @override
-  Future<void> sendPasswordReset(String email) => _auth.sendPasswordResetEmail(email: email);
+  Future<void> sendPasswordReset(String email) =>
+      _auth.sendPasswordResetEmail(email: email);
 
   @override
   Future<void> signOut() => _auth.signOut();

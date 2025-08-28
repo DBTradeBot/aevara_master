@@ -1,32 +1,22 @@
-﻿// lib/main.dart
+// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import 'app.dart'; // must export AevaraApp
-// If you have generated Firebase options, import them:
+// If using generated options, uncomment and import:
 // import 'firebase_options.dart';
+
+import 'app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
+  // Initialize Firebase first. (No anonymous sign-in here.)
   await Firebase.initializeApp(
     // options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Try to ensure an authenticated user (anonymous in dev).
-  // If Anonymous is disabled, we log and keep going so the app boots.
-  try {
-    if (FirebaseAuth.instance.currentUser == null) {
-      await FirebaseAuth.instance.signInAnonymously();
-    }
-  } catch (e) {
-    // admin-restricted-operation means the Anonymous provider is disabled.
-    // App can still boot, but Firestore rules requiring auth will block reads/writes.
-    debugPrint('⚠️ Firebase anonymous sign-in failed: $e');
-  }
+  // 👇 Important: DO NOT auto sign-in anonymously.
+  // That was causing the app to think you're "signed in" and skip auth.
 
   runApp(const ProviderScope(child: AevaraApp()));
 }

@@ -15,3 +15,12 @@ Generated.xcconfig
 # OS
 .DS_Store
 Thumbs.db
+# Ignore temp/backup files
+*.zip
+*.env
+*.json
+*.txt
+functions/*.js
+functions/*.cjs
+functions/.*
+android/.kotlin/sessions/

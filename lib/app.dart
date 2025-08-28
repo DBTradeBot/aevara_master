@@ -1,29 +1,30 @@
-// lib/app.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'routing/routes.dart';
 import 'routing/route_paths.dart';
-import 'core/debug/route_logging_observer.dart';
-import 'core/widgets/dev_fab_overlay.dart';
-import 'core/navigation/app_navigator.dart';
+import 'theme/aevara_theme.dart';
+import 'state/theme_providers.dart';
 
-class AevaraApp extends StatelessWidget {
+/// Root widget for Aevara. Exports AevaraApp.
+class AevaraApp extends ConsumerWidget {
   const AevaraApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+
     return MaterialApp(
       title: 'Aevara',
       debugShowCheckedModeBanner: false,
-      initialRoute: RoutePaths.signin,
+      theme: AevaraTheme.light(),
+      darkTheme: AevaraTheme.dark(),
+      themeMode: themeMode, // live theme switching
+
+      // Start on the app shell; the AuthGuard in routes will redirect to /auth/signin if needed.
+      initialRoute: RoutePaths.home,
+
       onGenerateRoute: onGenerateRoute,
-      navigatorKey: appNavigatorKey,                // <-- global key
-      navigatorObservers: [RouteLoggingObserver()], // logs PUSH/POP/REPLACE
-      // Overlay Dev FAB across the whole app (hidden in release builds)
-      builder: (context, child) => DevFabOverlay(
-        child: child ?? const SizedBox.shrink(),
-      ),
-      // theme: AppTheme.light,
-      // darkTheme: AppTheme.dark,
     );
   }
 }

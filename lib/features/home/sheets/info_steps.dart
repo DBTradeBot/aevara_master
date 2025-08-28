@@ -1,4 +1,4 @@
-﻿// lib/features/home/sheets/info_steps.dart
+// lib/features/home/sheets/info_steps.dart
 import 'package:flutter/material.dart';
 
 class InfoStepsSheet extends StatelessWidget {
@@ -18,13 +18,15 @@ class InfoStepsSheet extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 'Daily step count represents overall movement load. We roll it into '
-                    'Activity/Load and show short-term changes in Insights.',
+                'Activity/Load and show short-term changes in Insights.',
                 style: tt.bodyLarge,
               ),
               const SizedBox(height: 16),
               Text('Where to find it (devices)', style: tt.titleLarge),
               const SizedBox(height: 8),
-              Text('- Apple / Fitbit / Garmin / Oura: Steps or Activity Minutes', style: tt.bodyLarge),
+              Text(
+                  '- Apple / Fitbit / Garmin / Oura: Steps or Activity Minutes',
+                  style: tt.bodyLarge),
             ],
           ),
         ),

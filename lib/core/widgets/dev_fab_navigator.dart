@@ -29,13 +29,16 @@ class _DevFabNavigatorState extends State<DevFabNavigator> {
             onClose: _toggle,
             items: const [
               _Item('Home (push)', Icons.home_outlined, _MenuAction.goHome),
-              _Item('Home (reset stack)', Icons.cleaning_services_outlined, _MenuAction.resetHome),
+              _Item('Home (reset stack)', Icons.cleaning_services_outlined,
+                  _MenuAction.resetHome),
               _Divider(),
               _Item('Signin', Icons.login, _MenuAction.signin),
               _Item('Signup', Icons.person_add_alt, _MenuAction.signup),
-              _Item('Verify Email', Icons.verified_outlined, _MenuAction.verify),
+              _Item(
+                  'Verify Email', Icons.verified_outlined, _MenuAction.verify),
               _Divider(),
-              _Item('Demographics', Icons.badge_outlined, _MenuAction.demographics),
+              _Item('Demographics', Icons.badge_outlined,
+                  _MenuAction.demographics),
               _Item('Identity', Icons.alternate_email, _MenuAction.identity),
               _Item('Connect', Icons.link_outlined, _MenuAction.connect),
             ],
@@ -85,10 +88,11 @@ class _MenuCard extends StatelessWidget {
               for (final it in items)
                 it is _Divider
                     ? const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4),
-                  child: Divider(height: 1),
-                )
-                    : _MenuTile(item: it as _Item, onClose: onClose, color: onSurface),
+                        padding: EdgeInsets.symmetric(vertical: 4),
+                        child: Divider(height: 1),
+                      )
+                    : _MenuTile(
+                        item: it as _Item, onClose: onClose, color: onSurface),
             ],
           ),
         ),
@@ -101,7 +105,8 @@ class _MenuTile extends StatelessWidget {
   final _Item item;
   final VoidCallback onClose;
   final Color color;
-  const _MenuTile({required this.item, required this.onClose, required this.color});
+  const _MenuTile(
+      {required this.item, required this.onClose, required this.color});
 
   void _handle() {
     if (kReleaseMode) return;

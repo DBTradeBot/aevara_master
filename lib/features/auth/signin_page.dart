@@ -45,12 +45,13 @@ class _SignInPageState extends State<SignInPage> {
       // If you require email verification before proceeding, gate here:
       final user = cred.user;
       if (user == null) {
-        throw FirebaseAuthException(code: 'user-null', message: 'User not available');
+        throw FirebaseAuthException(
+            code: 'user-null', message: 'User not available');
       }
 
       // Route based on profile data:
       final route =
-      await nextRouteAfterAuth(user.uid, FirebaseFirestore.instance);
+          await nextRouteAfterAuth(user.uid, FirebaseFirestore.instance);
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, route);
     } on FirebaseAuthException catch (e) {
@@ -62,11 +63,9 @@ class _SignInPageState extends State<SignInPage> {
     }
   }
 
-  void _gotoSignup() =>
-      Navigator.pushNamed(context, RoutePaths.signup);
+  void _gotoSignup() => Navigator.pushNamed(context, RoutePaths.signup);
 
-  void _gotoForgot() =>
-      Navigator.pushNamed(context, RoutePaths.forgot);
+  void _gotoForgot() => Navigator.pushNamed(context, RoutePaths.forgot);
 
   @override
   Widget build(BuildContext context) {
@@ -104,30 +103,32 @@ class _SignInPageState extends State<SignInPage> {
             if (_error != null) ...[
               const SizedBox(height: 12),
               Text(_error!,
-                  style: t.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.error)),
+                  style: t.bodyMedium
+                      ?.copyWith(color: Theme.of(context).colorScheme.error)),
             ],
             const SizedBox(height: 16),
             FilledButton(
               onPressed: _busy ? null : _signIn,
               child: _busy
                   ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ))
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ))
                   : const Text('Sign in'),
             ),
             const SizedBox(height: 8),
-            TextButton(onPressed: _gotoForgot, child: const Text('Forgot password?')),
+            TextButton(
+                onPressed: _gotoForgot, child: const Text('Forgot password?')),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text("Don't have an account? "),
-                TextButton(onPressed: _gotoSignup, child: const Text('Sign up')),
+                TextButton(
+                    onPressed: _gotoSignup, child: const Text('Sign up')),
               ],
             ),
           ],

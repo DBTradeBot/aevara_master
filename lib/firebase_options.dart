@@ -59,5 +59,4 @@ class DefaultFirebaseOptions {
     projectId: 'vitalis-a8577',
     storageBucket: 'vitalis-a8577.firebasestorage.app',
   );
-
 }

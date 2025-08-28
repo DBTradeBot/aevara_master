@@ -1,4 +1,4 @@
-﻿// lib/features/home/sheets/info_hrv.dart
+// lib/features/home/sheets/info_hrv.dart
 import 'package:flutter/material.dart';
 
 class InfoHrvSheet extends StatelessWidget {
@@ -18,13 +18,14 @@ class InfoHrvSheet extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 'Root Mean Square of Successive Differences (RMSSD). Higher usually means '
-                    'better recovery—used in readiness scoring with Sleep and Resting HR.',
+                'better recovery—used in readiness scoring with Sleep and Resting HR.',
                 style: tt.bodyLarge,
               ),
               const SizedBox(height: 16),
               Text('Where to find it (devices)', style: tt.titleLarge),
               const SizedBox(height: 8),
-              Text('- Apple / Garmin: “HRV (RMSSD)” nightly', style: tt.bodyLarge),
+              Text('- Apple / Garmin: “HRV (RMSSD)” nightly',
+                  style: tt.bodyLarge),
               Text('- WHOOP: “Recovery HRV”', style: tt.bodyLarge),
             ],
           ),

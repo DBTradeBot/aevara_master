@@ -46,8 +46,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       final fresh = FirebaseAuth.instance.currentUser;
       if (fresh?.emailVerified == true) {
         final uid = fresh!.uid;
-        final route =
-        await nextRouteAfterAuth(uid, FirebaseFirestore.instance);
+        final route = await nextRouteAfterAuth(uid, FirebaseFirestore.instance);
         if (!mounted) return;
         Navigator.pushReplacementNamed(context, route);
       } else {
@@ -94,7 +93,8 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
             TextButton(
               onPressed: _busy
                   ? null
-                  : () => Navigator.pushReplacementNamed(context, RoutePaths.signin),
+                  : () => Navigator.pushReplacementNamed(
+                      context, RoutePaths.signin),
               child: const Text('Back to sign in'),
             ),
           ],

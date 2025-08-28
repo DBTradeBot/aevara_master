@@ -7,7 +7,6 @@ import 'package:aevara_app/data/adapters/firestore/user_profile_service_fs.dart'
 import 'package:aevara_app/data/services/user_profile_service.dart';
 import 'package:aevara_app/data/models/user_profile.dart';
 
-
 // Visual tokens (fallbacks if your theme isn't hooked yet)
 const _kPad = 16.0;
 const _kRadius = 16.0;
@@ -24,7 +23,7 @@ class ProfileSetupPage extends StatefulWidget {
 class _ProfileSetupPageState extends State<ProfileSetupPage> {
   // Services
   late final UserProfileService _profiles =
-  UserProfileServiceFs(FirebaseFirestore.instance);
+      UserProfileServiceFs(FirebaseFirestore.instance);
 
   // Auth
   User? get _user => FirebaseAuth.instance.currentUser;
@@ -80,10 +79,14 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
     if (_lenUnit == u) return;
     final current = _toDouble(_heightCtrl);
     setState(() {
-      if (_lenUnit == LengthUnit.cm && u == LengthUnit.inch && current != null) {
+      if (_lenUnit == LengthUnit.cm &&
+          u == LengthUnit.inch &&
+          current != null) {
         // cm -> in
         _heightCtrl.text = (current / 2.54).toStringAsFixed(1);
-      } else if (_lenUnit == LengthUnit.inch && u == LengthUnit.cm && current != null) {
+      } else if (_lenUnit == LengthUnit.inch &&
+          u == LengthUnit.cm &&
+          current != null) {
         // in -> cm
         _heightCtrl.text = (current * 2.54).toStringAsFixed(1);
       }
@@ -98,7 +101,9 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
       if (_wtUnit == WeightUnit.kg && u == WeightUnit.lb && current != null) {
         // kg -> lb
         _weightCtrl.text = (current / 0.45359237).toStringAsFixed(1);
-      } else if (_wtUnit == WeightUnit.lb && u == WeightUnit.kg && current != null) {
+      } else if (_wtUnit == WeightUnit.lb &&
+          u == WeightUnit.kg &&
+          current != null) {
         // lb -> kg
         _weightCtrl.text = (current * 0.45359237).toStringAsFixed(1);
       }
@@ -111,8 +116,8 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
     if (d == null) return null;
     final now = DateTime.now();
     int years = now.year - d.year;
-    final hadBirthday = (now.month > d.month) ||
-        (now.month == d.month && now.day >= d.day);
+    final hadBirthday =
+        (now.month > d.month) || (now.month == d.month && now.day >= d.day);
     if (!hadBirthday) years -= 1;
     return years;
   }
@@ -123,9 +128,11 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
     return age >= 13;
   }
 
-  bool get _hasBodyMetric => _heightCtrl.text.trim().isNotEmpty || _weightCtrl.text.trim().isNotEmpty;
+  bool get _hasBodyMetric =>
+      _heightCtrl.text.trim().isNotEmpty || _weightCtrl.text.trim().isNotEmpty;
 
-  bool get _minComplete => _dob != null && _gender != null && _hasBodyMetric && _meetsAge;
+  bool get _minComplete =>
+      _dob != null && _gender != null && _hasBodyMetric && _meetsAge;
 
   // ---------- Save ----------
   Future<void> _save() async {
@@ -152,8 +159,10 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
             'length': _lenUnit.name,
             'weight': _wtUnit.name,
           },
-          if (heightCm != null) 'height_cm': double.parse(heightCm.toStringAsFixed(2)),
-          if (weightKg != null) 'weight_kg': double.parse(weightKg.toStringAsFixed(2)),
+          if (heightCm != null)
+            'height_cm': double.parse(heightCm.toStringAsFixed(2)),
+          if (weightKg != null)
+            'weight_kg': double.parse(weightKg.toStringAsFixed(2)),
           'sharing': {
             'show_on_leaderboards': _showOnBoards,
             'receive_product_emails': _receiveEmails,
@@ -191,7 +200,8 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
 
             // Basics Card
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_kRadius)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(_kRadius)),
               elevation: 0,
               color: theme.colorScheme.surface,
               child: Padding(
@@ -219,7 +229,8 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                         padding: const EdgeInsets.only(top: 6),
                         child: Text(
                           'You must be at least 13.',
-                          style: text.bodySmall?.copyWith(color: theme.colorScheme.error),
+                          style: text.bodySmall
+                              ?.copyWith(color: theme.colorScheme.error),
                         ),
                       ),
                     const SizedBox(height: 16),
@@ -246,7 +257,8 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                         Expanded(
                           child: TextField(
                             controller: _heightCtrl,
-                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             decoration: const InputDecoration(
                               hintText: 'Enter height',
                               border: OutlineInputBorder(),
@@ -276,7 +288,8 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                         Expanded(
                           child: TextField(
                             controller: _weightCtrl,
-                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             decoration: const InputDecoration(
                               hintText: 'Enter weight',
                               border: OutlineInputBorder(),
@@ -305,7 +318,8 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
 
             // Optional prefs
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_kRadius)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(_kRadius)),
               elevation: 0,
               child: Padding(
                 padding: const EdgeInsets.all(_kPad),
@@ -313,11 +327,16 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     InkWell(
-                      onTap: () => setState(() => _showOptional = !_showOptional),
+                      onTap: () =>
+                          setState(() => _showOptional = !_showOptional),
                       child: Row(
                         children: [
-                          Expanded(child: Text('Optional preferences', style: text.titleMedium)),
-                          Icon(_showOptional ? Icons.expand_less : Icons.expand_more),
+                          Expanded(
+                              child: Text('Optional preferences',
+                                  style: text.titleMedium)),
+                          Icon(_showOptional
+                              ? Icons.expand_less
+                              : Icons.expand_more),
                         ],
                       ),
                     ),
@@ -325,14 +344,16 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                       const SizedBox(height: 8),
                       CheckboxListTile(
                         value: _showOnBoards,
-                        onChanged: (v) => setState(() => _showOnBoards = v ?? false),
+                        onChanged: (v) =>
+                            setState(() => _showOnBoards = v ?? false),
                         title: const Text('Show handle on public leaderboards'),
                         controlAffinity: ListTileControlAffinity.leading,
                         contentPadding: EdgeInsets.zero,
                       ),
                       CheckboxListTile(
                         value: _receiveEmails,
-                        onChanged: (v) => setState(() => _receiveEmails = v ?? false),
+                        onChanged: (v) =>
+                            setState(() => _receiveEmails = v ?? false),
                         title: const Text('Receive important product emails'),
                         controlAffinity: ListTileControlAffinity.leading,
                         contentPadding: EdgeInsets.zero,
@@ -350,7 +371,9 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
 
             if (_error != null) ...[
               const SizedBox(height: 12),
-              Text(_error!, style: text.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.error)),
+              Text(_error!,
+                  style: text.bodyMedium
+                      ?.copyWith(color: Theme.of(context).colorScheme.error)),
             ],
 
             const SizedBox(height: 24),
@@ -361,10 +384,17 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _kPrimary,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
                 child: _saving
-                    ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white)))
                     : const Text('Continue'),
               ),
             ),
@@ -382,7 +412,8 @@ class _IntroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_kRadius)),
+      shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(_kRadius)),
       elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(_kPad),
@@ -393,12 +424,13 @@ class _IntroCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'We use these to personalize your ranges and convert units across devices. '
-                  'You can edit everything later in Profile.',
+              'You can edit everything later in Profile.',
               style: text.bodyMedium?.copyWith(color: _kTextSecondary),
             ),
             const SizedBox(height: 8),
             TextButton(
-              onPressed: () => Navigator.of(context).pushNamed('/about/privacy'),
+              onPressed: () =>
+                  Navigator.of(context).pushNamed('/about/privacy'),
               child: const Text('Learn about privacy'),
             ),
           ],
@@ -456,8 +488,10 @@ class _GenderPicker extends StatelessWidget {
     final items = [
       DropdownMenuItem(value: Gender.male, child: const Text('Male')),
       DropdownMenuItem(value: Gender.female, child: const Text('Female')),
-      DropdownMenuItem(value: Gender.nonbinary, child: const Text('Non-binary')),
-      DropdownMenuItem(value: Gender.preferNotSay, child: const Text('Prefer not to say')),
+      DropdownMenuItem(
+          value: Gender.nonbinary, child: const Text('Non-binary')),
+      DropdownMenuItem(
+          value: Gender.preferNotSay, child: const Text('Prefer not to say')),
       DropdownMenuItem(value: Gender.other, child: const Text('Other')),
     ];
 
@@ -496,9 +530,11 @@ class _UnitChips<T> extends StatelessWidget {
           onSelected: (_) => onChanged(e.key),
           selectedColor: _kPrimary.withOpacity(0.15),
           labelStyle: TextStyle(
-            color: selected ? _kPrimary : Theme.of(context).colorScheme.onSurface,
+            color:
+                selected ? _kPrimary : Theme.of(context).colorScheme.onSurface,
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         );
       }).toList(),

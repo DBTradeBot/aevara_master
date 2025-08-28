@@ -30,7 +30,10 @@ class _InputStepsSheetState extends ConsumerState<InputStepsSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 48, height: 4, margin: const EdgeInsets.only(bottom: 12),
+            Container(
+              width: 48,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(2),
@@ -45,7 +48,8 @@ class _InputStepsSheetState extends ConsumerState<InputStepsSheet> {
             ),
             Slider(
               value: _steps.toDouble(),
-              min: 0, max: 50000,
+              min: 0,
+              max: 50000,
               divisions: 500,
               label: '$_steps',
               onChanged: (v) => setState(() => _steps = v.round()),

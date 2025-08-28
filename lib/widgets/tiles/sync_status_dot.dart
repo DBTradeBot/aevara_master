@@ -1,4 +1,4 @@
-﻿// lib/widgets/tiles/sync_status_dot.dart
+// lib/widgets/tiles/sync_status_dot.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../features/home/sheets/connect_providers_sheet.dart';
@@ -30,7 +30,7 @@ class SyncStatusDot extends StatelessWidget {
       case SyncDotStatus.error:
         return const Color(0xFFBF4A4A); // error
       case SyncDotStatus.notConnected:
-        return s.outlineVariant;        // neutral gray
+        return s.outlineVariant; // neutral gray
     }
   }
 

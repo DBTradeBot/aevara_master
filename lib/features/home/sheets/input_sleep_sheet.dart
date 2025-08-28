@@ -30,7 +30,10 @@ class _InputSleepSheetState extends ConsumerState<InputSleepSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 48, height: 4, margin: const EdgeInsets.only(bottom: 12),
+            Container(
+              width: 48,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(2),
@@ -40,7 +43,8 @@ class _InputSleepSheetState extends ConsumerState<InputSleepSheet> {
               children: [
                 Text('Add Sleep', style: theme.textTheme.titleMedium),
                 const Spacer(),
-                Text('${_hours.toStringAsFixed(1)} h', style: theme.textTheme.titleMedium),
+                Text('${_hours.toStringAsFixed(1)} h',
+                    style: theme.textTheme.titleMedium),
               ],
             ),
             Slider(

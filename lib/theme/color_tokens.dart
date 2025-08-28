@@ -20,7 +20,7 @@ class AevaraBaseColors {
   // Dark text/background
   static const textPrimaryDark = Color(0xFFFFFFFF);
   static const textSecondaryDark = Color(0xFFC8CCD4);
-  static const backgroundDark = Color(0xFF1A2428);   // Charcoal Slate
+  static const backgroundDark = Color(0xFF1A2428); // Charcoal Slate
   static const backgroundAltDark = Color(0xFF141B1F); // Near Black
 
   // Accents (shared)

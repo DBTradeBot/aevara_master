@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 enum Gender { male, female, nonbinary, preferNotSay, other }
 
 enum LengthUnit { cm, inch }
+
 enum WeightUnit { kg, lb }
 
 class UnitsPrefs {
@@ -16,14 +17,18 @@ class UnitsPrefs {
       UnitsPrefs(length: length ?? this.length, weight: weight ?? this.weight);
 
   Map<String, dynamic> toMap() => {
-    'length': length.name,
-    'weight': weight.name,
-  };
+        'length': length.name,
+        'weight': weight.name,
+      };
 
   static UnitsPrefs? fromMap(Map<String, dynamic>? m) {
     if (m == null) return null;
-    final length = LengthUnit.values.firstWhereOrNull((e) => e.name == m['length']) ?? LengthUnit.cm;
-    final weight = WeightUnit.values.firstWhereOrNull((e) => e.name == m['weight']) ?? WeightUnit.kg;
+    final length =
+        LengthUnit.values.firstWhereOrNull((e) => e.name == m['length']) ??
+            LengthUnit.cm;
+    final weight =
+        WeightUnit.values.firstWhereOrNull((e) => e.name == m['weight']) ??
+            WeightUnit.kg;
     return UnitsPrefs(length: length, weight: weight);
   }
 }
@@ -51,10 +56,10 @@ class SharingPrefs {
       );
 
   Map<String, dynamic> toMap() => {
-    'share_anonymized': shareAnonymized,
-    'show_on_leaderboards': showOnLeaderboards,
-    'receive_product_emails': receiveProductEmails,
-  };
+        'share_anonymized': shareAnonymized,
+        'show_on_leaderboards': showOnLeaderboards,
+        'receive_product_emails': receiveProductEmails,
+      };
 
   static SharingPrefs? fromMap(Map<String, dynamic>? m) {
     if (m == null) return null;
@@ -203,7 +208,8 @@ class UserProfile {
       gender: g,
       heightCm: (m['height_cm'] as num?)?.toDouble(),
       weightKg: (m['weight_kg'] as num?)?.toDouble(),
-      preferredUnits: UnitsPrefs.fromMap(m['preferred_units'] as Map<String, dynamic>?),
+      preferredUnits:
+          UnitsPrefs.fromMap(m['preferred_units'] as Map<String, dynamic>?),
       sharing: SharingPrefs.fromMap(m['sharing'] as Map<String, dynamic>?),
       createdAt: _asDate(m['created_at']) ?? DateTime.now(),
       updatedAt: _asDate(m['updated_at']) ?? DateTime.now(),

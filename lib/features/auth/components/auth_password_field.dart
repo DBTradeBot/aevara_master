@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class AuthPasswordField extends StatefulWidget {
   final TextEditingController controller;
   final String label;
-  const AuthPasswordField({super.key, required this.controller, this.label = 'Password'});
+  const AuthPasswordField(
+      {super.key, required this.controller, this.label = 'Password'});
 
   @override
   State<AuthPasswordField> createState() => _AuthPasswordFieldState();

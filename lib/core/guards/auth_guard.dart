@@ -20,7 +20,7 @@ class AuthGuard extends ConsumerWidget {
             if (ModalRoute.of(context)?.settings.name != RoutePaths.signin) {
               Navigator.of(context).pushNamedAndRemoveUntil(
                 RoutePaths.signin,
-                    (r) => false,
+                (r) => false,
               );
             }
           });

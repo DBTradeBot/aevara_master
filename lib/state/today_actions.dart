@@ -1,3 +1,4 @@
+import 'package:aevara/data/contracts/firestore_contracts_v1.dart' as Fx;
 // lib/state/today_actions.dart
 import 'dart:convert';
 import 'dart:io';
@@ -8,12 +9,12 @@ import 'package:intl/intl.dart';
 import '../core/env.dart' as env;
 
 /// Local YYYY-MM-DD based on device time zone.
-// We use local key for consistency with UI (HeroHeader/date) per project map.
 String _todayKeyLocal() => DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-Future<DocumentReference<Map<String, dynamic>>> _ensureTodayDoc(String uid) async {
+Future<DocumentReference<Map<String, dynamic>>> _ensureTodayDoc(
+    String uid) async {
   final ref = FirebaseFirestore.instance
-      .collection('user_daily')
+      .collection('users')
       .doc(uid)
       .collection('days')
       .doc(_todayKeyLocal());
@@ -31,20 +32,26 @@ Future<DocumentReference<Map<String, dynamic>>> _ensureTodayDoc(String uid) asyn
 }
 
 /// Fire-and-forget call to computeDailyHttp after writes.
-/// Reads endpoint from core/env.dart (COMPUTE_DAILY_URL). If not set, safely no-ops.
+/// Uses Firebase ID token for Authorization.
 Future<void> _triggerComputeIfConfigured() async {
   final url = env.COMPUTE_DAILY_URL;
   if (url == null || url.isEmpty) return;
   try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final idToken = await user.getIdToken();
+
     final client = HttpClient()..badCertificateCallback = (_, __, ___) => false;
     final req = await client.postUrl(Uri.parse(url));
     req.headers.set(HttpHeaders.contentTypeHeader, 'application/json');
+    req.headers.set(HttpHeaders.authorizationHeader, 'Bearer $idToken');
     req.add(utf8.encode('{}'));
     final resp = await req.close();
-    await resp.drain<void>(); // fix type inference warning
+    await resp.drain<void>();
     client.close(force: true);
-  } catch (_) {
-    // Intentionally swallow; UI still shows saved manual inputs, and compute can run later.
+  } catch (e) {
+    // Intentionally swallow; UI still shows saved manual inputs,
+    // and compute can run later (via scheduler).
   }
 }
 
@@ -55,7 +62,8 @@ class TodayActions {
   String? get _uid => FirebaseAuth.instance.currentUser?.uid;
 
   Future<void> setSleepHours(double hours) async {
-    final uid = _uid; if (uid == null) return;
+    final uid = _uid;
+    if (uid == null) return;
     final doc = await _ensureTodayDoc(uid);
     await doc.set({
       'sleep_total_hours': hours,
@@ -67,7 +75,8 @@ class TodayActions {
   }
 
   Future<void> setHrv(double rmssdMs) async {
-    final uid = _uid; if (uid == null) return;
+    final uid = _uid;
+    if (uid == null) return;
     final doc = await _ensureTodayDoc(uid);
     await doc.set({
       'hrv_rmssd_ms': rmssdMs,
@@ -79,7 +88,8 @@ class TodayActions {
   }
 
   Future<void> setRhr(int bpm) async {
-    final uid = _uid; if (uid == null) return;
+    final uid = _uid;
+    if (uid == null) return;
     final doc = await _ensureTodayDoc(uid);
     await doc.set({
       'rhr_bpm': bpm,
@@ -91,7 +101,8 @@ class TodayActions {
   }
 
   Future<void> setSteps(int steps) async {
-    final uid = _uid; if (uid == null) return;
+    final uid = _uid;
+    if (uid == null) return;
     final doc = await _ensureTodayDoc(uid);
     await doc.set({
       'steps_count': steps,
@@ -108,7 +119,8 @@ class TodayActions {
     String? notesMood,
     String? notesEnergy,
   }) async {
-    final uid = _uid; if (uid == null) return;
+    final uid = _uid;
+    if (uid == null) return;
     final doc = await _ensureTodayDoc(uid);
     final data = <String, dynamic>{
       'updated_at': FieldValue.serverTimestamp(),
@@ -130,3 +142,5 @@ class TodayActions {
 }
 
 final todayActionsProvider = Provider<TodayActions>((ref) => TodayActions(ref));
+
+

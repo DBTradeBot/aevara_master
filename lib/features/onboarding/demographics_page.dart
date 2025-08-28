@@ -1,11 +1,16 @@
 // lib/features/onboarding/demographics_page.dart
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io' show File;
+import 'dart:typed_data' show Uint8List;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../routing/route_paths.dart';
 import '../../data/adapters/firestore/user_profile_service_fs.dart';
-import '../../data/services/user_profile_service.dart';
 import '../../data/models/user_profile.dart';
 
 // Visual tokens
@@ -22,10 +27,7 @@ class DemographicsPage extends StatefulWidget {
 
 class _DemographicsPageState extends State<DemographicsPage> {
   // Services
-  late final UserProfileService _profiles =
-  UserProfileServiceFs(FirebaseFirestore.instance);
-
-  // Auth
+  final _svc = UserProfileServiceFs(FirebaseFirestore.instance);
   final _auth = FirebaseAuth.instance;
 
   // Name
@@ -42,6 +44,11 @@ class _DemographicsPageState extends State<DemographicsPage> {
   LengthUnit _lenUnit = LengthUnit.cm;
   WeightUnit _wtUnit = WeightUnit.kg;
 
+  // Avatar (NEW)
+  XFile? _avatarPicked;
+  String? _avatarUrl; // downloadURL after upload
+  bool _uploadingAvatar = false;
+
   // State
   bool _saving = false;
   String? _error;
@@ -53,6 +60,61 @@ class _DemographicsPageState extends State<DemographicsPage> {
     _heightCtrl.dispose();
     _weightCtrl.dispose();
     super.dispose();
+  }
+
+  // ---------- Avatar: pick + upload (NEW) ----------
+  Future<void> _pickAvatar() async {
+    try {
+      final picker = ImagePicker();
+      final picked = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        imageQuality: 88,
+      );
+      if (picked == null) return;
+      setState(() => _avatarPicked = picked);
+      await _uploadAvatar(picked);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not pick image: $e')),
+      );
+    }
+  }
+
+  Future<void> _uploadAvatar(XFile file) async {
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) return;
+
+    setState(() => _uploadingAvatar = true);
+    try {
+      final ref = FirebaseStorage.instance.ref().child('user_avatars/$uid.jpg');
+
+      if (kIsWeb) {
+        final Uint8List bytes = await file.readAsBytes();
+        final task = await ref.putData(
+          bytes,
+          SettableMetadata(contentType: 'image/jpeg'),
+        );
+        _avatarUrl = await task.ref.getDownloadURL();
+      } else {
+        final task = await ref.putFile(
+          File(file.path),
+          SettableMetadata(contentType: 'image/jpeg'),
+        );
+        _avatarUrl = await task.ref.getDownloadURL();
+      }
+
+      if (mounted) setState(() {});
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Avatar upload failed: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _uploadingAvatar = false);
+    }
   }
 
   // ---------- Utils / conversions ----------
@@ -74,32 +136,6 @@ class _DemographicsPageState extends State<DemographicsPage> {
     return _wtUnit == WeightUnit.kg ? v : v * 0.45359237;
   }
 
-  void _toggleLenUnit(LengthUnit u) {
-    if (_lenUnit == u) return;
-    final current = _toDouble(_heightCtrl);
-    setState(() {
-      if (_lenUnit == LengthUnit.cm && u == LengthUnit.inch && current != null) {
-        _heightCtrl.text = (current / 2.54).toStringAsFixed(1);
-      } else if (_lenUnit == LengthUnit.inch && u == LengthUnit.cm && current != null) {
-        _heightCtrl.text = (current * 2.54).toStringAsFixed(1);
-      }
-      _lenUnit = u;
-    });
-  }
-
-  void _toggleWtUnit(WeightUnit u) {
-    if (_wtUnit == u) return;
-    final current = _toDouble(_weightCtrl);
-    setState(() {
-      if (_wtUnit == WeightUnit.kg && u == WeightUnit.lb && current != null) {
-        _weightCtrl.text = (current / 0.45359237).toStringAsFixed(1);
-      } else if (_wtUnit == WeightUnit.lb && u == WeightUnit.kg && current != null) {
-        _weightCtrl.text = (current * 0.45359237).toStringAsFixed(1);
-      }
-      _wtUnit = u;
-    });
-  }
-
   // ---------- Validation ----------
   int? _ageYears(DateTime? d) {
     if (d == null) return null;
@@ -112,19 +148,12 @@ class _DemographicsPageState extends State<DemographicsPage> {
   }
 
   bool get _meetsAge => (_ageYears(_dob) ?? 0) >= 13;
-  bool get _hasMetric =>
-      _heightCtrl.text.trim().isNotEmpty || _weightCtrl.text.trim().isNotEmpty;
-
-  bool get _minComplete => _dob != null && _gender != null && _hasMetric && _meetsAge;
+  bool get _minComplete => _dob != null && _gender != null && _meetsAge;
 
   // ---------- Save ----------
   Future<void> _save() async {
     final user = _auth.currentUser;
-    if (user == null) {
-      setState(() => _error = 'Not signed in.');
-      return;
-    }
-    if (!_minComplete) return;
+    if (user == null || !_minComplete) return;
 
     setState(() {
       _saving = true;
@@ -135,23 +164,28 @@ class _DemographicsPageState extends State<DemographicsPage> {
       final heightCm = _heightToCm();
       final weightKg = _weightToKg();
 
-      await _profiles.createOrUpdatePartial(uid: user.uid, data: {
-        // Stamp identity
+      await _svc.createOrUpdatePartial(uid: user.uid, data: {
+        // Identity
         'uid': user.uid,
         'email': user.email ?? '',
         // Core fields
-        'first_name': _firstCtrl.text.trim().isEmpty ? null : _firstCtrl.text.trim(),
-        'last_name': _lastCtrl.text.trim().isEmpty ? null : _lastCtrl.text.trim(),
-        if (_dob != null) 'dob': _dob!.toIso8601String(),
+        'first_name':
+        _firstCtrl.text.trim().isEmpty ? null : _firstCtrl.text.trim(),
+        'last_name':
+        _lastCtrl.text.trim().isEmpty ? null : _lastCtrl.text.trim(),
+        if (_dob != null) 'dob': Timestamp.fromDate(_dob!), // ✅ Timestamp
         if (_gender != null) 'gender': _gender!.name,
         'preferred_units': {
           'length': _lenUnit.name,
           'weight': _wtUnit.name,
         },
-        if (heightCm != null) 'height_cm': double.parse(heightCm.toStringAsFixed(2)),
-        if (weightKg != null) 'weight_kg': double.parse(weightKg.toStringAsFixed(2)),
-        // Audit
-        'updated_at': FieldValue.serverTimestamp(),
+        if (heightCm != null)
+          'height_cm': double.parse(heightCm.toStringAsFixed(2)),
+        if (weightKg != null)
+          'weight_kg': double.parse(weightKg.toStringAsFixed(2)),
+        if (_avatarUrl != null && _avatarUrl!.isNotEmpty)
+          'photo_url': _avatarUrl, // NEW
+        // Audit: adapter sets updated_at.
       });
 
       if (!mounted) return;
@@ -181,9 +215,20 @@ class _DemographicsPageState extends State<DemographicsPage> {
             _IntroCard(),
             const SizedBox(height: 12),
 
+            // AVATAR (NEW) — placed right under the intro card
+            _AvatarPicker(
+              uploading: _uploadingAvatar,
+              avatarUrl: _avatarUrl,
+              localFilePath: _avatarPicked?.path,
+              onPick: _pickAvatar,
+            ),
+
+            const SizedBox(height: 16),
+
             // Names
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_kRadius)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(_kRadius)),
               elevation: 0,
               child: Padding(
                 padding: const EdgeInsets.all(_kPad),
@@ -224,7 +269,8 @@ class _DemographicsPageState extends State<DemographicsPage> {
 
             // Basics
             Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_kRadius)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(_kRadius)),
               elevation: 0,
               child: Padding(
                 padding: const EdgeInsets.all(_kPad),
@@ -233,29 +279,33 @@ class _DemographicsPageState extends State<DemographicsPage> {
                   children: [
                     Text('Basics', style: text.titleMedium),
                     const SizedBox(height: 12),
-
                     Text('Date of birth', style: text.labelLarge),
                     const SizedBox(height: 6),
-                    _DobField(value: _dob, onChanged: (d) => setState(() => _dob = d)),
+                    _DobField(
+                        value: _dob,
+                        onChanged: (d) => setState(() => _dob = d)),
                     const SizedBox(height: 4),
                     Text('Used to personalize ranges.',
-                        style: text.bodySmall?.copyWith(color: _kTextSecondary)),
+                        style:
+                        text.bodySmall?.copyWith(color: _kTextSecondary)),
                     if (_dob != null && !_meetsAge)
                       Padding(
                         padding: const EdgeInsets.only(top: 6),
                         child: Text('You must be at least 13.',
-                            style: text.bodySmall?.copyWith(color: theme.colorScheme.error)),
+                            style: text.bodySmall
+                                ?.copyWith(color: theme.colorScheme.error)),
                       ),
                     const SizedBox(height: 16),
-
                     Text('Gender', style: text.labelLarge),
                     const SizedBox(height: 6),
-                    _GenderPicker(value: _gender, onChanged: (g) => setState(() => _gender = g)),
+                    _GenderPicker(
+                        value: _gender,
+                        onChanged: (g) => setState(() => _gender = g)),
                     const SizedBox(height: 4),
                     Text('Helps us set appropriate reference ranges.',
-                        style: text.bodySmall?.copyWith(color: _kTextSecondary)),
+                        style:
+                        text.bodySmall?.copyWith(color: _kTextSecondary)),
                     const SizedBox(height: 16),
-
                     Text('Height', style: text.labelLarge),
                     const SizedBox(height: 6),
                     Row(
@@ -263,25 +313,24 @@ class _DemographicsPageState extends State<DemographicsPage> {
                         Expanded(
                           child: TextField(
                             controller: _heightCtrl,
-                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             decoration: const InputDecoration(
                               hintText: 'Enter height',
                               border: OutlineInputBorder(),
                               isDense: true,
                             ),
-                            onChanged: (_) => setState(() {}),
                           ),
                         ),
                         const SizedBox(width: 8),
                         _UnitChips<LengthUnit>(
                           options: {LengthUnit.cm: 'cm', LengthUnit.inch: 'in'},
                           value: _lenUnit,
-                          onChanged: _toggleLenUnit,
+                          onChanged: (u) => setState(() => _lenUnit = u),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
-
                     Text('Weight', style: text.labelLarge),
                     const SizedBox(height: 6),
                     Row(
@@ -289,20 +338,20 @@ class _DemographicsPageState extends State<DemographicsPage> {
                         Expanded(
                           child: TextField(
                             controller: _weightCtrl,
-                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             decoration: const InputDecoration(
                               hintText: 'Enter weight',
                               border: OutlineInputBorder(),
                               isDense: true,
                             ),
-                            onChanged: (_) => setState(() {}),
                           ),
                         ),
                         const SizedBox(width: 8),
                         _UnitChips<WeightUnit>(
                           options: {WeightUnit.kg: 'kg', WeightUnit.lb: 'lb'},
                           value: _wtUnit,
-                          onChanged: _toggleWtUnit,
+                          onChanged: (u) => setState(() => _wtUnit = u),
                         ),
                       ],
                     ),
@@ -314,7 +363,8 @@ class _DemographicsPageState extends State<DemographicsPage> {
             if (_error != null) ...[
               const SizedBox(height: 12),
               Text(_error!,
-                  style: text.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.error)),
+                  style: text.bodyMedium
+                      ?.copyWith(color: Theme.of(context).colorScheme.error)),
             ],
           ],
         ),
@@ -330,9 +380,7 @@ class _DemographicsPageState extends State<DemographicsPage> {
                 child: Text(
                   _dob == null || _gender == null
                       ? 'Add your date of birth and gender.'
-                      : (!_hasMetric
-                      ? 'Enter height or weight to continue.'
-                      : (!_meetsAge ? 'You must be at least 13.' : '')),
+                      : (!_meetsAge ? 'You must be at least 13.' : ''),
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall
@@ -342,11 +390,14 @@ class _DemographicsPageState extends State<DemographicsPage> {
               ),
             FilledButton(
               onPressed: (!_saving && _minComplete) ? _save : null,
-              style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
+              style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14)),
               child: _saving
                   ? const SizedBox(
-                  width: 20, height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2, color: Colors.white))
                   : const Text('Continue'),
             ),
           ],
@@ -362,7 +413,8 @@ class _IntroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_kRadius)),
+      shape:
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(_kRadius)),
       elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(_kPad),
@@ -378,7 +430,6 @@ class _IntroCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             TextButton(
-              // Opens the in-app explainer page
               onPressed: () =>
                   Navigator.of(context).pushNamed(RoutePaths.aboutPrivacy),
               child: const Text('How we use your data'),
@@ -386,6 +437,84 @@ class _IntroCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+// NEW: Avatar picker block
+class _AvatarPicker extends StatelessWidget {
+  final bool uploading;
+  final String? avatarUrl;
+  final String? localFilePath;
+  final VoidCallback onPick;
+
+  const _AvatarPicker({
+    required this.uploading,
+    required this.avatarUrl,
+    required this.localFilePath,
+    required this.onPick,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final size = 86.0;
+
+    ImageProvider? provider;
+    if (localFilePath != null && !kIsWeb) {
+      provider = FileImage(File(localFilePath!));
+    } else if (avatarUrl != null && avatarUrl!.isNotEmpty) {
+      provider = NetworkImage(avatarUrl!);
+    }
+
+    return Row(
+      children: [
+        Stack(
+          alignment: Alignment.bottomRight,
+          children: [
+            CircleAvatar(
+              radius: size / 2,
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+              backgroundImage: provider,
+              child: provider == null
+                  ? Icon(Icons.person,
+                  size: size * 0.5,
+                  color: Theme.of(context).colorScheme.onSecondaryContainer)
+                  : null,
+            ),
+            Positioned(
+              right: 2,
+              bottom: 2,
+              child: InkWell(
+                onTap: uploading ? null : onPick,
+                borderRadius: BorderRadius.circular(18),
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: uploading
+                      ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                        strokeWidth: 2, color: Colors.white),
+                  )
+                      : const Icon(Icons.photo_camera,
+                      size: 18, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Text(
+            'Add a photo (optional). You can change this later in Profile.',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -435,12 +564,13 @@ class _GenderPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = [
-      DropdownMenuItem(value: Gender.male, child: const Text('Male')),
-      DropdownMenuItem(value: Gender.female, child: const Text('Female')),
-      DropdownMenuItem(value: Gender.nonbinary, child: const Text('Non-binary')),
-      DropdownMenuItem(value: Gender.preferNotSay, child: const Text('Prefer not to say')),
-      DropdownMenuItem(value: Gender.other, child: const Text('Other')),
+    final items = const [
+      DropdownMenuItem(value: Gender.male, child: Text('Male')),
+      DropdownMenuItem(value: Gender.female, child: Text('Female')),
+      DropdownMenuItem(value: Gender.nonbinary, child: Text('Non-binary')),
+      DropdownMenuItem(
+          value: Gender.preferNotSay, child: Text('Prefer not to say')),
+      DropdownMenuItem(value: Gender.other, child: Text('Other')),
     ];
 
     return DropdownButtonFormField<Gender>(
@@ -478,9 +608,11 @@ class _UnitChips<T> extends StatelessWidget {
           onSelected: (_) => onChanged(e.key),
           selectedColor: _kPrimary.withOpacity(0.15),
           labelStyle: TextStyle(
-            color: selected ? _kPrimary : Theme.of(context).colorScheme.onSurface,
+            color:
+            selected ? _kPrimary : Theme.of(context).colorScheme.onSurface,
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         );
       }).toList(),

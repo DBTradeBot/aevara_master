@@ -67,28 +67,28 @@ class InfoSyncStatusSheet extends StatelessWidget {
             emoji: '🟢',
             title: 'Green = Synced / Current',
             desc:
-            'Data was received recently (within 24h for daily metrics).\n→ Your dashboard is fully up to date.',
+                'Data was received recently (within 24h for daily metrics).\n→ Your dashboard is fully up to date.',
           ),
           const SizedBox(height: 12),
           const _LegendRow(
             emoji: '🟡',
             title: 'Yellow = Partial / Stale',
             desc:
-            'Some metrics haven’t updated in time (e.g. HRV is 2–3 days old).\n→ You can still see last values, but sync is falling behind.',
+                'Some metrics haven’t updated in time (e.g. HRV is 2–3 days old).\n→ You can still see last values, but sync is falling behind.',
           ),
           const SizedBox(height: 12),
           const _LegendRow(
             emoji: '🔴',
             title: 'Red = Error / Disconnected',
             desc:
-            'The source stopped syncing due to an error or expired login.\n→ Tap to reconnect or check the provider’s app.',
+                'The source stopped syncing due to an error or expired login.\n→ Tap to reconnect or check the provider’s app.',
           ),
           const SizedBox(height: 12),
           const _LegendRow(
             emoji: '⚪',
             title: 'Gray = Not Connected',
             desc:
-            'You haven’t connected this source yet.\n→ Tap to link Apple Health, Google Fit, Garmin, WHOOP, etc.',
+                'You haven’t connected this source yet.\n→ Tap to link Apple Health, Google Fit, Garmin, WHOOP, etc.',
           ),
 
           const SizedBox(height: 16),
@@ -140,7 +140,8 @@ class _LegendRow extends StatelessWidget {
             children: [
               Text(title, style: t.titleMedium),
               const SizedBox(height: 4),
-              Text(desc, style: t.bodySmall?.copyWith(color: c.onSurfaceVariant)),
+              Text(desc,
+                  style: t.bodySmall?.copyWith(color: c.onSurfaceVariant)),
             ],
           ),
         ),

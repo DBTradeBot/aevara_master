@@ -22,7 +22,7 @@ class _IdentityPageState extends State<IdentityPage> {
 
   // Firestore-backed profile service
   late final UserProfileService _profiles =
-  UserProfileServiceFs(FirebaseFirestore.instance);
+      UserProfileServiceFs(FirebaseFirestore.instance);
 
   bool _checking = false;
   bool? _available;
@@ -52,8 +52,7 @@ class _IdentityPageState extends State<IdentityPage> {
         // Use replacement so Back doesn't return here first
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
-            Navigator.of(context)
-                .pushReplacementNamed(RoutePaths.demographics);
+            Navigator.of(context).pushReplacementNamed(RoutePaths.demographics);
           }
         });
       }
@@ -183,22 +182,22 @@ class _IdentityPageState extends State<IdentityPage> {
                   child: Text('@', style: TextStyle(fontSize: 18)),
                 ),
                 prefixIconConstraints:
-                const BoxConstraints(minWidth: 0, minHeight: 0),
+                    const BoxConstraints(minWidth: 0, minHeight: 0),
                 border: const OutlineInputBorder(),
                 hintText: 'yourhandle',
                 suffixIcon: _checking
                     ? const Padding(
-                  padding: EdgeInsets.all(12),
-                  child: SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2)),
-                )
+                        padding: EdgeInsets.all(12),
+                        child: SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2)),
+                      )
                     : (_available == true
-                    ? const Icon(Icons.check_circle, color: Colors.green)
-                    : (_available == false
-                    ? const Icon(Icons.error, color: Colors.red)
-                    : null)),
+                        ? const Icon(Icons.check_circle, color: Colors.green)
+                        : (_available == false
+                            ? const Icon(Icons.error, color: Colors.red)
+                            : null)),
               ),
             ),
             if (_statusMsg != null) ...[
@@ -209,8 +208,8 @@ class _IdentityPageState extends State<IdentityPage> {
                   color: _available == false
                       ? Colors.red
                       : (_available == true
-                      ? Colors.green
-                      : Theme.of(context).colorScheme.onSurface),
+                          ? Colors.green
+                          : Theme.of(context).colorScheme.onSurface),
                 ),
               ),
             ],

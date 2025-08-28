@@ -7,5 +7,6 @@ abstract class AuthService {
   Future<void> sendEmailVerification();
   Future<void> sendPasswordReset(String email);
   Future<void> signOut();
-  Future<UserCredential> signInWithGoogle(); // stub; platform code handled by firebase_auth_oauth or google_sign_in
+  Future<UserCredential>
+      signInWithGoogle(); // stub; platform code handled by firebase_auth_oauth or google_sign_in
 }

@@ -26,9 +26,13 @@ class _SignUpPageState extends State<SignUpPage> {
       setState(() => _error = 'Passwords do not match');
       return;
     }
-    setState(() { _loading = true; _error = null; });
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email.text.trim(), password: _pass.text);
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _email.text.trim(), password: _pass.text);
       await FirebaseAuth.instance.currentUser?.sendEmailVerification();
       if (mounted) Navigator.pushReplacementNamed(context, RoutePaths.verify);
     } on FirebaseAuthException catch (e) {
@@ -56,9 +60,13 @@ class _SignUpPageState extends State<SignUpPage> {
                   const SizedBox(height: 12),
                   AuthPasswordField(controller: _pass),
                   const SizedBox(height: 12),
-                  AuthPasswordField(controller: _confirm, label: 'Confirm Password'),
+                  AuthPasswordField(
+                      controller: _confirm, label: 'Confirm Password'),
                   const SizedBox(height: 16),
-                  PrimarySubmitButton(label: 'Create Account', onPressed: _doSignup, loading: _loading),
+                  PrimarySubmitButton(
+                      label: 'Create Account',
+                      onPressed: _doSignup,
+                      loading: _loading),
                   const SizedBox(height: 12),
                   Center(child: Text('OR', style: theme.textTheme.labelMedium)),
                   const SizedBox(height: 12),
@@ -67,7 +75,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   const AuthAltLinksRow(isSignin: false),
                   if (_error != null) ...[
                     const SizedBox(height: 8),
-                    Text(_error!, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error)),
+                    Text(_error!,
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: theme.colorScheme.error)),
                   ],
                 ],
               ),

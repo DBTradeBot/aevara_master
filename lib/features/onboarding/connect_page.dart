@@ -24,7 +24,8 @@ class _ConnectPageState extends State<ConnectPage> {
 
   void _finish() {
     // For now we go straight to Dashboard; connections can be managed later.
-    Navigator.of(context).pushNamedAndRemoveUntil(RoutePaths.home, (r) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(RoutePaths.home, (r) => false);
   }
 
   @override
@@ -77,7 +78,7 @@ class _ConnectPageState extends State<ConnectPage> {
                         const SizedBox(height: 6),
                         Text(
                           'Connect your wearables now to see trends faster. '
-                              'You can always connect or disconnect later in Settings → Connections.',
+                          'You can always connect or disconnect later in Settings → Connections.',
                           style: t.bodyMedium!.copyWith(
                             color: theme.colorScheme.onSurface.withOpacity(.75),
                           ),
@@ -126,7 +127,8 @@ class _ConnectPageState extends State<ConnectPage> {
             OutlinedButton(
               onPressed: _finish,
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
               ),
               child: const Text('Skip for now'),
             ),
@@ -134,9 +136,12 @@ class _ConnectPageState extends State<ConnectPage> {
             FilledButton(
               onPressed: _finish,
               style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
               ),
-              child: Text(_connected.isEmpty ? 'Continue' : 'Continue (${_connected.length})'),
+              child: Text(_connected.isEmpty
+                  ? 'Continue'
+                  : 'Continue (${_connected.length})'),
             ),
           ],
         ),
@@ -192,7 +197,9 @@ class _ProviderCard extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor: connected ? on.withOpacity(.15) : theme.colorScheme.surfaceVariant,
+              backgroundColor: connected
+                  ? on.withOpacity(.15)
+                  : theme.colorScheme.surfaceVariant,
               child: Icon(provider.icon, color: connected ? on : off),
             ),
             const SizedBox(width: 12),
@@ -207,17 +214,17 @@ class _ProviderCard extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               child: connected
                   ? Row(
-                key: const ValueKey('ok'),
-                children: [
-                  const Icon(Icons.check_circle, size: 18),
-                  const SizedBox(width: 6),
-                  Text('Connected',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelLarge
-                          ?.copyWith(color: on)),
-                ],
-              )
+                      key: const ValueKey('ok'),
+                      children: [
+                        const Icon(Icons.check_circle, size: 18),
+                        const SizedBox(width: 6),
+                        Text('Connected',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(color: on)),
+                      ],
+                    )
                   : const Icon(Icons.add_link),
             ),
           ],

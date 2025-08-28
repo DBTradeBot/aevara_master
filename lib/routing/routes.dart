@@ -1,7 +1,6 @@
-﻿// lib/routing/routes.dart
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-import 'route_paths.dart';
+import '../routing/route_paths.dart';
 
 // Auth
 import '../features/auth/signin_page.dart';
@@ -15,13 +14,35 @@ import '../features/onboarding/demographics_page.dart';
 import '../features/onboarding/consent_page.dart';
 import '../features/onboarding/connect_page.dart';
 
-// About
-import '../features/about/privacy_page.dart';
+// About & Legal
+import '../features/about/privacy_page.dart'; // ✅ corrected
+import '../features/about/about_page.dart';
+import '../features/about/terms_page.dart';
 
-// App
-import '../features/home/dashboard_page.dart';
+// Devices & Notifications
+import '../features/settings/devices_page.dart';
+import '../features/settings/notifications_page.dart';
 
-Map<String, WidgetBuilder> appRoutes = <String, WidgetBuilder>{
+// Account/Settings pages
+import '../features/profile/edit/edit_profile_page.dart'; // legacy route target (kept)
+import '../features/settings/account/change_username_page.dart';
+import '../features/settings/account/change_email_page.dart';
+import '../features/settings/account/change_password_page.dart';
+import '../features/settings/account/update_profile_page.dart'; // ✅ new page
+
+// Data & Privacy
+import '../features/profile/privacy_dashboard_page.dart';
+import '../features/profile/export_page.dart';
+import '../features/profile/delete_account_page.dart';
+
+// Methods & transparency (existing docs page)
+import '../features/insights/methods_doc_page.dart';
+
+// App shell + guard
+import '../shell/app_shell.dart';
+import '../core/guards/auth_guard.dart';
+
+final Map<String, WidgetBuilder> appRoutes = <String, WidgetBuilder>{
   // Auth
   RoutePaths.signin: (_) => const SignInPage(),
   RoutePaths.signup: (_) => const SignUpPage(),
@@ -29,26 +50,47 @@ Map<String, WidgetBuilder> appRoutes = <String, WidgetBuilder>{
   RoutePaths.forgot: (_) => const ForgotPasswordPage(),
 
   // Onboarding
-  RoutePaths.demographics: (_) => const DemographicsPage(),
   RoutePaths.identity: (_) => const IdentityPage(),
+  RoutePaths.demographics: (_) => const DemographicsPage(),
   RoutePaths.consent: (_) => const ConsentPage(),
   RoutePaths.connect: (_) => const ConnectPage(),
 
-  // About
-  RoutePaths.aboutPrivacy: (_) => const PrivacyPage(),
+  // About & Legal
+  RoutePaths.aboutPrivacy: (_) => const PrivacyPage(), // ✅ fixed mapping
+  RoutePaths.about: (_) => const AboutPage(),
+  RoutePaths.aboutTerms: (_) => const TermsPage(),
 
-  // App
-  RoutePaths.home: (_) => const DashboardPage(),
+  // Devices & Notifications
+  RoutePaths.settingsDevices: (_) => const DevicesPage(),
+  RoutePaths.settingsNotifs: (_) => const NotificationsPage(),
+
+  // Data & Privacy
+  RoutePaths.profilePrivacy: (_) => const PrivacyDashboardPage(),
+  RoutePaths.profileExport:  (_) => const ExportPage(),
+  RoutePaths.profileDelete:  (_) => const DeleteAccountPage(),
+
+  // Account / Profile editors
+  RoutePaths.profileEdit:       (_) => const EditProfilePage(), // legacy
+  RoutePaths.updateProfile:     (_) => const UpdateProfilePage(), // ✅ new route
+  RoutePaths.settingsUsername:  (_) => const ChangeUsernamePage(),
+  RoutePaths.settingsEmail:     (_) => const ChangeEmailPage(),
+  RoutePaths.settingsPassword:  (_) => const ChangePasswordPage(),
+
+  // Methods & transparency
+  RoutePaths.methodsDoc: (_) => const MethodsDocPage(),
+
+  // APP HOME → wrap the shell with AuthGuard so signed-out users go to /auth/signin
+  RoutePaths.home: (_) => AuthGuard(child: const AppShell()),
 };
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
   final builder = appRoutes[settings.name];
   if (builder != null) {
-    return MaterialPageRoute(builder: builder, settings: settings);
+    return MaterialPageRoute<void>(builder: builder, settings: settings);
   }
   // Fallback to home if unknown
-  return MaterialPageRoute(
-    builder: (_) => const DashboardPage(),
+  return MaterialPageRoute<void>(
+    builder: (_) => AuthGuard(child: const AppShell()),
     settings: const RouteSettings(name: RoutePaths.home),
   );
 }

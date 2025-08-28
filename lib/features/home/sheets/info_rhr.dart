@@ -1,4 +1,4 @@
-﻿// lib/features/home/sheets/info_rhr.dart
+// lib/features/home/sheets/info_rhr.dart
 import 'package:flutter/material.dart';
 
 class InfoRhrSheet extends StatelessWidget {
@@ -18,13 +18,14 @@ class InfoRhrSheet extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 'Lowest sustained heart rate at rest. Lower generally indicates better '
-                    'cardio fitness and recovery. We combine it with HRV + Sleep for Readiness.',
+                'cardio fitness and recovery. We combine it with HRV + Sleep for Readiness.',
                 style: tt.bodyLarge,
               ),
               const SizedBox(height: 16),
               Text('Where to find it (devices)', style: tt.titleLarge),
               const SizedBox(height: 8),
-              Text('- Apple / Garmin / Fitbit / WHOOP: Resting HR / RHR', style: tt.bodyLarge),
+              Text('- Apple / Garmin / Fitbit / WHOOP: Resting HR / RHR',
+                  style: tt.bodyLarge),
             ],
           ),
         ),
