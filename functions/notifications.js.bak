@@ -1,0 +1,184 @@
+/**
+ * Notifications module (ESM)
+ * - Writes app-notifications to users/{uid}/notifications in the shape Flutter expects.
+ * - 14-day calibration lifecycle: start-on-first-write + daily tick + complete.
+ */
+
+import { onCall } from "firebase-functions/v2/https";
+import { onDocumentWritten } from "firebase-functions/v2/firestore";
+import { onSchedule } from "firebase-functions/v2/scheduler";
+import * as logger from "firebase-functions/logger";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+
+
+
+/** AppNotification writer: keeps the mobile schema & path */
+export async function writeAppNotif(uid, payload = {}) {
+  // Default fields the client expects (see AppNotification)
+  const base = {
+    type: payload.type ?? "system",
+    category: payload.category ?? "system",        // 'system' | 'coaching' | 'experiments' | 'community' | 'account'
+    severity: payload.severity ?? "info",          // 'info' | 'success' | 'warn' | 'crit'
+    title: String(payload.title ?? "Notification"),
+    body: payload.body ?? null,
+    icon: payload.icon ?? null,
+    route: payload.route ?? null,
+    routeArgs: payload.routeArgs ?? null,
+    source: payload.source ?? "functions",
+    created_at: FieldValue.serverTimestamp(),
+    read_at: null,
+    archived_at: null,
+    sticky_until: payload.stickyUntil ?? null,     // Date | null
+    expires_at: payload.expiresAt ?? null,         // Date | null
+  };
+
+  await db.collection("users").doc(uid).collection("notifications").add(base);
+}
+
+/* ----------------------- 14-day calibration ----------------------- */
+
+/**
+ * Start calibration for a brand-new user (or a legacy user that never had the fields).
+ * Trigger: first write (create) of users/{uid} OR a write that lacks calibration fields.
+ */
+export const startCalibrationIfMissing = onDocumentWritten(
+  "users/{uid}",
+  async (event) => {
+    const after = event.data?.after;
+    if (!after) return;
+    const before = event.data?.before;
+
+    const uid = after.id;
+    const user = after.data() || {};
+    const hasStatus = typeof user.calibration_status === "string";
+    const hasDay = typeof user.calibration_day === "number";
+
+    // Start only when creating or when the fields are completely missing
+    if (before && hasStatus && hasDay) return;
+
+    const patch = {
+      calibration_status: "running",
+      calibration_day: 1,
+      created_at_utc: user.created_at_utc ?? new Date().toISOString(),
+      ui: {
+        ...(user.ui || {}),
+        calibration_banner_dismissed: false, // make sure the banner shows
+      },
+    };
+
+    await after.ref.set(patch, { merge: true });
+    logger.info("Calibration started for user", { uid });
+
+    // Drop a sticky notification so it also shows in the Notifications page
+    await writeAppNotif(uid, {
+      type: "calibrationBanner",
+      category: "system",
+      severity: "info",
+      title: "Calibration started (14 days)",
+      body:
+        "We'll calibrate quietly in the background for ~2 weeks. Dismiss the banner anytime—this card will keep the info handy.",
+      icon: "hourglass_empty",
+      route: "/info/methods_doc",
+      routeArgs: { from: "notification" },
+      stickyUntil: new Date(Date.now() + 14 * 864e5),
+      expiresAt: new Date(Date.now() + 30 * 864e5),
+    });
+  }
+);
+
+/**
+ * Daily tick for calibration: bumps day, completes at 14.
+ * Runs every morning UTC; idempotent.
+ */
+export const tickCalibrationDaily = onSchedule(
+  { schedule: "every 24 hours", timeZone: "Etc/UTC" },
+  async () => {
+    const snap = await db
+      .collection("users")
+      .where("calibration_status", "in", ["running", null])
+      .limit(5000)
+      .get();
+
+    const now = Date.now();
+    let started = 0,
+      progressed = 0,
+      completed = 0;
+
+    const batch = db.batch();
+
+    for (const doc of snap.docs) {
+      const uid = doc.id;
+      const u = doc.data() || {};
+      let status = (u.calibration_status || "running").toString();
+      let day = Number(u.calibration_day ?? 1);
+
+      // If it somehow never got initialized, start it here
+      if (!u.calibration_status) {
+        status = "running";
+        day = 1;
+        batch.set(doc.ref, { calibration_status: status, calibration_day: day }, { merge: true });
+        started++;
+        continue;
+      }
+
+      if (status !== "running") continue;
+      if (day >= 14) {
+        // flip to complete only once
+        batch.set(doc.ref, { calibration_status: "complete" }, { merge: true });
+        await writeAppNotif(uid, {
+          type: "calibrationComplete",
+          category: "system",
+          severity: "success",
+          title: "Calibration complete",
+          body: "Your baseline is calibrated. You’ll see steadier daily changes from now on.",
+          icon: "verified",
+          expiresAt: new Date(now + 30 * 864e5),
+        });
+        completed++;
+        continue;
+      }
+
+      // Progress a day
+      const next = Math.min(14, day + 1);
+      if (next !== day) {
+        batch.set(doc.ref, { calibration_day: next }, { merge: true });
+        progressed++;
+      }
+    }
+
+    if (progressed || started || completed) await batch.commit();
+    logger.info("tickCalibrationDaily", { started, progressed, completed });
+  }
+);
+
+/* ----------------------- Dev/test utilities ----------------------- */
+
+/**
+ * Push a test notification to the current user.
+ * onCall: notificationsDevAdd({ title?, body?, severity?, category?, route? })
+ */
+export const notificationsDevAdd = onCall({ region: "us-central1" }, async (req) => {
+  const uid = req.auth?.uid;
+  if (!uid) throw new Error("unauthenticated");
+
+  const {
+    title = "Hello from Functions",
+    body = "This is a dev/test notification.",
+    category = "system",
+    severity = "info",
+    route = null,
+  } = req.data || {};
+
+  await writeAppNotif(uid, {
+    type: "dev",
+    category,
+    severity,
+    title,
+    body,
+    route,
+    expiresAt: new Date(Date.now() + 7 * 864e5),
+  });
+
+  return { ok: true };
+});
+

@@ -1,0 +1,249 @@
+import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
+// functions/core/ddc_utils.js
+// Shared helpers for DDC + vendors (Node 20 / ESM / Firebase Functions v2)
+//
+// Exports:
+//   • round, clamp, clamp01, pad2
+//   • hashOf (stable, order-insensitive, undefined→null)
+//   • date/tz: dateKeyInTZ, isTodayKey, dayKeysBackInTZ, parseDateKey
+//   • regex: HANDLE_RE, isDateKey
+//   • EMA & staleness: ema, stalenessWeight, decayValue, reNormalizeWeights
+//   • sex-aware bounds scaffolding: sexAwareBounds(), normalizeUnits()
+//   • percentiles scaffolding: valueToPercentile()
+//   • tiny cache: memoizeTtl()
+//
+// Notes:
+// - Keep *all* duplicated helpers centralized here (fitbit_fetch keeps its own for now).
+// - These helpers are pure and side-effect free (safe to import everywhere).
+
+/* ----------------------------- Numbers/helpers ----------------------------- */
+
+export const round = (n, d = 2) =>
+  typeof n === "number" && Number.isFinite(n) ? Number(n.toFixed(d)) : n;
+
+export const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+export const clamp01 = (x) => clamp(Number(x), 0, 1);
+export const pad2 = (n) => String(n).padStart(2, "0");
+
+/* ------------------------------ Hash / stable ------------------------------ */
+
+// stable, deterministic hash for objects (order-insensitive, undefined → null)
+export function hashOf(obj) {
+  try {
+    const replacer = (k, v) => (v === undefined ? null : v);
+    const ordered = (o) => {
+      if (o === null || typeof o !== "object" || Array.isArray(o)) return o;
+      // Sort object keys to be order-insensitive
+      return Object.keys(o)
+        .sort()
+        .reduce((acc, k) => {
+          acc[k] = ordered(o[k]);
+          return acc;
+        }, {});
+    };
+    const json = JSON.stringify(ordered(obj), replacer);
+    // Lightweight DJB2 variant
+    let h = 5381;
+    for (let i = 0; i < json.length; i++) {
+      h = (h * 33) ^ json.charCodeAt(i);
+    }
+    // ensure positive 32-bit
+    return (h >>> 0).toString(16);
+  } catch {
+    return Math.random().toString(16).slice(2);
+  }
+}
+
+/* -------------------------------- Time/TZ ---------------------------------- */
+
+const DEFAULT_TZ = "America/Los_Angeles";
+
+export function dateKeyInTZ(d, tz = DEFAULT_TZ) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: tz,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  })
+    .formatToParts(d)
+    .reduce((acc, p) => ((acc[p.type] = p.value), acc), {});
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+export function isTodayKey(key, tz = DEFAULT_TZ) {
+  return key === dateKeyInTZ(new Date(), tz);
+}
+
+export function dayKeysBackInTZ(nDays, tz = DEFAULT_TZ) {
+  const keys = [];
+  const now = new Date();
+  for (let i = 0; i < nDays; i++) {
+    const dt = new Date(now);
+    dt.setUTCDate(dt.getUTCDate() - i);
+    keys.push(dateKeyInTZ(dt, tz));
+  }
+  return keys;
+}
+
+export function parseDateKey(key) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(key))) return null;
+  const [y, m, d] = key.split("-").map((s) => Number(s));
+  if (!y || !m || !d) return null;
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return Number.isFinite(dt.getTime()) ? dt : null;
+}
+
+/* -------------------------------- Regexes ---------------------------------- */
+
+// Fixed per plan
+export const HANDLE_RE = /^[a-zA-Z0-9*.]{3,24}$/;
+export const isDateKey = (s) => /^\d{4}-\d{2}-\d{2}$/.test(String(s || ""));
+
+/* --------------------------------- EMA ------------------------------------- */
+
+// Simple EMA with alpha in (0,1]; if prev is null, return value
+export function ema(prev, value, alpha = 2 / (7 + 1)) {
+  const v = Number(value);
+  if (!Number.isFinite(v)) return prev ?? null;
+  if (prev == null) return v;
+  return alpha * v + (1 - alpha) * prev;
+}
+
+/**
+ * Staleness weight decay.
+ * daysStale: 0 → 1.0, 1 → 1.0, 2–3 → 0.9, ≥4 → 0.75 (per plan, conservative)
+ */
+export function stalenessWeight(daysStale) {
+  const d = Number(daysStale || 0);
+  if (d <= 1) return 1.0;
+  if (d <= 3) return 0.9;
+  return 0.75;
+}
+
+/**
+ * Decay a value by staleness weight.
+ * Returns { value, weight } to help caller re-normalize later.
+ */
+export function decayValue(value, daysStale) {
+  if (value == null) return { value: null, weight: 0 };
+  const w = stalenessWeight(daysStale);
+  return { value, weight: w };
+}
+
+/**
+ * Re-normalize weights to sum to 1.0, skipping zeros.
+ * Returns array of { value, weight } with normalized weight.
+ */
+export function reNormalizeWeights(items) {
+  const sum = items.reduce((acc, it) => acc + (Number(it.weight) || 0), 0);
+  if (sum <= 0) return items.map((it) => ({ ...it, weight: 0 }));
+  return items.map((it) => ({ ...it, weight: (Number(it.weight) || 0) / sum }));
+}
+
+/* -------------------------- Sex-aware bounds (scaffold) --------------------- */
+/**
+ * sexAwareBounds(metric, { sex, ageYears })
+ * Returns { optimal, low, high } bounds we can use for scoring clamps.
+ * This is a scaffold to keep compute.js pure — real tables can be injected via model config.
+ */
+export function sexAwareBounds(metric, { sex = "unknown", ageYears = 40 } = {}) {
+  const s = String(sex || "unknown").toLowerCase();
+  // Minimal defaults (should be overwritten via model config as needed)
+  const defaults = {
+    hrv_rmssd_ms: { optimal: 60, low: 20, high: 120 },
+    rhr_bpm: { optimal: 60, low: 40, high: 90 },
+    sleep_total_hours: { optimal: 7.5, low: 5.0, high: 9.5 },
+    steps_count: { optimal: 9000, low: 2000, high: 15000 },
+  };
+  const base = defaults[metric] || { optimal: 0, low: 0, high: 0 };
+  // Very light sex/age tweak: small slope to demonstrate scaffolding
+  const ageAdj = (ageYears - 40) * 0.2; // ± small
+  if (metric === "hrv_rmssd_ms") {
+    const sexAdj = s === "female" ? -3 : s === "male" ? 0 : -1;
+    return {
+      optimal: clamp(base.optimal + sexAdj - ageAdj, 10, 200),
+      low: clamp(base.low - ageAdj, 5, 180),
+      high: clamp(base.high - ageAdj, 20, 240),
+    };
+  }
+  if (metric === "rhr_bpm") {
+    const sexAdj = s === "female" ? +2 : s === "male" ? 0 : +1;
+    return {
+      optimal: clamp(base.optimal + sexAdj + ageAdj * 0.2, 35, 100),
+      low: clamp(base.low + sexAdj, 30, 100),
+      high: clamp(base.high + sexAdj, 50, 120),
+    };
+  }
+  // Otherwise return base with light age adjustment
+  return {
+    optimal: base.optimal,
+    low: base.low,
+    high: base.high,
+  };
+}
+
+/* ------------------------------- Units normalize --------------------------- */
+/**
+ * normalizeUnits(input)
+ *  - height_cm: accepts meters or inches if obviously not cm (heuristics)
+ *  - weight_kg: accepts lb if obviously not kg
+ */
+export function normalizeUnits({ height_cm, weight_kg }) {
+  let h = Number(height_cm);
+  let w = Number(weight_kg);
+
+  if (Number.isFinite(h)) {
+    // if clearly meters (0.5–2.5), convert to cm
+    if (h > 0.5 && h < 2.5) h = h * 100;
+    // if looks like inches (< 100 and whole number around 60–80), convert
+    if (h < 100 && h > 20) h = h * 2.54;
+  } else {
+    h = null;
+  }
+
+  if (Number.isFinite(w)) {
+    // if looks like pounds (> 120 and < 500), convert
+    if (w > 120 && w < 500) w = w * 0.45359237;
+  } else {
+    w = null;
+  }
+
+  return {
+    height_cm: Number.isFinite(h) ? round(h, 1) : null,
+    weight_kg: Number.isFinite(w) ? round(w, 1) : null,
+  };
+}
+
+/* ------------------------------- Percentiles (scaffold) -------------------- */
+/**
+ * valueToPercentile(metric, value, { sex, ageYears })
+ * Placeholder mapping — in real model, load curves from config.
+ */
+export function valueToPercentile(metric, value, ctx = {}) {
+  const v = Number(value);
+  if (!Number.isFinite(v)) return null;
+  // Simple piecewise heuristics for scaffold:
+  if (metric === "hrv_rmssd_ms") return clamp01((v - 15) / (110 - 15));
+  if (metric === "rhr_bpm") return clamp01(1 - (v - 40) / (90 - 40));
+  if (metric === "sleep_total_hours") return clamp01((v - 5) / (9.5 - 5));
+  if (metric === "steps_count") return clamp01((v - 2000) / (12000 - 2000));
+  return 0.5; // neutral fallback
+}
+
+/* ---------------------------------- Cache ---------------------------------- */
+
+/**
+ * memoizeTtl(name, key, ttlMs, computeFn): Promise<any>
+ * In-memory per-process TTL cache, safe for stateless function instances.
+ */
+const _memo = new Map(); // key → { at, val }
+export async function memoizeTtl(name, key, ttlMs, computeFn) {
+  const fullKey = `${name}:${key}`;
+  const now = Date.now();
+  const cached = _memo.get(fullKey);
+  if (cached && now - cached.at < ttlMs) return cached.val;
+  const val = await computeFn();
+  _memo.set(fullKey, { at: now, val });
+  return val;
+}
+

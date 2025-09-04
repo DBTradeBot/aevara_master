@@ -1,0 +1,304 @@
+// functions/community/index.js
+// Community module (ESM / Gen2 / Node 20)
+// - Usernames: reserve-on-create trigger, getMyUsername, reserveUsername
+// - Notifications: markNotificationRead
+// - Counters (BACKGROUND TRIGGERS restored): friendsCounters, groupMembersCounter, challengeParticipantsCounter, eventRsvpsCounter
+// - Leaderboards: buildLeaderboards (SCHEDULED) + buildLeaderboardsCall (CALLABLE helper)
+// - Biometrics: enrichBP (CALLABLE)
+
+import { onCall } from "firebase-functions/v2/https";
+import { onDocumentCreated, onDocumentWritten } from "firebase-functions/v2/firestore";
+import { onSchedule } from "firebase-functions/v2/scheduler";
+import * as logger from "firebase-functions/logger";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+
+const db = getFirestore();
+
+/* ─────────────────────────────── Username policy ───────────────────────────── */
+
+const HANDLE_RE = /^[a-z][a-z0-9._-]*$/; // lower; start with letter
+
+function validateHandle(raw) {
+  const h = String(raw || "").trim().toLowerCase();
+  if (h.length < 3 || h.length > 24) throw new Error("invalid handle length");
+  if (!HANDLE_RE.test(h)) throw new Error("invalid handle format");
+  return h;
+}
+
+function assertAuthed(req) {
+  const uid = req.auth?.uid;
+  if (!uid) throw new Error("UNAUTHENTICATED");
+  return uid;
+}
+
+/* ─────────────────────────── reserve on user create ────────────────────────── */
+export const reserveUsernameOnCreate = onDocumentCreated("users/{uid}", async (event) => {
+  try {
+    const uid = event.params.uid;
+    const u = event.data?.data() || {};
+    const handleRaw = (u.username || u.handle || "").toString().trim();
+    if (!handleRaw) return;
+    const lower = handleRaw.toLowerCase();
+    if (!HANDLE_RE.test(lower)) return;
+
+    const ref = db.doc(`usernames/${lower}`);
+    const snap = await ref.get();
+    if (snap.exists && snap.data()?.uid !== uid) {
+      await db.doc(`users/${uid}`).set({ username_conflict: true }, { merge: true });
+      return;
+    }
+    await ref.set({ uid, reserved_at: FieldValue.serverTimestamp() }, { merge: true });
+    await db.doc(`users/${uid}`).set({ username: lower, username_conflict: false }, { merge: true });
+  } catch (e) {
+    logger.error("reserveUsernameOnCreate error", { message: e?.message });
+  }
+});
+
+/* ───────────────────── maintain mapping on change (optional) ───────────────── */
+export const updateUsernameOnChange = onDocumentWritten("users/{uid}", async (event) => {
+  try {
+    const uid = event.params.uid;
+    const before = event.data?.before?.data() || {};
+    const after = event.data?.after?.data() || {};
+    const prev = (before.username || before.handle || "").toString().trim().toLowerCase();
+    const next = (after.username || after.handle || "").toString().trim().toLowerCase();
+    if (!next || next === prev) return;
+    if (!HANDLE_RE.test(next)) return;
+
+    await db.runTransaction(async (tx) => {
+      const nextRef = db.doc(`usernames/${next}`);
+      const nextSnap = await tx.get(nextRef);
+      if (nextSnap.exists && nextSnap.data()?.uid !== uid) {
+        tx.set(db.doc(`users/${uid}`), { username_conflict: true }, { merge: true });
+        return;
+      }
+
+      if (prev && prev !== next) {
+        const prevRef = db.doc(`usernames/${prev}`);
+        const prevSnap = await tx.get(prevRef);
+        if (prevSnap.exists && prevSnap.data()?.uid === uid) {
+          tx.delete(prevRef);
+        }
+      }
+
+      tx.set(nextRef, { uid, reserved_at: FieldValue.serverTimestamp() }, { merge: true });
+      tx.set(db.doc(`users/${uid}`), { username: next, username_conflict: false }, { merge: true });
+    });
+  } catch (e) {
+    logger.error("updateUsernameOnChange error", { message: e?.message });
+  }
+});
+
+/* ───────────────────────────── Username callables ─────────────────────────── */
+
+export const getMyUsername = onCall(async (req) => {
+  const uid = assertAuthed(req);
+  const u = (await db.doc(`users/${uid}`).get()).data() || {};
+  const username = (u.username || u.handle || null) ?? null;
+  let mappingOk = null;
+  if (username) {
+    const m = await db.doc(`usernames/${username}`).get();
+    mappingOk = m.exists ? (m.data()?.uid === uid) : false;
+  }
+  return { ok: true, username, mappingOk };
+});
+
+export const reserveUsername = onCall(async (req) => {
+  const uid = assertAuthed(req);
+  const handle = validateHandle(req.data?.handle);
+
+  const mapRef = db.doc(`usernames/${handle}`);
+  const userRef = db.doc(`users/${uid}`);
+
+  await db.runTransaction(async (tx) => {
+    const mapSnap = await tx.get(mapRef);
+    if (!mapSnap.exists) {
+      tx.set(mapRef, { uid, reserved_at: FieldValue.serverTimestamp() });
+    } else if (mapSnap.data()?.uid !== uid) {
+      throw new Error("handle_taken");
+    }
+    tx.set(userRef, { username: handle, username_updated_at: FieldValue.serverTimestamp(), username_conflict: false }, { merge: true });
+  });
+
+  return { ok: true, username: handle };
+});
+
+/* ─────────────────────────── Notifications helper ─────────────────────────── */
+
+export const markNotificationRead = onCall(async (req) => {
+  const uid = assertAuthed(req);
+  const id = String(req.data?.id || "").trim();
+  if (!id) throw new Error("missing id");
+  const ref = db.doc(`users/${uid}/notifications/${id}`);
+  await ref.set({ read_at: FieldValue.serverTimestamp() }, { merge: true });
+  return { ok: true };
+});
+
+/* ─────────────────────── BACKGROUND COUNTERS (restored) ─────────────────────
+   IMPORTANT: These were previously background triggers. We keep the names and
+   implement onDocumentWritten so the trigger type matches the deployed one.
+----------------------------------------------------------------------------- */
+
+/** Recompute friends counters whenever any friend item changes. */
+export const friendsCounters = onDocumentWritten(
+  "users/{uid}/friends/{bucket}/items/{friendId}",
+  async (event) => {
+    try {
+      const uid = event.params.uid;
+      const base = db.collection("users").doc(uid);
+
+      const [incoming, outgoing, accepted, blocked] = await Promise.all([
+        base.collection("friends").doc("incoming").collection("items").count().get(),
+        base.collection("friends").doc("outgoing").collection("items").count().get(),
+        base.collection("friends").doc("accepted").collection("items").count().get(),
+        base.collection("friends").doc("blocked").collection("items").count().get(),
+      ]);
+
+      await base.collection("friends_meta").doc("counts").set({
+        incoming_count: incoming.data().count || 0,
+        outgoing_count: outgoing.data().count || 0,
+        accepted_count: accepted.data().count || 0,
+        blocked_count: blocked.data().count || 0,
+        updated_at: FieldValue.serverTimestamp(),
+      }, { merge: true });
+    } catch (e) {
+      logger.error("friendsCounters trigger error", { message: e?.message });
+    }
+  }
+);
+
+/** Recompute members_count when any member doc changes. */
+export const groupMembersCounter = onDocumentWritten(
+  "groups/{groupId}/members/{memberId}",
+  async (event) => {
+    try {
+      const groupId = event.params.groupId;
+      const members = await db.collection("groups").doc(groupId).collection("members").count().get();
+      await db.collection("groups").doc(groupId).set({
+        members_count: members.data().count || 0,
+        members_count_updated_at: FieldValue.serverTimestamp(),
+      }, { merge: true });
+    } catch (e) {
+      logger.error("groupMembersCounter trigger error", { message: e?.message, groupId: event.params.groupId });
+    }
+  }
+);
+
+/** Recompute participants_count when any participant changes. */
+export const challengeParticipantsCounter = onDocumentWritten(
+  "challenges/{challengeId}/participants/{participantId}",
+  async (event) => {
+    try {
+      const challengeId = event.params.challengeId;
+      const c = await db.collection("challenges").doc(challengeId).collection("participants").count().get();
+      await db.collection("challenges").doc(challengeId).set({
+        participants_count: c.data().count || 0,
+        participants_count_updated_at: FieldValue.serverTimestamp(),
+      }, { merge: true });
+    } catch (e) {
+      logger.error("challengeParticipantsCounter trigger error", { message: e?.message, challengeId: event.params.challengeId });
+    }
+  }
+);
+
+/** Recompute rsvps_count when any RSVP doc changes. */
+export const eventRsvpsCounter = onDocumentWritten(
+  "community_events/{eventId}/rsvps/{rsvpId}",
+  async (event) => {
+    try {
+      const eventId = event.params.eventId;
+      const r = await db.collection("community_events").doc(eventId).collection("rsvps").count().get();
+      await db.collection("community_events").doc(eventId).set({
+        rsvps_count: r.data().count || 0,
+        rsvps_count_updated_at: FieldValue.serverTimestamp(),
+      }, { merge: true });
+    } catch (e) {
+      logger.error("eventRsvpsCounter trigger error", { message: e?.message, eventId: event.params.eventId });
+    }
+  }
+);
+
+/* ───────────────────────── Leaderboards: shared core logic ────────────────── */
+
+function startOfIsoWeekUTC(d) {
+  const dt = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  const day = dt.getUTCDay() || 7; // 1..7 (Mon..Sun)
+  if (day > 1) dt.setUTCDate(dt.getUTCDate() - (day - 1));
+  dt.setUTCHours(0, 0, 0, 0);
+  return dt;
+}
+function periodIdForUTC(d) {
+  const start = startOfIsoWeekUTC(d);
+  const yearStart = new Date(Date.UTC(start.getUTCFullYear(), 0, 1));
+  const week = Math.ceil((((start - yearStart) / 86400000) + yearStart.getUTCDay() + 1) / 7);
+  const ww = String(week).padStart(2, "0");
+  return `${start.getUTCFullYear()}-W${ww}`;
+}
+
+async function buildLeaderboardsCore() {
+  const now = new Date();
+  const periodId = periodIdForUTC(now);
+
+  // 7 daily keys
+  const keys = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(now);
+    d.setUTCDate(d.getUTCDate() - i);
+    const yyyy = d.getUTCFullYear();
+    const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+    const dd = String(d.getUTCDate()).padStart(2, "0");
+    keys.push(`${yyyy}-${mm}-${dd}`);
+  }
+
+  // Sum steps per user across collectionGroup("days")
+  const entries = {};
+  for (const dayKey of keys) {
+    const cg = await db.collectionGroup("days")
+      .where("date_local", "==", dayKey)
+      .select("steps_count", "uid")
+      .get();
+    cg.forEach((doc) => {
+      const data = doc.data() || {};
+      const owner = data.uid || doc.ref.parent.parent?.parent?.id; // fallback to path
+      if (!owner) return;
+      const steps = Number(data.steps_count || 0);
+      entries[owner] = (entries[owner] || 0) + (Number.isFinite(steps) ? steps : 0);
+    });
+  }
+
+  // Write leaderboard
+  const lbRef = db.collection("leaderboards").doc("weekly_steps");
+  const batch = db.batch();
+  batch.set(lbRef, { period_id: periodId, last_built_utc: FieldValue.serverTimestamp() }, { merge: true });
+  Object.entries(entries).forEach(([userId, score]) => {
+    batch.set(lbRef.collection("entries").doc(userId), {
+      uid: userId,
+      score: Math.round(score),
+      period_id: periodId,
+      updated_at: FieldValue.serverTimestamp(),
+    }, { merge: true });
+  });
+  await batch.commit();
+
+  const users = Object.keys(entries).length;
+  logger.info("[community] weekly_steps built", { users, period_id: periodId });
+  return { ok: true, period_id: periodId, users };
+}
+
+/* ───────────────────────── buildLeaderboards (SCHEDULED) ──────────────────── */
+export const buildLeaderboards = onSchedule(
+  {
+    region: "us-central1",
+    schedule: "every day 03:00",
+    timeZone: "America/Los_Angeles",
+  },
+  async () => {
+    return buildLeaderboardsCore();
+  }
+);
+
+/* ─────────────────────── buildLeaderboardsCall (CALLABLE) ─────────────────── */
+export const buildLeaderboardsCall = onCall(async (req) => {
+  assertAuthed(req);
+  return buildLeaderboardsCore();
+});

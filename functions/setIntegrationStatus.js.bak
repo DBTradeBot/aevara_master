@@ -1,0 +1,154 @@
+// functions/setIntegrationStatus.js
+/**
+ * Callable: setIntegrationStatus (ESM + Firebase Functions v2)
+ *
+ * Purpose:
+ *  - Single source of truth to update an integration's connection/status.
+ *  - Mirrors to BOTH admin path and user-facing path so the app UI reflects changes.
+ *
+ * Writes:
+ *  - integrations/{providerId}/users/{uid}               (admin registry)
+ *  - users/{uid}/integrations/{providerId}               (UI-facing mirror)
+ *  - users/{uid}/system_runs_server (audit ledger entry)
+ *
+ * Input (req.data):
+ *  {
+ *    uid?: string                // defaults to req.auth.uid (self)
+ *    providerId: string,         // e.g., "fitbit", "garmin", "apple"
+ *    connected?: boolean,        // true/false
+ *    last_status?: string,       // "ok" | "partial" | "error" | "disconnected" ...
+ *    scopes?: string[],          // optional scopes list
+ *    error_msg?: string|null,    // optional human-readable error
+ *    meta?: object               // optional extra metadata to merge (careful!)
+ *  }
+ *
+ * Auth:
+ *  - If uid is omitted → uses req.auth.uid (self).
+ *  - If uid is provided and !== req.auth.uid → rejects (permission-denied).
+ *
+ * Notes:
+ *  - Region: us-central1 (matches your other functions)
+ *  - ESM + Admin SDK initialized once
+ */
+
+import { onCall, HttpsError } from "firebase-functions/v2/https";
+import * as logger from "firebase-functions/logger";
+import { getApps, initializeApp, applicationDefault } from "firebase-admin/app";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+
+// Initialize Admin SDK once (safe even if your barrel also initializes)
+if (!getApps().length) initializeApp({ credential: applicationDefault?.() });
+const db = getFirestore();
+
+// Basic, local normalization (keeps dependency surface minimal)
+function normProviderId(p) {
+  return String(p || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "_"); // "apple health" → "apple_health"
+}
+
+export const setIntegrationStatus = onCall({ region: "us-central1" }, async (req) => {
+  const caller = req.auth?.uid || null;
+  const body = req.data || {};
+
+  // Resolve target uid
+  const targetUid = String(body.uid || caller || "");
+  if (!targetUid) throw new HttpsError("unauthenticated", "Must be signed in");
+
+  // Block cross-user updates from clients (keep it simple/strict)
+  if (caller && body.uid && caller !== body.uid) {
+    throw new HttpsError("permission-denied", "Cannot set status for another user");
+  }
+
+  // Validate provider
+  const providerIdRaw = body.providerId;
+  if (!providerIdRaw) throw new HttpsError("invalid-argument", "providerId is required");
+  const providerId = normProviderId(providerIdRaw);
+
+  // Prepare patch
+  const connected = typeof body.connected === "boolean" ? !!body.connected : undefined;
+  const last_status =
+    typeof body.last_status === "string"
+      ? body.last_status
+      : connected === false
+      ? "disconnected"
+      : undefined;
+
+  const scopes = Array.isArray(body.scopes) ? body.scopes.filter(Boolean) : undefined;
+  const error_msg =
+    body.error_msg === null || typeof body.error_msg === "string" ? body.error_msg : undefined;
+
+  const meta = body.meta && typeof body.meta === "object" ? body.meta : undefined;
+
+  // Build safe patch (avoid clobbering system fields)
+  const stamp = FieldValue.serverTimestamp();
+  const basePatch = {
+    ...(connected !== undefined ? { connected } : {}),
+    ...(last_status ? { last_status } : {}),
+    ...(scopes ? { scopes } : {}),
+    ...(error_msg !== undefined ? { error_msg } : {}),
+    updated_at_utc: stamp,
+    last_sync_utc: stamp, // treat as latest truth touch
+  };
+
+  // Admin registry doc
+  const adminRef = db.doc(`integrations/${providerId}/users/${targetUid}`);
+
+  // User-facing mirror (what the app reads)
+  const userRef = db.doc(`users/${targetUid}/integrations/${providerId}`);
+
+  try {
+    // 1) Write admin registry
+    await adminRef.set(
+      {
+        provider: providerId,
+        ...basePatch,
+        ...(meta ? { meta } : {}),
+      },
+      { merge: true }
+    );
+
+    // 2) Mirror to user-facing doc (lean, predictable shape)
+    await userRef.set(
+      {
+        provider: providerId,
+        ...basePatch,
+      },
+      { merge: true }
+    );
+
+    // 3) Audit log (append-only)
+    await db
+      .collection("users")
+      .doc(targetUid)
+      .collection("system_runs_server")
+      .add({
+        at_utc: new Date().toISOString(),
+        source: "setIntegrationStatus",
+        providerId,
+        patch: {
+          connected: connected ?? null,
+          last_status: last_status ?? null,
+          scopes: scopes ?? null,
+          error_msg: error_msg ?? null,
+        },
+      });
+
+    logger.info("setIntegrationStatus OK", {
+      uid: targetUid,
+      providerId,
+      connected,
+      last_status,
+    });
+
+    return { ok: true };
+  } catch (e) {
+    logger.error("setIntegrationStatus failed", {
+      uid: targetUid,
+      providerId,
+      message: String(e?.message || e),
+    });
+    throw new HttpsError("internal", String(e?.message || e));
+  }
+});

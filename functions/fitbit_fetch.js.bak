@@ -1,0 +1,815 @@
+/**
+ * Fitbit fetchers — Unified flow (write to sync_days only)
+ * Node 20 / ESM / Firebase Functions v2
+ *
+ * Adds:
+ *  - Exponential backoff + jitter (tight caps)
+ *  - Per-user concurrency lock (2-min TTL)
+ *  - Deauth handling (mark disconnected on 401) so cron skips
+ *  - Re/connect: backfill MISSING days (lookback 30) + quick 3-day refresh
+ *  - Optional VO2 path (boot/callables default off; cron can include)
+ *  - Mirrors UI status to users/{uid}/integrations/fitbit
+ *  - Graceful 400 for "no_integration_doc" in HTTP wrapper; structured object in callable
+ *  - Optional { onlyDays: [...] } support for targeted backfills
+ *  - HRV fallback: use lastNightRmssd if dailyRmssd is unavailable
+ *  - Source-side zero guard for "today" (steps/sleep/calories)
+ *  - ✨ NEW: *today-empty short-circuit* — if all today metrics are zero/empty, don't create a sync_days doc
+ *
+ * Writes into: users/{uid}/sync_days/fitbit_{YYYY-MM-DD}
+ * Then POSTs computeDailyHttp per affected day so users see changes immediately.
+ */
+
+import { onSchedule } from "firebase-functions/v2/scheduler";
+import { onRequest, onCall } from "firebase-functions/v2/https";
+import { onDocumentWritten } from "firebase-functions/v2/firestore";
+import * as logger from "firebase-functions/logger";
+
+import { getApps, initializeApp, applicationDefault } from "firebase-admin/app";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+
+if (!getApps().length) initializeApp({ credential: applicationDefault() });
+
+
+logger.info("fitbit_fetch BUILD", { tag: "ff-2025-09-01f" });
+
+const REGION = "us-central1";
+const API_BASE = "https://api.fitbit.com/1/user/-";
+const PROJECT = process.env.GCLOUD_PROJECT;
+
+// Internal endpoints we call from server to server
+const REFRESH_URL = `https://${REGION}-${PROJECT}.cloudfunctions.net/fitbitRefresh`;
+const COMPUTE_URL = `https://${REGION}-${PROJECT}.cloudfunctions.net/computeDailyHttp`;
+
+// Optional shared-secret to gate certain HTTP endpoints
+const SYNC_SECRET = process.env.FITBIT_SYNC_SECRET || null;
+
+const DEFAULT_TZ = "America/Los_Angeles";
+
+/* ─────────────────────────── Date helpers ─────────────────────────── */
+
+const pad2 = (n) => String(n).padStart(2, "0");
+function dateKeyInTZ(d, tz) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: tz || DEFAULT_TZ, year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(d).reduce((acc, p) => ((acc[p.type] = p.value), acc), {});
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+function dayKeysBackInTZ(nDays, tz) {
+  const keys = [];
+  const now = new Date();
+  for (let i = 0; i < nDays; i++) {
+    const dt = new Date(now);
+    dt.setUTCDate(dt.getUTCDate() - i);
+    keys.push(dateKeyInTZ(dt, tz));
+  }
+  return keys;
+}
+function round(n, d = 2) {
+  return typeof n === "number" && Number.isFinite(n) ? Number(n.toFixed(d)) : n;
+}
+function isExpired(expires_at_utc) {
+  if (!expires_at_utc) return true;
+  const skewMs = 60 * 1000; // refresh 1 min early
+  return new Date(expires_at_utc).getTime() - skewMs <= Date.now();
+}
+function isTodayKey(key, tz = DEFAULT_TZ) {
+  return key === dateKeyInTZ(new Date(), tz);
+}
+
+/* ───────────────────── Backoff + retry (tighter) ───────────────────── */
+
+async function sleepMs(ms) { return new Promise((r) => setTimeout(r, ms)); }
+function isRetriableStatus(code) {
+  return code === 429 || code === 408 || (code >= 500 && code <= 599);
+}
+async function fetchWithRetry(
+  url,
+  options = {},
+  { tries = 4, base = 400, factor = 2, cap = 8000 } = {}
+) {
+  let lastErr = null;
+  for (let i = 0; i < tries; i++) {
+    try {
+      const resp = await fetch(url, options);
+      if (!resp.ok) {
+        if (isRetriableStatus(resp.status) && i < tries - 1) {
+          const delay = Math.min(cap, base * Math.pow(factor, i)) * (0.5 + Math.random());
+          logger.warn("fetch backoff", { url, status: resp.status, try: i + 1, delayMs: Math.round(delay) });
+          await sleepMs(delay);
+          continue;
+        }
+        const text = await resp.text().catch(() => "");
+        const e = new Error(`HTTP ${resp.status} ${text?.slice(0, 200) || ""}`);
+        e.status = resp.status;
+        throw e;
+      }
+      return resp;
+    } catch (e) {
+      lastErr = e;
+      if (i < tries - 1) {
+        const delay = Math.min(cap, base * Math.pow(factor, i)) * (0.5 + Math.random());
+        logger.warn("fetch error/backoff", { url, err: String(e?.message || e), try: i + 1, delayMs: Math.round(delay) });
+        await sleepMs(delay);
+        continue;
+      }
+      break;
+    }
+  }
+  throw lastErr || new Error("fetchWithRetry failed");
+}
+
+async function callFitbit(accessToken, endpoint) {
+  const url = `${API_BASE}/${endpoint}`;
+  const resp = await fetchWithRetry(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+  return resp.json();
+}
+
+/* ─────────────────────────── Concurrency lock ───────────────────────── */
+
+function lockRefFor(uid, provider = "fitbit") {
+  return db.doc(`locks/sync_${provider}_${uid}`);
+}
+async function acquireLock(uid, { ttlMs = 120000 } = {}) {
+  const ref = lockRefFor(uid);
+  const token = Math.random().toString(36).slice(2);
+  const now = Date.now();
+  const expiresAt = now + ttlMs;
+
+  const result = await db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    const data = snap.exists ? snap.data() : null;
+    const existingExpires = data?.expires_at_ms || 0;
+    const owned = data?.owner_token === token;
+    const expired = existingExpires < now;
+    if (!snap.exists || expired || owned) {
+      tx.set(ref, {
+        owner_token: token,
+        acquired_at_ms: now,
+        expires_at_ms: expiresAt,
+        renewals: 0,
+      });
+      return { ok: true, token, ref };
+    }
+    return { ok: false, reason: "busy", until_ms: existingExpires };
+  });
+
+  return result;
+}
+async function releaseLock(uid, token) {
+  try {
+    const ref = lockRefFor(uid);
+    await db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      if (!snap.exists) return;
+      const data = snap.data() || {};
+      if (data.owner_token === token) tx.delete(ref);
+    });
+  } catch {
+    // best effort
+  }
+}
+
+/* ────────────────────────── Integration helpers ───────────────────────── */
+
+async function mirrorUserIntegrationStatus(uid, patch) {
+  await db.doc(`users/${uid}/integrations/fitbit`).set(
+    { provider: "fitbit", updated_at_utc: FieldValue.serverTimestamp(), ...patch },
+    { merge: true }
+  );
+}
+
+async function markDisconnected(uid, reason = "revoked") {
+  await db.doc(`integrations/fitbit/users/${uid}`).set(
+    {
+      connected: false,
+      last_status: "disconnected",
+      error_msg: reason,
+      updated_at_utc: FieldValue.serverTimestamp(),
+    },
+    { merge: true }
+  );
+  await mirrorUserIntegrationStatus(uid, {
+    connected: false,
+    last_status: "disconnected",
+    last_sync_utc: FieldValue.serverTimestamp(),
+    error_msg: reason,
+  });
+}
+
+async function refreshIfNeeded(uid, integ) {
+  if (!isExpired(integ?.expires_at_utc)) return integ;
+  const headers = { "Content-Type": "application/json" };
+  if (SYNC_SECRET) headers["x-sync-secret"] = SYNC_SECRET;
+  const r = await fetchWithRetry(REFRESH_URL, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ uid }),
+  });
+  if (!r.ok) {
+    const msg = await r.text().catch(() => "");
+    throw new Error(`fitbitRefresh failed: ${r.status} ${msg}`);
+  }
+  const snap = await db.doc(`integrations/fitbit/users/${uid}`).get();
+  return snap.exists ? snap.data() : null;
+}
+
+async function loadUserTZ(uid) {
+  try {
+    const u = await db.doc(`users/${uid}`).get();
+    return (u.exists ? (u.data()?.tz || u.data()?.timezone) : null) || DEFAULT_TZ;
+  } catch {
+    return DEFAULT_TZ;
+  }
+}
+
+/* ─────────────────────────── Pull primitives ─────────────────────────── */
+
+async function pullFitbitForDayToSyncDoc(
+  uid,
+  accessToken,
+  dayKey,
+  { only = "all", includeCrf = true, tz = DEFAULT_TZ, skipZerosToday = true } = {}
+) {
+  let steps = null,
+    calories = null,
+    distanceKm = null,
+    floors = null,
+    sleepHours = null,
+    sleepScore = null,
+    rhrBpm = null,
+    hrvRmssd = null,
+    minVery = null,
+    minFair = null,
+    minLight = null,
+    minSed = null,
+    vo2max = null;
+
+  const sampleIso = new Date().toISOString(); // best-effort sample stamp
+  const todayLocal = isTodayKey(dayKey, tz);
+
+  // activities (steps/calories/distance/floors + active minutes)
+  if (only === "all" || only === "activity" || only === "all_nocrf") {
+    try {
+      const a = await callFitbit(accessToken, `activities/date/${dayKey}.json`);
+      steps = a?.summary?.steps ?? null;
+      calories = a?.summary?.caloriesOut ?? null;
+      if (Array.isArray(a?.summary?.distances)) {
+        const total = a.summary.distances.find((d) => d.activity === "total");
+        if (total?.distance != null) distanceKm = Number(total.distance); // Fitbit returns KM
+      }
+      floors = a?.summary?.floors ?? null;
+
+      minVery = a?.summary?.veryActiveMinutes ?? a?.summary?.minutesVeryActive ?? null;
+      minFair = a?.summary?.fairlyActiveMinutes ?? a?.summary?.minutesFairlyActive ?? null;
+      minLight = a?.summary?.lightlyActiveMinutes ?? a?.summary?.minutesLightlyActive ?? null;
+      minSed = a?.summary?.sedentaryMinutes ?? a?.summary?.minutesSedentary ?? null;
+    } catch (e) {
+      if (e?.status === 401 || /invalid_token|Unauthorized/i.test(String(e?.message))) {
+        await markDisconnected(uid, "revoked");
+        throw e;
+      }
+      logger.warn("activities fetch issue", { uid, dayKey, msg: e?.message });
+    }
+  }
+
+  // sleep (total hours + score if present)
+  if (only === "all" || only === "sleep" || only === "all_nocrf") {
+    try {
+      const s = await callFitbit(accessToken, `sleep/date/${dayKey}.json`);
+      const min = s?.summary?.totalMinutesAsleep ?? null;
+      if (min != null) sleepHours = round(min / 60, 2);
+
+      const firstSleep = Array.isArray(s?.sleep) ? s.sleep[0] : null;
+      const score = firstSleep?.score ?? s?.summary?.score ?? null;
+      if (score != null) sleepScore = Number(score);
+    } catch (e) {
+      if (e?.status === 401 || /invalid_token|Unauthorized/i.test(String(e?.message))) {
+        await markDisconnected(uid, "revoked");
+        throw e;
+      }
+      logger.warn("sleep fetch issue", { uid, dayKey, msg: e?.message });
+    }
+  }
+
+  // resting HR + HRV (with HRV fallback)
+  if (only === "all" || only === "recovery" || only === "all_nocrf") {
+    try {
+      const h = await callFitbit(accessToken, `activities/heart/date/${dayKey}/1d.json`);
+      const arr = h?.["activities-heart"];
+      const v = Array.isArray(arr) ? arr[0]?.value?.restingHeartRate : null;
+      if (v != null) rhrBpm = Number(v);
+    } catch (e) {
+      if (e?.status === 401 || /invalid_token|Unauthorized/i.test(String(e?.message))) {
+        await markDisconnected(uid, "revoked");
+        throw e;
+      }
+      logger.warn("heart fetch issue", { uid, dayKey, msg: e?.message });
+    }
+
+    try {
+      const hv = await callFitbit(accessToken, `hrv/date/${dayKey}.json`);
+      const arr = hv?.hrv;
+      let rmssd = Array.isArray(arr) ? arr[0]?.value?.dailyRmssd : null;
+      if (rmssd == null) {
+        // Fallback seen in some payloads/regions
+        rmssd = Array.isArray(arr) ? arr[0]?.value?.lastNightRmssd : null;
+      }
+      if (rmssd != null) hrvRmssd = Number(rmssd);
+    } catch (e) {
+      if (e?.status === 401 || /invalid_token|Unauthorized/i.test(String(e?.message))) {
+        await markDisconnected(uid, "revoked");
+        throw e;
+      }
+      logger.warn("hrv fetch issue", { uid, dayKey, msg: e?.message });
+    }
+  }
+
+  // VO2max (optional)
+  if ((only === "all" || only === "crf") && includeCrf === true) {
+    try {
+      const cf = await callFitbit(accessToken, `cardioFitnessScore/date/${dayKey}.json`);
+      const arr = cf?.cardioScore || cf?.["cardioFitnessScore"] || [];
+      const latest = Array.isArray(arr) ? arr[0] : null;
+      const v = latest?.value?.vo2Max ?? latest?.value?.vo2max ?? null;
+      if (v != null) vo2max = Number(v);
+    } catch (e) {
+      if (e?.status === 401 || /invalid_token|Unauthorized/i.test(String(e?.message))) {
+        await markDisconnected(uid, "revoked");
+        throw e;
+      }
+      logger.warn("vo2max fetch issue", { uid, dayKey, msg: e?.message });
+    }
+  }
+
+  // Build patch & decide whether to write
+  const docRef = db.doc(`users/${uid}/sync_days/fitbit_${dayKey}`);
+  const patch = {
+    provider: "fitbit",
+    date_local: dayKey,
+    sample_at_utc: sampleIso,
+    synced_at_utc: FieldValue.serverTimestamp(),
+  };
+
+  const lastStamp = {}; // last_<metric>_utc
+  function setMetric(key, val) {
+    if (val == null) return;
+    // Optional: skip known-zero on TODAY (merge layer already guards write-forward)
+    if (skipZerosToday && todayLocal) {
+      if ((key === "steps_count" || key === "sleep_total_hours" || key === "calories_out") && Number(val) === 0) {
+        return;
+      }
+    }
+    patch[key] = val;
+    lastStamp[`last_${key}_utc`] = sampleIso;
+  }
+
+  if (only === "all" || only === "activity" || only === "all_nocrf") {
+    setMetric("steps_count", steps);
+    setMetric("calories_out", calories);
+    setMetric("distance_km", distanceKm);
+    setMetric("floors", floors);
+    setMetric("minutes_very_active", minVery);
+    setMetric("minutes_fairly_active", minFair);
+    setMetric("minutes_lightly_active", minLight);
+    setMetric("minutes_sedentary", minSed);
+  }
+  if (only === "all" || only === "sleep" || only === "all_nocrf") {
+    setMetric("sleep_total_hours", sleepHours);
+    setMetric("sleep_score", sleepScore);
+  }
+  if (only === "all" || only === "recovery" || only === "all_nocrf") {
+    setMetric("rhr_bpm", rhrBpm);
+    setMetric("hrv_rmssd_ms", hrvRmssd);
+  }
+  if ((only === "all" || only === "crf") && includeCrf === true) {
+    setMetric("vo2max_ml_kg_min", vo2max);
+  }
+
+  // ✨ Today-empty short-circuit: if TODAY and no metric made it into lastStamp, skip creating the doc entirely
+  if (todayLocal && Object.keys(lastStamp).length === 0) {
+    logger.info("fitbit today-empty short-circuit (no sync_days write)", { uid, dayKey });
+    return { wrote: false, skipped: true };
+  }
+
+  Object.assign(patch, lastStamp);
+  await docRef.set(patch, { merge: true });
+
+  return { wrote: Object.keys(lastStamp).length > 0 };
+}
+
+/* ─────────────────────── Missing-days helper ─────────────────────── */
+
+async function computeMissingFitbitDayKeys(uid, tz, lookbackDays = 30) {
+  const keys = dayKeysBackInTZ(lookbackDays, tz);
+  const refs = keys.map((k) => db.doc(`users/${uid}/sync_days/fitbit_${k}`));
+  const results = [];
+  const CHUNK = 20;
+  for (let i = 0; i < refs.length; i += CHUNK) {
+    const slice = refs.slice(i, i + CHUNK);
+    const snaps = await db.getAll(...slice);
+    for (let j = 0; j < snaps.length; j++) {
+      if (!snaps[j].exists) results.push(keys[i + j]);
+    }
+  }
+  return results;
+}
+
+/* ─────────────────────── Core multi-day sync ─────────────────────── */
+
+export async function runFitbitSyncForUid(
+  uid,
+  {
+    days = 3,
+    backfill = false,
+    only = "all",
+    includeCrf = true,
+    onlyDays = null, // ✨ optional targeted day list
+  } = {}
+) {
+  const started = Date.now();
+
+  // Acquire per-user lock
+  const lock = await acquireLock(uid, { ttlMs: 120000 });
+  if (!lock?.ok) {
+    logger.info("skip sync; lock busy", { uid, until_ms: lock?.until_ms });
+    return { ok: true, wroteDays: [], tz: DEFAULT_TZ, skipped: "locked" };
+  }
+
+  let wroteByDay = [];
+  let httpOk = 0,
+    httpErr = 0;
+  let tz = DEFAULT_TZ;
+
+  try {
+    // 0) read integration row
+    let integSnap = await db.doc(`integrations/fitbit/users/${uid}`).get();
+    if (!integSnap.exists) throw new Error("no_integration_doc");
+    let integ = integSnap.data() || {};
+    if (!integ.connected) {
+      logger.info("skip sync; disconnected", { uid });
+      return { ok: true, wroteDays: [], tz, skipped: "disconnected" };
+    }
+
+    tz = await loadUserTZ(uid);
+
+    // 1) ensure valid token (auto-refresh)
+    try {
+      integ = await refreshIfNeeded(uid, integ);
+    } catch (e) {
+      await markDisconnected(uid, "refresh_failed");
+      throw e;
+    }
+    const accessToken = integ?.access_token;
+    if (!accessToken) throw new Error("missing_access_token_after_refresh");
+
+    // 2) decide local-day window
+    let dayKeys;
+    if (Array.isArray(onlyDays) && onlyDays.length) {
+      dayKeys = [...new Set(onlyDays)].sort(); // explicit set
+    } else if (backfill) {
+      // backfill: Only pull MISSING days in the last 30 (reduces cost)
+      const missing = await computeMissingFitbitDayKeys(uid, tz, 30);
+      dayKeys = missing.length ? missing : [];
+    } else {
+      dayKeys = dayKeysBackInTZ(Math.max(1, Math.min(days, 7)), tz); // cap at 7
+    }
+
+    // 3) pull/write sync_day for each day
+    for (const dayKey of dayKeys) {
+      try {
+        const { wrote } = await pullFitbitForDayToSyncDoc(
+          uid,
+          accessToken,
+          dayKey,
+          { only, includeCrf, tz, skipZerosToday: true }
+        );
+        httpOk++;
+        if (wrote) wroteByDay.push(dayKey);
+      } catch (e) {
+        httpErr++;
+        if (e?.status === 401) {
+          logger.warn("fitbit 401; marked disconnected", { uid });
+          break;
+        }
+        logger.warn("Fitbit per-day sync error", { uid, dayKey, msg: e?.message });
+      }
+    }
+
+    // 4) mark integration status (central doc) + mirror UI status
+    const integPatch = {
+      last_status: httpErr ? "partial" : "ok",
+      last_sync_utc: FieldValue.serverTimestamp(),
+      last_window_days: dayKeys.length,
+      updated_at_utc: FieldValue.serverTimestamp(),
+      counters: {
+        http_ok: FieldValue.increment(httpOk),
+        http_err: FieldValue.increment(httpErr),
+        wrote_days: FieldValue.increment(wroteByDay.length),
+        runs: FieldValue.increment(1),
+      },
+    };
+    if (backfill && !integ?.last_backfill_at_utc) {
+      integPatch.last_backfill_at_utc = FieldValue.serverTimestamp();
+    }
+    await db.doc(`integrations/fitbit/users/${uid}`).set(integPatch, { merge: true });
+
+    await mirrorUserIntegrationStatus(uid, {
+      connected: true,
+      last_status: httpErr ? "partial" : "ok",
+      last_sync_utc: FieldValue.serverTimestamp(),
+      scopes: integ?.scopes || [],
+      error_msg: httpErr ? "partial" : null,
+    });
+
+    logger.info("Fitbit sync OK (sync_days)", {
+      uid,
+      days: dayKeys.length,
+      wroteDays: wroteByDay,
+    });
+
+    // 5) immediate recompute for affected days
+    let computeErr = 0;
+    for (const dk of wroteByDay) {
+      try {
+        const headers = { "Content-Type": "application/json" };
+        if (SYNC_SECRET) headers["x-sync-secret"] = SYNC_SECRET;
+        await fetchWithRetry(
+          COMPUTE_URL,
+          {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ userId: uid, date_local: dk, tz }),
+          },
+          { tries: 4, base: 400, factor: 2, cap: 8000 }
+        );
+      } catch (e) {
+        computeErr++;
+        logger.warn("computeDaily post-sync failed", {
+          uid,
+          dateKey: dk,
+          msg: e?.message,
+        });
+      }
+    }
+
+    // 6) write a single truth status doc for the app (optionally include compute status)
+    await db.doc(`users/${uid}/sync_state/fitbit`).set(
+      {
+        last_sync_utc: FieldValue.serverTimestamp(),
+        last_compute_utc: FieldValue.serverTimestamp(),
+        days_synced: wroteByDay.length,
+        last_error:
+          httpErr || computeErr
+            ? {
+                http_err: httpErr,
+                compute_err: computeErr,
+                at_utc: new Date().toISOString(),
+              }
+            : null,
+        last_window_days: dayKeys.length,
+      },
+      { merge: true }
+    );
+
+    // 7) ledger (per-run doc)
+    const runId = new Date().toISOString();
+    await db
+      .doc(`integrations/fitbit/users/${uid}/runs/${runId}`)
+      .set(
+        {
+          at_utc: runId,
+          window_days: dayKeys.length,
+          wrote_days: wroteByDay,
+          http_ok: httpOk,
+          http_err: httpErr,
+          ms: Date.now() - started,
+          mode: backfill
+            ? "backfill"
+            : only === "sleep"
+            ? "sleep_correction"
+            : Array.isArray(onlyDays) && onlyDays.length
+            ? "targeted"
+            : "routine",
+          includeCrf,
+        },
+        { merge: true }
+      );
+
+    return { ok: true, wroteDays: wroteByDay, tz };
+  } finally {
+    await releaseLock(uid, lock?.token);
+  }
+}
+
+/* ───────────────────────────── Schedules ───────────────────────────── */
+
+// 1) Cron: every hour (routine 3-day window). Skips disconnected users.
+export const fetchFitbitHourly = onSchedule(
+  { region: REGION, schedule: "every 60 minutes" },
+  async () => {
+    const integrationsSnap = await db.collection("integrations/fitbit/users").get();
+    if (integrationsSnap.empty) {
+      logger.info("No Fitbit users connected yet.");
+      return;
+    }
+
+    for (const doc of integrationsSnap.docs) {
+      const uid = doc.id;
+      const d = doc.data() || {};
+      if (!d.connected) continue; // skip clearly disconnected rows
+      try {
+        // Cron can include VO2 since it's not on the critical boot path
+        await runFitbitSyncForUid(uid, {
+          days: 3,
+          backfill: false,
+          only: "all",
+          includeCrf: true,
+        });
+      } catch (e) {
+        logger.error("Fitbit cron sync error", { uid, msg: e?.message });
+        await db.doc(`integrations/fitbit/users/${uid}`).set(
+          {
+            last_status: "error",
+            error_msg: String(e.message || e),
+            updated_at_utc: FieldValue.serverTimestamp(),
+            counters: { run_errors: FieldValue.increment(1) },
+          },
+          { merge: true }
+        );
+        await mirrorUserIntegrationStatus(uid, {
+          connected: true,
+          last_status: "error",
+          last_sync_utc: FieldValue.serverTimestamp(),
+          error_msg: String(e.message || e),
+        });
+      }
+    }
+  }
+);
+
+// 2) Sleep retro-corrections: run hourly, act only when local hour == 13
+export const fitbitSleepCorrectionsHourly = onSchedule(
+  { region: REGION, schedule: "every 60 minutes" },
+  async () => {
+    const integrationsSnap = await db.collection("integrations/fitbit/users").get();
+    for (const doc of integrationsSnap.docs) {
+      const uid = doc.id;
+      const d = doc.data() || {};
+      if (!d.connected) continue;
+
+      // Determine user's local hour
+      const tz = await loadUserTZ(uid);
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: tz, hour: "2-digit", hour12: false,
+      }).formatToParts(new Date()).reduce((acc, p) => ((acc[p.type] = p.value), acc), {});
+      const hour = Number(parts.hour);
+
+      if (hour === 13) { // ~1pm local
+        try {
+          await runFitbitSyncForUid(uid, {
+            days: 4,
+            backfill: false,
+            only: "sleep",
+            includeCrf: false,
+          });
+        } catch (e) {
+          logger.warn("sleep corrections failed", { uid, msg: e?.message });
+        }
+      }
+    }
+  }
+);
+
+/* ───────────────────────── On-demand endpoints ───────────────────────── */
+
+// HTTP endpoint (server-to-server or admin usage)
+export const fitbitFetchNow = onRequest({ region: REGION }, async (req, res) => {
+  try {
+    if (req.method !== "POST")
+      return res.status(405).json({ ok: false, error: "Use POST" });
+    if (SYNC_SECRET) {
+      const got = req.headers["x-sync-secret"];
+      if (!got || String(got) !== String(SYNC_SECRET)) {
+        return res.status(401).json({ ok: false, error: "Unauthorized" });
+      }
+    }
+    const uid = String(req.body?.uid || "");
+    if (!uid) return res.status(400).json({ ok: false, error: "Missing uid" });
+
+    const days = Number(req.body?.days ?? 3);
+    const backfill = !!req.body?.backfill;
+    const only = String(req.body?.only || "all");
+    const includeCrf = req.body?.includeCrf === true; // HTTP defaults to false unless explicitly requested
+    const onlyDays = Array.isArray(req.body?.onlyDays) ? req.body.onlyDays : null;
+
+    let result;
+    try {
+      result = await runFitbitSyncForUid(uid, {
+        days,
+        backfill,
+        only,
+        includeCrf,
+        onlyDays,
+      });
+    } catch (e) {
+      if (String(e?.message) === "no_integration_doc") {
+        return res
+          .status(400)
+          .json({
+            ok: false,
+            code: "no_integration_doc",
+            hint: "Connect Fitbit in Devices",
+          });
+      }
+      throw e;
+    }
+    return res.status(200).json({ ok: true, ...result });
+  } catch (e) {
+    logger.error("fitbitFetchNow error", { message: e?.message });
+    return res.status(500).json({ ok: false, error: String(e?.message || e) });
+  }
+});
+
+// Callable endpoint (app login path)
+export const fitbitFetchNowCall = onCall({ region: REGION }, async (ctx) => {
+  const caller = ctx.auth?.uid;
+  const uid = String(ctx.data?.uid || caller || "");
+  if (!caller) return { ok: false, code: "unauthenticated" };
+  if (!uid || uid !== caller) return { ok: false, code: "invalid_uid" }; // only self
+
+  const days = Number(ctx.data?.days ?? 3);
+  const backfill = !!ctx.data?.backfill;
+  const only = String(ctx.data?.only || "all");
+  // Default boot path: skip VO2 unless explicitly requested
+  const includeCrf = ctx.data?.includeCrf === true ? true : false;
+  const onlyDays = Array.isArray(ctx.data?.onlyDays) ? ctx.data.onlyDays : null;
+
+  try {
+    const result = await runFitbitSyncForUid(uid, {
+      days,
+      backfill,
+      only,
+      includeCrf,
+      onlyDays,
+    });
+    return { ok: true, ...result };
+  } catch (e) {
+    if (String(e?.message) === "no_integration_doc") {
+      return { ok: false, code: "no_integration_doc", hint: "Connect Fitbit first" };
+    }
+    return { ok: false, code: "error", error: String(e?.message || e) };
+  }
+});
+
+/* ───────────────────── Connect / reconnect trigger ───────────────────── */
+
+export const fitbitKickoffOnConnect = onDocumentWritten(
+  "integrations/fitbit/users/{uid}",
+  async (event) => {
+    const uid = event.params.uid;
+    const before = event.data?.before?.data() || null;
+    const after = event.data?.after?.data() || null;
+    if (!after) return;
+
+    const created = !!event.data?.after && !event.data?.before;
+    const connectedFlip = !before?.connected && !!after?.connected;
+    const tokenChanged = before?.access_token !== after?.access_token;
+
+    if (after?.connected === false) {
+      await mirrorUserIntegrationStatus(uid, {
+        connected: false,
+        last_status: "disconnected",
+        last_sync_utc: FieldValue.serverTimestamp(),
+        error_msg: null,
+      });
+      return;
+    }
+
+    if (!(created || connectedFlip || tokenChanged)) return;
+
+    try {
+      // Quick 3-day refresh
+      await runFitbitSyncForUid(uid, {
+        days: 3,
+        backfill: false,
+        only: "all",
+        includeCrf: true,
+      });
+
+      // Backfill only missing days in last 30 (cheap)
+      const tz = await loadUserTZ(uid);
+      const missing = await computeMissingFitbitDayKeys(uid, tz, 30);
+      if (missing.length) {
+        await runFitbitSyncForUid(uid, {
+          backfill: true,
+          only: "all",
+          includeCrf: true,
+          onlyDays: missing,
+        });
+      }
+    } catch (e) {
+      logger.warn("Kickoff fetch failed", { uid, msg: e?.message });
+    }
+  }
+);
+

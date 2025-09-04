@@ -1,0 +1,257 @@
+/**
+ * Fitbit OAuth (start handled client-side via WebView) + token exchange + refresh
+ * Node 20 / ESM / Firebase Functions v2
+ *
+ * Changes:
+ *  - Uses FITBIT_REDIRECT_URI from env (fallback to Hosting URL)
+ *  - Mirrors a lean status doc to users/{uid}/integrations/fitbit so the app listens there
+ */
+
+import { onRequest } from "firebase-functions/v2/https";
+import * as logger from "firebase-functions/logger";
+import { initializeApp, getApps, applicationDefault } from "firebase-admin/app";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
+
+if (!getApps().length) initializeApp({ credential: applicationDefault() });
+
+
+const TOKEN_URL = "https://api.fitbit.com/oauth2/token";
+const AUTH_URL  = "https://www.fitbit.com/oauth2/authorize";
+
+const DEFAULT_REDIRECT =
+  process.env.FITBIT_REDIRECT_URI ||
+  "https://vitalis-a8577.web.app/fitbit/callback";
+
+function basicAuthHeader() {
+  const id = process.env.FITBIT_CLIENT_ID;
+  const sec = process.env.FITBIT_CLIENT_SECRET;
+  const b64 = Buffer.from(`${id}:${sec}`).toString("base64");
+  return `Basic ${b64}`;
+}
+
+function nowPlusSeconds(sec) {
+  return new Date(Date.now() + (Number(sec) || 0) * 1000).toISOString();
+}
+
+function b64urlDecode(s) {
+  try {
+    const pad = s.length % 4 ? "=".repeat(4 - (s.length % 4)) : "";
+    const str = s.replace(/-/g, "+").replace(/_/g, "/") + pad;
+    return Buffer.from(str, "base64").toString("utf8");
+  } catch {
+    return null;
+  }
+}
+
+async function fitbitTokenRequest(params) {
+  const body = new URLSearchParams(params);
+  const resp = await fetch(TOKEN_URL, {
+    method: "POST",
+    headers: {
+      Authorization: basicAuthHeader(),
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body,
+  });
+  const json = await resp.json().catch(() => ({}));
+  if (!resp.ok) {
+    const msg = json?.errors?.[0]?.message || resp.statusText || "token_error";
+    throw new Error(`Fitbit token error: ${msg}`);
+  }
+  return json;
+}
+
+async function mirrorUserIntegrationStatus(uid, patch) {
+  // Lean, UI-facing status doc
+  await db
+    .doc(`users/${uid}/integrations/fitbit`)
+    .set(
+      {
+        provider: "fitbit",
+        updated_at_utc: FieldValue.serverTimestamp(),
+        ...patch,
+      },
+      { merge: true }
+    );
+}
+
+async function writeTokens({ uid, payload }) {
+  const {
+    access_token,
+    refresh_token,
+    expires_in,
+    scope,
+    user_id,
+    token_type,
+  } = payload;
+
+  const scopes = String(scope || "").split(" ").filter(Boolean);
+  const docRef = db.doc(`integrations/fitbit/users/${uid}`);
+  const prev = (await docRef.get()).data() || {};
+
+  await docRef.set(
+    {
+      connected: true,
+      provider_user_id: user_id || null,
+      token_type: token_type || "Bearer",
+      access_token,
+      refresh_token: refresh_token || null,
+      scopes,
+      expires_at_utc: nowPlusSeconds(expires_in || 3600),
+      last_status: "ok",
+      last_sync_utc: FieldValue.serverTimestamp(),
+      updated_at_utc: FieldValue.serverTimestamp(),
+      ...(prev?.connected ? {} : { just_connected_at_utc: FieldValue.serverTimestamp() }),
+      ...(prev?.last_backfill_at_utc ? {} : { last_backfill_at_utc: null }), // set by fetcher after first backfill
+    },
+    { merge: true }
+  );
+
+  // Mirror a lean status doc to the user-scoped location the app reads
+  await mirrorUserIntegrationStatus(uid, {
+    connected: true,
+    last_status: "ok",
+    last_sync_utc: FieldValue.serverTimestamp(),
+    scopes,
+    error_msg: null,
+  });
+
+  return { scopes };
+}
+
+/** GET /fitbit/callback (Hosting redirects here) */
+export const fitbitCallback = onRequest(
+  { region: "us-central1", secrets: ["FITBIT_CLIENT_ID", "FITBIT_CLIENT_SECRET"] },
+  async (req, res) => {
+    try {
+      if (req.method !== "GET") return res.status(405).send("Use GET");
+      const code = String(req.query.code || "");
+      const stateRaw = String(req.query.state || "");
+      if (!code) return res.status(400).send("Missing code");
+
+      let uid = null;
+      if (stateRaw) {
+        try {
+          const decoded = b64urlDecode(stateRaw);
+          const obj = decoded ? JSON.parse(decoded) : null;
+          uid = obj?.uid || null;
+        } catch {}
+      }
+      uid = uid || String(req.query.uid || "");
+      if (!uid) return res.status(400).send("Missing uid in state");
+
+      const tokenJson = await fitbitTokenRequest({
+        grant_type: "authorization_code",
+        code,
+        client_id: process.env.FITBIT_CLIENT_ID,
+        redirect_uri: DEFAULT_REDIRECT,
+      });
+      const { scopes } = await writeTokens({ uid, payload: tokenJson });
+      logger.info("Fitbit connected (web)", { uid, scopes });
+
+      res
+        .status(200)
+        .set("Content-Type", "text/html")
+        .send(`<!doctype html>
+<html><head><meta charset="utf-8"><title>Aevara • Fitbit Connected</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial; padding:24px;">
+  <h2>Fitbit Connected ✅</h2>
+  <p>You can close this window and return to the app.</p>
+</body></html>`);
+    } catch (e) {
+      logger.error("fitbitCallback error", { message: e?.message });
+      res.status(500).send(`Error: ${e?.message || "unknown"}`);
+    }
+  }
+);
+
+/** POST /fitbit/exchange (mobile flow; optional PKCE) */
+export const fitbitExchange = onRequest(
+  { region: "us-central1", cors: true, secrets: ["FITBIT_CLIENT_ID", "FITBIT_CLIENT_SECRET"] },
+  async (req, res) => {
+    try {
+      if (req.method !== "POST")
+        return res.status(405).json({ ok: false, error: "Use POST" });
+
+      const { code, uid, redirect_uri, code_verifier } = req.body || {};
+      if (!code || !uid || !redirect_uri) {
+        return res
+          .status(400)
+          .json({ ok: false, error: "Missing code/uid/redirect_uri" });
+      }
+
+      const params = {
+        grant_type: "authorization_code",
+        code,
+        client_id: process.env.FITBIT_CLIENT_ID,
+        redirect_uri,
+      };
+      if (code_verifier) params.code_verifier = code_verifier;
+
+      const tokenJson = await fitbitTokenRequest(params);
+      const { scopes } = await writeTokens({ uid, payload: tokenJson });
+      logger.info("Fitbit connected (mobile)", { uid, scopes });
+      return res.status(200).json({
+        ok: true,
+        scopes,
+        provider_user_id: tokenJson?.user_id || null,
+      });
+    } catch (e) {
+      logger.error("fitbitExchange error", { message: e?.message });
+      return res.status(500).json({ ok: false, error: String(e?.message || e) });
+    }
+  }
+);
+
+/** POST /fitbit/refresh (server-to-server; gated by optional FITBIT_SYNC_SECRET) */
+export const fitbitRefresh = onRequest(
+  { region: "us-central1", secrets: ["FITBIT_CLIENT_ID", "FITBIT_CLIENT_SECRET"] },
+  async (req, res) => {
+    try {
+      if (req.method !== "POST")
+        return res.status(405).json({ ok: false, error: "Use POST" });
+
+      const SYNC_SECRET = process.env.FITBIT_SYNC_SECRET || null;
+      if (SYNC_SECRET) {
+        const got = req.headers["x-sync-secret"];
+        if (!got || String(got) !== String(SYNC_SECRET)) {
+          return res.status(401).json({ ok: false, error: "Unauthorized" });
+        }
+      }
+
+      const uid = String(req.body?.uid || "");
+      if (!uid) return res.status(400).json({ ok: false, error: "Missing uid" });
+
+      const ref = db.doc(`integrations/fitbit/users/${uid}`);
+      const snap = await ref.get();
+      const data = snap.exists ? snap.data() || {} : {};
+      const refresh_token = data?.refresh_token;
+      if (!refresh_token)
+        return res.status(400).json({ ok: false, error: "No refresh_token" });
+
+      const tokenJson = await fitbitTokenRequest({
+        grant_type: "refresh_token",
+        refresh_token,
+        client_id: process.env.FITBIT_CLIENT_ID,
+      });
+
+      await writeTokens({ uid, payload: tokenJson });
+      logger.info("Fitbit token refreshed", { uid });
+
+      // Mirror status for the UI
+      await mirrorUserIntegrationStatus(uid, {
+        connected: true,
+        last_status: "ok",
+        last_sync_utc: FieldValue.serverTimestamp(),
+        error_msg: null,
+      });
+
+      return res.status(200).json({ ok: true });
+    } catch (e) {
+      logger.error("fitbitRefresh error", { message: e?.message });
+      return res.status(500).json({ ok: false, error: String(e?.message || e) });
+    }
+  }
+);
+
