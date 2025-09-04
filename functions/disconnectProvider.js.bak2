@@ -1,0 +1,141 @@
+import { db, FieldValue, Timestamp } from "./core/firebase_admin.js";
+// functions/disconnectProvider.js
+/**
+ * Callable: disconnectProviderCall (ESM + Firebase Functions v2)
+ * Input: { uid?: string, providerId: string, deleteVendorData?: boolean }
+ *
+ * Behavior:
+ *  - (Fitbit) Attempts token revoke (best-effort; non-fatal on failure)
+ *  - Mirrors status -> users/{uid}/integrations/{providerId} (UI-facing)
+ *  - Mirrors status -> integrations/{providerId}/users/{uid} (admin path)
+ *  - Optional vendor data purge hook (disabled by default; dangerous)
+ *  - Writes audit event -> users/{uid}/system_runs_server
+ */
+
+import { onCall, HttpsError } from "firebase-functions/v2/https";
+import * as logger from "firebase-functions/logger";
+// Initialize Admin SDK once (safe if index.js also initializes)
+if (!getApps().length) {
+  initializeApp({ credential: applicationDefault?.() });
+}
+
+function basicAuthHeader(clientId, clientSecret) {
+  if (!clientId || !clientSecret) return null;
+  return "Basic " + Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+}
+
+/** Revoke Fitbit token if present under integrations/fitbit/users/{uid} (best-effort) */
+async function revokeFitbitIfPresent(uid) {
+  try {
+    const doc = await db.doc(`integrations/fitbit/users/${uid}`).get();
+    if (!doc.exists) return;
+    const data = doc.data() || {};
+    const accessToken = data.access_token;
+    if (!accessToken) return;
+
+    // Some Fitbit apps require client auth for revocation; include if env provides it.
+    const authHeader = basicAuthHeader(
+      process.env.FITBIT_CLIENT_ID,
+      process.env.FITBIT_CLIENT_SECRET
+    );
+
+    const headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
+    if (authHeader) headers["Authorization"] = authHeader;
+
+    await fetch("https://api.fitbit.com/oauth2/revoke", {
+      method: "POST",
+      headers,
+      body: new URLSearchParams({ token: accessToken }),
+    }).catch(() => { /* non-fatal */ });
+
+    logger.info("Fitbit token revoke attempted", { uid, hadClientAuth: !!authHeader });
+  } catch (e) {
+    // Non-fatal; we still proceed to mark disconnected.
+    logger.warn("Fitbit revoke failed (continuing)", { uid, message: String(e?.message || e) });
+  }
+}
+
+/**
+ * Callable (v2):
+ *   data: { uid?: string, providerId: string, deleteVendorData?: boolean }
+ *   auth.uid used as fallback when data.uid is omitted (self-only typical usage).
+ */
+export const disconnectProviderCall = onCall(
+  // If you want to load secrets for revoke auth, you can add:
+  // { region: "us-central1", secrets: ["FITBIT_CLIENT_ID", "FITBIT_CLIENT_SECRET"] }
+  { region: "us-central1" },
+  async (req) => {
+    const uid = (req.data?.uid && String(req.data.uid)) || req.auth?.uid || "";
+    const providerId = String(req.data?.providerId || "");
+    const deleteVendorData = !!req.data?.deleteVendorData;
+
+    if (!uid || !providerId) {
+      throw new HttpsError("invalid-argument", "uid and providerId are required");
+    }
+
+    try {
+      // 1) Revoke vendor token where applicable (best-effort)
+      if (providerId === "fitbit") {
+        await revokeFitbitIfPresent(uid);
+      }
+
+      // 2) Mirror status to user-scoped doc (UI reads this)
+      const userIntegRef = db.doc(`users/${uid}/integrations/${providerId}`);
+      await userIntegRef.set(
+        {
+          provider: providerId,
+          connected: false,
+          last_status: "disconnected",
+          revoked_at_utc: FieldValue.serverTimestamp(),
+          updated_at_utc: FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+
+      // 3) Mirror status to admin-scoped doc (central integrations registry)
+      const adminRef = db.doc(`integrations/${providerId}/users/${uid}`);
+      await adminRef.set(
+        {
+          connected: false,
+          last_status: "disconnected",
+          revoked_at_utc: FieldValue.serverTimestamp(),
+          updated_at_utc: FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+
+      // 4) Optional vendor data purge (DANGEROUS — intentionally left as a stub)
+      if (deleteVendorData) {
+        // Example (commented out):
+        // await db.recursiveDelete(db.collection(`raw/${uid}/${providerId}`));
+        logger.warn("deleteVendorData requested but not implemented; skipping", {
+          uid,
+          providerId,
+        });
+      }
+
+      // 5) Audit trail
+      await db
+        .collection("users")
+        .doc(uid)
+        .collection("system_runs_server")
+        .add({
+          at_utc: new Date().toISOString(),
+          source: "disconnectProviderCall",
+          providerId,
+        });
+
+      logger.info("Provider disconnected", { uid, providerId });
+      return { ok: true };
+    } catch (e) {
+      logger.error("disconnectProviderCall failed", {
+        uid,
+        providerId,
+        message: String(e?.message || e),
+      });
+      throw new HttpsError("internal", String(e?.message || e));
+    }
+  }
+);
