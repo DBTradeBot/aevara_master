@@ -2,7 +2,7 @@
 // Anchors & model config loaders (robust + cached)
 // Node 20 / ESM / Firebase Functions v2
 
-import { db } from "../core/firebase_admin.js";
+import { db } from "./firebase_admin.js";
 import {
   round,
   normalizeUnits,

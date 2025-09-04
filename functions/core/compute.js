@@ -1,4 +1,4 @@
-import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
+import { db, FieldValue, Timestamp } from "./firebase_admin.js";
 // functions/core/compute.js
 // Pure compute: from inputs + anchors + model config → scores & drivers
 // Node 20 / ESM

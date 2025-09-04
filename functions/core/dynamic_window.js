@@ -3,7 +3,7 @@
 // Anchors dynamic window to the day being computed (D), not "today"
 // Node 20 / ESM
 
-import { db } from "../core/firebase_admin.js";
+import { db } from "./firebase_admin.js";
 import {
   isDateKey,
 } from "./ddc_utils.js";

@@ -3,7 +3,7 @@
 // Supports: 'lag_yesterday' (default), 'cutoff', 'sleep_bounded'
 // Node 20 / ESM
 
-import { db } from "../core/firebase_admin.js";
+import { db } from "./firebase_admin.js";
 import {
   dateKeyInTZ,
   parseDateKey,

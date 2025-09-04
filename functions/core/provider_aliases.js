@@ -1,4 +1,4 @@
-import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
+import { db, FieldValue, Timestamp } from "./firebase_admin.js";
 // provider_aliases.js
 // ESM module
 // - Canonicalizes vendor names

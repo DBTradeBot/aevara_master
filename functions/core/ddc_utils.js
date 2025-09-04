@@ -1,4 +1,4 @@
-import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
+import { db, FieldValue, Timestamp } from "./firebase_admin.js";
 // functions/core/ddc_utils.js
 // Shared helpers for DDC + vendors (Node 20 / ESM / Firebase Functions v2)
 //

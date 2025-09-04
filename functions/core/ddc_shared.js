@@ -4,13 +4,10 @@
  * and slow “anchors” loader (fixed + memoized).
  * Node 20 / ESM / Firebase Functions v2
  */
-
-import { initializeApp, applicationDefault, getApps } from "firebase-admin/app";
-import { db } from "../core/firebase_admin.js";
+import { db } from "./firebase_admin.js";
 import { createHash } from "crypto";
 
 // --- Firebase Admin single-init ---
-if (!getApps().length) initializeApp({ credential: applicationDefault() });
 export 
 
 // --- Constants ---
