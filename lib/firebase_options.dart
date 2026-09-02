@@ -17,29 +17,17 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -57,6 +45,45 @@ class DefaultFirebaseOptions {
     appId: '1:74116747347:android:94db01e6fe6ea1ffd476a6',
     messagingSenderId: '74116747347',
     projectId: 'vitalis-a8577',
+    storageBucket: 'vitalis-a8577.firebasestorage.app',
+  );
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDkEexvQb38sCxh00Mg89agZ7Xe8pIdL0k',
+    appId: '1:74116747347:web:091268ffdc110b1ad476a6',
+    messagingSenderId: '74116747347',
+    projectId: 'vitalis-a8577',
+    authDomain: 'vitalis-a8577.firebaseapp.com',
+    storageBucket: 'vitalis-a8577.firebasestorage.app',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDpvFtr7tWHS5W3ZWgXgVc5dTC0Y1qc_XE',
+    appId: '1:74116747347:ios:04a45779472f55bcd476a6',
+    messagingSenderId: '74116747347',
+    projectId: 'vitalis-a8577',
+    storageBucket: 'vitalis-a8577.firebasestorage.app',
+    androidClientId: '74116747347-sg8vis9p47r72omfj6ndu48iscikue7n.apps.googleusercontent.com',
+    iosClientId: '74116747347-m1ivrno7i4lsp36n0e3tna415bcmv7qm.apps.googleusercontent.com',
+    iosBundleId: 'com.example.aevaraMaster',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDpvFtr7tWHS5W3ZWgXgVc5dTC0Y1qc_XE',
+    appId: '1:74116747347:ios:04a45779472f55bcd476a6',
+    messagingSenderId: '74116747347',
+    projectId: 'vitalis-a8577',
+    storageBucket: 'vitalis-a8577.firebasestorage.app',
+    androidClientId: '74116747347-sg8vis9p47r72omfj6ndu48iscikue7n.apps.googleusercontent.com',
+    iosClientId: '74116747347-m1ivrno7i4lsp36n0e3tna415bcmv7qm.apps.googleusercontent.com',
+    iosBundleId: 'com.example.aevaraMaster',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBkFwXAd53UqpthU5tLkKv2-FUpWj37Mok',
+    appId: '1:74116747347:web:0c66e0f9f5cd82fdd476a6',
+    messagingSenderId: '74116747347',
+    projectId: 'vitalis-a8577',
+    authDomain: 'vitalis-a8577.firebaseapp.com',
     storageBucket: 'vitalis-a8577.firebasestorage.app',
   );
 }
