@@ -1,4 +1,4 @@
-import { db, FieldValue, Timestamp } from "./firebase_admin.js";
+﻿import { db, FieldValue, Timestamp } from "./firebase_admin.js";
 // provider_aliases.js
 // ESM module
 // - Canonicalizes vendor names
@@ -66,7 +66,7 @@ const ALIASES = {
     "sleep_hours",
     "totalSleepHours",
     "sleep.total_hours_num",
-    "sleep.total_minutes_asleep", // might be minutes → handled in readMetricWithAliases
+    "sleep.total_minutes_asleep", // might be minutes â†' handled in readMetricWithAliases
   ],
   sleep_regularity_pct: [
     "sleep_regularity_pct",
@@ -117,7 +117,7 @@ function getPath(obj, path) {
       return path.split(".").reduce((acc, k) => (acc == null ? undefined : acc[k]), obj);
     }
     return obj[path];
-  } catch {
+  } catch (e) {
     return undefined;
   }
 }
@@ -125,7 +125,7 @@ function getPath(obj, path) {
 /**
  * Heuristics to fix units when aliases point to vendor-specific raw fields.
  * Currently:
- *  - sleep.total_minutes_asleep → convert to hours
+ *  - sleep.total_minutes_asleep â†' convert to hours
  */
 function normalizeValueForKey(key, raw) {
   if (raw == null) return raw;
@@ -204,4 +204,7 @@ export default {
   PROVIDER_QUALITY,
   isEffectivelyZero,
 };
+
+
+
 

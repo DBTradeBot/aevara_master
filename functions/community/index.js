@@ -1,4 +1,4 @@
-import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
+﻿import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
 // functions/community/index.js
 // Community module (ESM / Gen2 / Node 20)
 // - Usernames: reserve-on-create trigger, getMyUsername, reserveUsername
@@ -12,7 +12,7 @@ import { onDocumentCreated, onDocumentWritten } from "firebase-functions/v2/fire
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import * as logger from "firebase-functions/logger";
 
-/* ─────────────────────────────── Username policy ───────────────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ Username policy â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 
 const HANDLE_RE = /^[a-z][a-z0-9._-]*$/; // lower; start with letter
 
@@ -29,7 +29,7 @@ function assertAuthed(req) {
   return uid;
 }
 
-/* ─────────────────────────── reserve on user create ────────────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ reserve on user create â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 export const reserveUsernameOnCreate = onDocumentCreated("users/{uid}", async (event) => {
   try {
     const uid = event.params.uid;
@@ -52,7 +52,7 @@ export const reserveUsernameOnCreate = onDocumentCreated("users/{uid}", async (e
   }
 });
 
-/* ───────────────────── maintain mapping on change (optional) ───────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ maintain mapping on change (optional) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 export const updateUsernameOnChange = onDocumentWritten("users/{uid}", async (event) => {
   try {
     const uid = event.params.uid;
@@ -87,7 +87,7 @@ export const updateUsernameOnChange = onDocumentWritten("users/{uid}", async (ev
   }
 });
 
-/* ───────────────────────────── Username callables ─────────────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ Username callables â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 
 export const getMyUsername = onCall(async (req) => {
   const uid = assertAuthed(req);
@@ -121,7 +121,7 @@ export const reserveUsername = onCall(async (req) => {
   return { ok: true, username: handle };
 });
 
-/* ─────────────────────────── Notifications helper ─────────────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ Notifications helper â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 
 export const markNotificationRead = onCall(async (req) => {
   const uid = assertAuthed(req);
@@ -132,7 +132,7 @@ export const markNotificationRead = onCall(async (req) => {
   return { ok: true };
 });
 
-/* ─────────────────────── BACKGROUND COUNTERS (restored) ─────────────────────
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ BACKGROUND COUNTERS (restored) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
    IMPORTANT: These were previously background triggers. We keep the names and
    implement onDocumentWritten so the trigger type matches the deployed one.
 ----------------------------------------------------------------------------- */
@@ -216,7 +216,7 @@ export const eventRsvpsCounter = onDocumentWritten(
   }
 );
 
-/* ───────────────────────── Leaderboards: shared core logic ────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ Leaderboards: shared core logic â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 
 function startOfIsoWeekUTC(d) {
   const dt = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
@@ -283,7 +283,7 @@ async function buildLeaderboardsCore() {
   return { ok: true, period_id: periodId, users };
 }
 
-/* ───────────────────────── buildLeaderboards (SCHEDULED) ──────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ buildLeaderboards (SCHEDULED) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 export const buildLeaderboards = onSchedule(
   {
     region: "us-central1",
@@ -295,8 +295,11 @@ export const buildLeaderboards = onSchedule(
   }
 );
 
-/* ─────────────────────── buildLeaderboardsCall (CALLABLE) ─────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ buildLeaderboardsCall (CALLABLE) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 export const buildLeaderboardsCall = onCall(async (req) => {
   assertAuthed(req);
   return buildLeaderboardsCore();
 });
+
+
+

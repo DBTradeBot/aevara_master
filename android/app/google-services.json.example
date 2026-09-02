@@ -1,0 +1,4 @@
+{
+  "_comment": "Run `flutterfire configure` to generate your own google-services.json here.",
+  "project_info": { "project_id": "your-firebase-project-id" }
+}

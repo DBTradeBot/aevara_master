@@ -1,4 +1,4 @@
-import { db, FieldValue, Timestamp } from "./firebase_admin.js";
+﻿import { db, FieldValue, Timestamp } from "./firebase_admin.js";
 // functions/core/leases.js
 // Per-day compute lease with even-segment subcollection
 // Node 20 / ESM
@@ -79,8 +79,10 @@ export async function releaseDayLease(uid, dateKey, token) {
         tx.delete(ref);
       }
     });
-  } catch {
+  } catch (e) {
     // best-effort
   }
 }
+
+
 

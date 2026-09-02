@@ -22,8 +22,8 @@ class RoutePaths {
   static const String home = '/app/home';
 
   // App → Settings/Account
-  static const String profileEdit      = '/profile/edit'; // legacy, kept for compatibility
-  static const String updateProfile    = '/settings/update-profile'; // ✅ new target
+  static const String profileEdit      = '/profile/edit';
+  static const String updateProfile    = '/settings/update-profile';
   static const String settingsUsername = '/settings/username';
   static const String settingsEmail    = '/settings/change-email';
   static const String settingsPassword = '/settings/change-password';

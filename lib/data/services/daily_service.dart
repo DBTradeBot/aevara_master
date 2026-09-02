@@ -1,6 +1,5 @@
-// lib/data/services/daily_service.dart
 // Abstract interface for reading/writing the daily doc.
-// Path: user_daily/{uid}/days/{YYYY-MM-DD}
+// ✅ Canonical path: users/{uid}/days/{YYYY-MM-DD}
 
 abstract class DailyService {
   /// Returns today's document data or null if none (adapter may create a stub).

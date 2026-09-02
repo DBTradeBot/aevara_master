@@ -1,29 +1,32 @@
-// lib/features/home/sheets/input_wellbeing_sheet.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../state/today_actions.dart';
 
+/// Wellbeing (1–5) where 1 = best, 5 = worst.
+/// Writes to user_daily/{uid}/days/{YYYY-MM-DD}.wellbeing_level_1to5
+/// Optional note saved to .notes_wellbeing
 class InputWellbeingSheet extends ConsumerStatefulWidget {
   const InputWellbeingSheet({super.key});
+
   @override
   ConsumerState<InputWellbeingSheet> createState() =>
       _InputWellbeingSheetState();
 }
 
 class _InputWellbeingSheetState extends ConsumerState<InputWellbeingSheet> {
-  int _mood = 3;
-  int _stress = 3;
-  final _moodCtrl = TextEditingController();
+  int _value = 3; // neutral default
+  final _noteCtrl = TextEditingController();
 
   @override
   void dispose() {
-    _moodCtrl.dispose();
+    _noteCtrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return SafeArea(
       top: false,
       child: Padding(
@@ -31,6 +34,7 @@ class _InputWellbeingSheetState extends ConsumerState<InputWellbeingSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Handle
             Container(
               width: 48,
               height: 4,
@@ -40,59 +44,65 @@ class _InputWellbeingSheetState extends ConsumerState<InputWellbeingSheet> {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
+
+            // Title
             Row(
               children: [
-                Text('Wellbeing check‑in', style: theme.textTheme.titleMedium),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Text('Mood', style: theme.textTheme.bodyMedium),
-                const Spacer(),
-                DropdownButton<int>(
-                  value: _mood,
-                  items: List.generate(
-                      5,
-                      (i) => DropdownMenuItem(
-                          value: i + 1, child: Text('${i + 1}'))),
-                  onChanged: (v) => setState(() => _mood = v ?? 3),
+                Text('Wellbeing (1–5)', style: theme.textTheme.titleMedium),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '1 = feeling great · 5 = feeling poor',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
                 ),
               ],
             ),
-            Row(
-              children: [
-                Text('Stress', style: theme.textTheme.bodyMedium),
-                const Spacer(),
-                DropdownButton<int>(
-                  value: _stress,
-                  items: List.generate(
-                      5,
-                      (i) => DropdownMenuItem(
-                          value: i + 1, child: Text('${i + 1}'))),
-                  onChanged: (v) => setState(() => _stress = v ?? 3),
-                ),
+            const SizedBox(height: 12),
+
+            // Single 1–5 control (emoji labels, 5 = worse)
+            SegmentedButton<int>(
+              segments: const [
+                ButtonSegment(value: 1, label: Text('1 😄')),
+                ButtonSegment(value: 2, label: Text('2 🙂')),
+                ButtonSegment(value: 3, label: Text('3 😐')),
+                ButtonSegment(value: 4, label: Text('4 😣')),
+                ButtonSegment(value: 5, label: Text('5 🌪️')),
               ],
+              selected: {_value},
+              onSelectionChanged: (s) => setState(() => _value = s.first),
             ),
-            const SizedBox(height: 8),
+
+            const SizedBox(height: 12),
+
+            // Optional note (stored in notes_wellbeing)
             TextField(
-              controller: _moodCtrl,
+              controller: _noteCtrl,
               maxLines: 2,
+              textInputAction: TextInputAction.done,
               decoration: const InputDecoration(
                 hintText:
-                    'Want to share more? Tell Aevara what’s on your mind.',
+                'Want to share more? Tell Aevara what’s on your mind.',
               ),
             ),
-            const SizedBox(height: 8),
+
+            const SizedBox(height: 12),
+
+            // Save
             FilledButton(
               onPressed: () async {
-                await ref.read(todayActionsProvider).setWellbeing(
-                      mood1to5: _mood,
-                      stress1to5: _stress,
-                      notesMood: _moodCtrl.text.isEmpty ? null : _moodCtrl.text,
-                    );
-                if (context.mounted)
-                  Navigator.pop(context, {'mood': _mood, 'stress': _stress});
+                await ref.read(todayActionsProvider).setWellbeingLevel(
+                  value1to5: _value,
+                  note: _noteCtrl.text.trim().isEmpty
+                      ? null
+                      : _noteCtrl.text.trim(),
+                );
+                if (context.mounted) {
+                  Navigator.pop(context, {'wellbeing': _value});
+                }
               },
               child: const Text('Save'),
             ),

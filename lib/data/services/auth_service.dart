@@ -1,12 +1,23 @@
 // lib/data/services/auth_service.dart
 import 'package:firebase_auth/firebase_auth.dart';
 
+/// App-level auth interface used by UI and guards.
 abstract class AuthService {
-  Future<UserCredential> signIn(String email, String password);
-  Future<UserCredential> signUp(String email, String password);
-  Future<void> sendEmailVerification();
-  Future<void> sendPasswordReset(String email);
+  Stream<User?> authStateChanges();
+
+  Future<UserCredential> signInWithEmail({
+    required String email,
+    required String password,
+  });
+
+  Future<UserCredential> signUpWithEmail({
+    required String email,
+    required String password,
+  });
+
+  Future<void> sendPasswordResetEmail({required String email});
+
   Future<void> signOut();
-  Future<UserCredential>
-      signInWithGoogle(); // stub; platform code handled by firebase_auth_oauth or google_sign_in
+
+  User? get currentUser;
 }

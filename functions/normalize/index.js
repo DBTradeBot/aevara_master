@@ -1,9 +1,9 @@
-import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
+﻿import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
 // functions/normalize/index.js
 // Normalization triggers (scaffold):
 // - Convert user-entered / imported entries into a low-friction manual provider snapshot
 //   at users/{uid}/sync_days/manual_{YYYY-MM-DD} so mergeDailyFromVendors can consider it.
-// - BP enrichment on write (pulse pressure + MAP) — maintained under BOTH names:
+// - BP enrichment on write (pulse pressure + MAP) "" maintained under BOTH names:
 //     normBloodPressure (background trigger) and enrichBP (background trigger)
 // Node 20 / ESM
 
@@ -59,7 +59,7 @@ async function enrichBpCore(afterRef, afterData) {
   return { wrote: true, pulse_pressure, mean_arterial_pressure: map };
 }
 
-/* ------------------------- Measurements → manual --------------------------- */
+/* ------------------------- Measurements â†' manual --------------------------- */
 /**
  * users/{uid}/measurements/{id}
  *   { at_utc, tz?, steps_count?, distance_km?, calories_out?,
@@ -95,7 +95,7 @@ export const normMeasurements = onDocumentWritten(
   }
 );
 
-/* --------------------------- Workouts → manual ----------------------------- */
+/* --------------------------- Workouts â†' manual ----------------------------- */
 /**
  * users/{uid}/workouts/{id}
  * { at_utc, tz?, steps?, distance_km?, calories? , minutes_active? }
@@ -165,20 +165,20 @@ export const normHydration = onDocumentWritten(
 export const normGlucose = onDocumentWritten(
   "users/{uid}/biometrics_glucose/{id}",
   async () => {
-    // scaffold – no-op by default
+    // scaffold "" no-op by default
   }
 );
 
 export const normTemp = onDocumentWritten(
   "users/{uid}/biometrics_temp/{id}",
   async () => {
-    // scaffold – no-op by default
+    // scaffold "" no-op by default
   }
 );
 
 /**
  * BP normalization + enrichment on write.
- * users/{uid}/biometrics_bp/{id}  → computes:
+ * users/{uid}/biometrics_bp/{id}  â†' computes:
  *   - pulse_pressure = systolic - diastolic
  *   - mean_arterial_pressure = diastolic + (pulse_pressure / 3)
  */
@@ -227,3 +227,5 @@ export const normalizeHydration = normHydration;
 export const normalizeGlucose = normGlucose;
 export const normalizeTemp = normTemp;
 export const normalizeBloodPressure = normBloodPressure;
+
+

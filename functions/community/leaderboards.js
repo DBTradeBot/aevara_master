@@ -1,4 +1,4 @@
-import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
+﻿import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
 // functions/community/leaderboards.js
 // Weekly steps leaderboard builder (legacy name: buildLeaderboards).
 // Node 20 / Gen 2 / ESM
@@ -90,3 +90,5 @@ export const buildLeaderboards = onCall(async (req) => {
   logger.info(`[leaderboards] weekly_steps built for ${Object.keys(entries).length} users, period ${periodId}`);
   return { ok: true, period_id: periodId, users: Object.keys(entries).length };
 });
+
+

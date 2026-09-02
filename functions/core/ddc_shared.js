@@ -1,14 +1,11 @@
-/**
+﻿/**
  * core/ddc_shared.js
  * Shared initialization, date/TZ utilities, hashing, model cache,
- * and slow “anchors” loader (fixed + memoized).
+ * and slow "anchors" loader (fixed + memoized).
  * Node 20 / ESM / Firebase Functions v2
  */
-import { db } from "./firebase_admin.js";
+import { db } from "../core/firebase_admin.js";
 import { createHash } from "crypto";
-
-// --- Firebase Admin single-init ---
-export 
 
 // --- Constants ---
 export const DEFAULT_TZ = "America/Los_Angeles";
@@ -35,7 +32,7 @@ export function hashOf(obj) {
     };
     const s = JSON.stringify(ordered(obj), replacer);
     return createHash("sha1").update(s).digest("hex");
-  } catch {
+  } catch (e) {
     return null;
   }
 }
@@ -62,7 +59,7 @@ export async function loadUserTZ(uid) {
   try {
     const u = await db.doc(`users/${uid}`).get();
     return (u.exists ? (u.data()?.tz || u.data()?.timezone) : null) || DEFAULT_TZ;
-  } catch {
+  } catch (e) {
     return DEFAULT_TZ;
   }
 }
@@ -75,7 +72,7 @@ export function localHourInTZ(tz = DEFAULT_TZ) {
       hour12: false,
     }).format(new Date());
     return parseInt(s, 10);
-  } catch {
+  } catch (e) {
     return new Date().getHours();
   }
 }
@@ -173,9 +170,9 @@ export async function loadModelConfig() {
 
 // --- Anchors loader (FIXED + memoized) ---
 // Reads slow-changing anchors from:
-//   users/{uid} → sex, height_cm, weight_kg, waist_cm (legacy aliases supported)
-//   users/{uid}/biometrics_bp           (latest) → systolic/diastolic
-//   users/{uid}/biometrics_glucose      (latest) → hba1c_pct or fasting value (normalized to mmol/L)
+//   users/{uid} â†' sex, height_cm, weight_kg, waist_cm (legacy aliases supported)
+//   users/{uid}/biometrics_bp           (latest) â†' systolic/diastolic
+//   users/{uid}/biometrics_glucose      (latest) â†' hba1c_pct or fasting value (normalized to mmol/L)
 const _anchorsMemo = new Map(); // uid -> { at: ms, value }
 
 export async function loadAnchors(uid) {
@@ -212,7 +209,7 @@ export async function loadAnchors(uid) {
       const dia = d.diastolic ?? d.dia ?? null;
       if (sys != null && dia != null) bp = { sys: Number(sys), dia: Number(dia) };
     }
-  } catch {
+  } catch (e) {
     // best-effort
   }
 
@@ -237,7 +234,7 @@ export async function loadAnchors(uid) {
           glucose = { fasting_mmol_L: Number(fasting_mmol_L.toFixed(2)) };
       }
     }
-  } catch {
+  } catch (e) {
     // best-effort
   }
 
@@ -269,4 +266,6 @@ export default {
   loadModelConfig,
   loadAnchors,
 };
+
+
 

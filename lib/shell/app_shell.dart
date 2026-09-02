@@ -1,18 +1,26 @@
 // lib/shell/app_shell.dart
 //
-// AppShell — tabs + AppBar + Settings banner.
-// Avatar sits in AppBar.leading (left of "Home") with symmetric padding
-// so the dropdown anchor is inset from the screen edge.
-// Toggle logic works with overlay handle that is marked closed on any dismiss.
+// AppShell — tabs + AppBar + Settings banner + sync LED.
+// Boot/resume sync happens AFTER first frame.
+// Small change: invalidate the gauge VM after boot compute,
+// and stagger compute(today) before compute(yesterday) to land a score sooner.
 
+import 'dart:async';
 import 'dart:math' as math;
+
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:aevara_app/data/contracts/firestore_contracts_v1.dart' as Fx;
 
 // Feature entry pages
 import '../features/home/dashboard_page.dart';
 import '../features/data_hub/data_hub_page.dart';
-import '../features/insights/insights_page.dart';
 import '../features/experiments/experiments_page.dart';
 import '../features/community/community_page.dart';
 
@@ -21,32 +29,44 @@ import '../core/widgets/app_bottom_nav.dart';
 import '../core/widgets/settings_banner.dart';
 import '../core/widgets/avatar/coach_avatar.dart';
 import '../core/widgets/avatar/coach_insights_overlay.dart';
+import '../core/widgets/dev_fab_navigator.dart';
+
+// Settings icon with red dot
+import '../core/widgets/settings_icon_with_dot.dart';
+
+// Global in-app notification overlay
+import '../core/notifications/notification_overlay_host.dart';
+
+// Sync status LED (tappable legend)
+import '../core/widgets/tiles/sync_status_icon.dart';
+
+// Devices + sync status + compute
+import '../state/devices_provider.dart';
+import '../state/sync_status_provider.dart' as sync;
+import '../state/app_providers.dart' as app_state;
+
+// Gauge VM (invalidate after boot compute)
+import '../state/daily_providers.dart' as daily;
+
+// Ensure today's stub
+import '../state/today_actions.dart' show ensureTodayDoc;
 
 class AppShell extends ConsumerStatefulWidget {
   const AppShell({super.key, this.initialTab = 0});
-  final int initialTab; // 0..4
+  final int initialTab; // 0..3
 
   @override
   ConsumerState<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends ConsumerState<AppShell> {
+class _AppShellState extends ConsumerState<AppShell> with WidgetsBindingObserver {
   late int _index;
 
   final _pages = const <Widget>[
     DashboardPage(),
     DataHubPage(),
-    InsightsPage(),
     ExperimentsPage(),
     CommunityPage(),
-  ];
-
-  final _titles = const <String>[
-    'Home',
-    'Data',
-    'Insights',
-    'Experiments',
-    'Community',
   ];
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -55,16 +75,116 @@ class _AppShellState extends ConsumerState<AppShell> {
   final LayerLink _coachLink = LayerLink();
   CoachInsightsOverlayHandle? _coachHandle;
 
+  // Boot/resume sync guards
+  bool _syncInFlight = false;
+  DateTime? _lastSyncKickUtc;
+  Timer? _resumeDebounce;
+
   @override
   void initState() {
     super.initState();
     _index = widget.initialTab.clamp(0, _pages.length - 1);
+    WidgetsBinding.instance.addObserver(this);
+
+    // Defer boot sync until after first frame to avoid blocking initial paint.
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _runBootOrResumeSync(reason: 'boot_postframe');
+    });
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _resumeDebounce?.cancel();
     _coachHandle?.close();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!mounted) return;
+    if (state == AppLifecycleState.resumed) {
+      _resumeDebounce?.cancel();
+      _resumeDebounce = Timer(const Duration(milliseconds: 250), () {
+        _runBootOrResumeSync(reason: 'resume');
+      });
+    }
+  }
+
+  Future<void> _runBootOrResumeSync({required String reason}) async {
+    if (!mounted) return;
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null || uid.isEmpty) return;
+
+    // Prevent spam if a sync just ran in the last ~20 seconds.
+    final nowUtc = DateTime.now().toUtc();
+    if (_lastSyncKickUtc != null &&
+        nowUtc.difference(_lastSyncKickUtc!).inSeconds < 20) {
+      return;
+    }
+    if (_syncInFlight) return;
+
+    _syncInFlight = true;
+    _lastSyncKickUtc = nowUtc;
+
+    try {
+      // 0) Ensure a users/{uid}/days/{today} stub first so readers bind instantly.
+      await ensureTodayDoc(uid);
+
+      // 1) Vendor fetch (Fitbit, etc.) — fast, tight window, no CRF.
+      try {
+        await ref.read(devicesServiceProvider).fitbitFetchNowFor(
+          uid,
+          days: 3,
+          backfill: false,
+          includeCrf: false,
+          reason: reason,
+        );
+      } catch (_) {
+        // Silent: avoid noise when not connected.
+      }
+
+      if (!mounted) return;
+
+      // 2) Compute TODAY first to land a visible score fast.
+      final compute = ref.read(app_state.computeServiceProvider);
+      await compute.computeTodayFor(uid, source: 'shell_$reason');
+
+      // 2b) Nudge the gauge VM + status to re-read now.
+      ref.invalidate(sync.todayDailyDocSnapProvider);
+      ref.invalidate(sync.syncStatusProvider);
+      ref.invalidate(daily.vitalityGaugeVMProvider); // <- important on boot
+
+      // 3) Kick YESTERDAY shortly after (spreads work across frames).
+      //    Do not await; cooldowns and in-flight guards are in the service.
+      Future<void>.delayed(const Duration(milliseconds: 300), () {
+        compute.computeYesterdayFor(uid, source: 'shell_$reason');
+      });
+
+      if (!mounted) return;
+      setState(() {}); // ensure AppBar actions rebuild
+
+      // Optional: diagnostic log (do not await).
+      unawaited(_logShellSyncEvent(uid: uid, reason: reason));
+    } finally {
+      _syncInFlight = false;
+    }
+  }
+
+  Future<void> _logShellSyncEvent({required String uid, required String reason}) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('system_runs_client')
+          .add({
+        'reason': reason,
+        'at_utc': DateTime.now().toUtc().toIso8601String(),
+        'source': 'app_shell',
+      });
+    } catch (_) {
+      // best effort only
+    }
   }
 
   void _openSettings() => _scaffoldKey.currentState?.openEndDrawer();
@@ -83,34 +203,30 @@ class _AppShellState extends ConsumerState<AppShell> {
   }
 
   Future<void> _toggleCoachOverlay() async {
-    // If we still hold a handle but it's been marked closed, drop it.
     if (_coachHandle != null && _coachHandle!.isOpen == false) {
       _coachHandle = null;
     }
-
     if (_coachHandle?.isOpen == true) {
-      await _coachHandle!.close(); // marks closed immediately
+      await _coachHandle!.close();
       _coachHandle = null;
       return;
     }
-
-    // Open a new overlay — NOTE: no builder passed so default chat UI shows
     _coachHandle = await showCoachInsightsOverlay(
       context: context,
       link: _coachLink,
-      // builder: (ctx, close) => _CoachInsightsPanel(onClose: close), // removed
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final status = ref.watch(sync.syncStatusProvider);
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        // Give the leading avatar a wider hit target and horizontal inset
         leadingWidth: 64,
         leading: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0), // inset from screen edge
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: CompositedTransformTarget(
             link: _coachLink,
             child: InkWell(
@@ -119,12 +235,12 @@ class _AppShellState extends ConsumerState<AppShell> {
               child: Semantics(
                 button: true,
                 label: 'Open coach insights',
-                child: Center(
+                child: const Center(
                   child: CoachAvatar(
                     size: 40,
                     padding: 0,
                     showHalo: false,
-                    hideLayerNames: const ['Aura 2'],
+                    hideLayerNames: ['Aura 2'],
                     semanticLabel: 'Coach avatar',
                   ),
                 ),
@@ -132,17 +248,22 @@ class _AppShellState extends ConsumerState<AppShell> {
             ),
           ),
         ),
-        title: Text(_titles[_index]),
+        title: const Text('Aevara'),
         centerTitle: false,
         actions: [
-          IconButton(
-            tooltip: 'Settings',
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: _openSettings,
+          SyncStatusIcon(status: status),
+          SettingsIconWithDot(onPressed: _openSettings),
+        ],
+      ),
+      body: Stack(
+        children: [
+          IndexedStack(index: _index, children: _pages),
+          const Align(
+            alignment: Alignment.topCenter,
+            child: NotificationOverlayHost(),
           ),
         ],
       ),
-      body: IndexedStack(index: _index, children: _pages),
       bottomNavigationBar: AppBottomNav(
         currentIndex: _index,
         onTap: (i) => setState(() => _index = i),
@@ -165,37 +286,13 @@ class _AppShellState extends ConsumerState<AppShell> {
       ),
       endDrawerEnableOpenDragGesture: true,
       drawerScrimColor: Colors.black.withOpacity(0.30),
+      floatingActionButton: (_index == 0)
+          ? Offstage(
+        offstage: kReleaseMode,
+        child: const DevFabNavigator(),
+      )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
-
-// (Optional) Keep this around if you want to pass a custom builder later.
-// class _CoachInsightsPanel extends StatelessWidget {
-//   const _CoachInsightsPanel({required this.onClose});
-//   final VoidCallback onClose;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final theme = Theme.of(context);
-//     return Column(
-//       mainAxisSize: MainAxisSize.min,
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Row(
-//           children: [
-//             Text('Coach insights',
-//                 style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
-//             const Spacer(),
-//             IconButton(
-//               tooltip: 'Close',
-//               onPressed: onClose,
-//               icon: const Icon(Icons.close_rounded),
-//             ),
-//           ],
-//         ),
-//         const SizedBox(height: 8),
-//         const Text('Custom content goes here…'),
-//       ],
-//     );
-//   }
-// }

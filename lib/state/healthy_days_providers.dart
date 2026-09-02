@@ -1,89 +1,48 @@
-import 'package:aevara/data/contracts/firestore_contracts_v1.dart' as Fx;
 // lib/state/healthy_days_providers.dart
 //
-// Independent provider(s) for the Healthy Days component.
-// This file intentionally does NOT import or reference the Vitality Gauge VM.
-//
-// Reads: users/{uid}/days/{YYYY-MM-DD}.healthy_days_30
-// Added: per-day risk_index series for last 30 days (for chart rendering)
+// Healthy Days mini-bar sources directly from the last 30 day docs under
+// users/{uid}/days, reading `risk_index` and `healthy_day` that the compute writes.
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-String _todayKeyLocal() => DateFormat('yyyy-MM-dd').format(DateTime.now());
+import '../state/user_providers.dart' as user_state;
 
-/// Streams today's Healthy Days count (0–30). Returns null if missing.
-final healthyDaysCountProvider = StreamProvider<int?>((ref) async* {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) {
-    yield null;
-    return;
+/// Count of healthy days over last 30 (boolean field healthy_day).
+final healthyDaysCountProvider = FutureProvider<int>((ref) async {
+  final uid = ref.watch(user_state.currentUserIdProvider);
+  if (uid == null || uid.isEmpty) return 0;
+
+  final col = FirebaseFirestore.instance.collection('users').doc(uid).collection('days');
+
+  final snap = await col.orderBy(FieldPath.documentId).limitToLast(30).get();
+
+  int count = 0;
+  for (final doc in snap.docs) {
+    final d = doc.data();
+    final hd = d['healthy_day'];
+    if (hd == true) count++;
   }
+  return count;
+});
 
-  final uid = user.uid;
-  final todayKey = _todayKeyLocal();
-  final docStream = FirebaseFirestore.instance
-      .collection('users')
-      .doc(uid)
-      .collection('days')
-      .doc(todayKey)
-      .snapshots();
+/// Last-30 series of risk_index (0..1). `null` means missing.
+final healthyDaysRiskSeriesProvider = FutureProvider<List<double?>?>((ref) async {
+  final uid = ref.watch(user_state.currentUserIdProvider);
+  if (uid == null || uid.isEmpty) return const <double?>[];
 
-  await for (final snap in docStream) {
-    final data = snap.data();
-    if (data == null) {
-      yield null;
-      continue;
+  final col = FirebaseFirestore.instance.collection('users').doc(uid).collection('days');
+
+  final snap = await col.orderBy(FieldPath.documentId).limitToLast(30).get();
+
+  final out = <double?>[];
+  for (final doc in snap.docs) {
+    final d = doc.data();
+    if (d.containsKey('risk_index') && d['risk_index'] is num) {
+      out.add((d['risk_index'] as num).toDouble());
+    } else {
+      out.add(null);
     }
-    final num? raw = data['healthy_days_30'] as num?;
-    yield raw?.toInt();
   }
+  return out;
 });
-
-/// Fetches the last 30 days of `risk_index` values (oldest → newest).
-/// Returns a list of nullable doubles (0–1). Null = missing that day.
-/// This powers the dynamic Healthy Days mini bar chart.
-final healthyDaysRiskSeriesProvider =
-FutureProvider<List<double?>>((ref) async {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) return [];
-
-  final uid = user.uid;
-
-  // Build the last-30 date keys (local time).
-  final now = DateTime.now();
-  final keys = List.generate(
-    30,
-        (i) => DateFormat('yyyy-MM-dd')
-        .format(now.subtract(Duration(days: 29 - i))),
-  );
-
-  final col = FirebaseFirestore.instance
-      .collection('users')
-      .doc(uid)
-      .collection('days');
-
-  // Query docs in the window.
-  final snap = await col
-      .orderBy(FieldPath.documentId)
-      .startAt([keys.first])
-      .endAt([keys.last])
-      .get();
-
-  // Map by ID for alignment.
-  final byId = {
-    for (final d in snap.docs) d.id: d.data(),
-  };
-
-  // Align to 30 slots (oldest → newest).
-  return keys.map((k) {
-    final data = byId[k];
-    if (data == null) return null;
-    final num? r = data['risk_index'] as num?;
-    return r != null ? r.toDouble().clamp(0.0, 1.0) : null;
-  }).toList();
-});
-
-

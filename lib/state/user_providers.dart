@@ -1,5 +1,3 @@
-import 'package:aevara/data/contracts/firestore_contracts_v1.dart' as Fx;
-// lib/state/user_providers.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,17 +9,17 @@ import '../data/models/user_profile.dart';
 
 /// Auth user (nullable)
 final authUserProvider = StreamProvider<User?>(
-  (ref) => FirebaseAuth.instance.authStateChanges(),
+      (ref) => FirebaseAuth.instance.authStateChanges(),
 );
 
 /// Current UID (null when signed out)
 final currentUserIdProvider = Provider<String?>(
-  (ref) => ref.watch(authUserProvider).value?.uid,
+      (ref) => ref.watch(authUserProvider).value?.uid,
 );
 
 /// Firestore
 final firestoreProvider =
-    Provider<FirebaseFirestore>((_) => FirebaseFirestore.instance);
+Provider<FirebaseFirestore>((_) => FirebaseFirestore.instance);
 
 /// User profile service
 final userProfileServiceProvider = Provider<UserProfileService>((ref) {
@@ -44,12 +42,10 @@ final currentUserProfileProvider = StreamProvider<UserProfile?>((ref) {
 
 /// Cloud Functions
 final functionsProvider =
-    Provider<FirebaseFunctions>((_) => FirebaseFunctions.instance);
+Provider<FirebaseFunctions>((_) => FirebaseFunctions.instance);
 
 /// Callable: reserveUsername
 final reserveUsernameCallableProvider = Provider<HttpsCallable>((ref) {
   final fns = ref.watch(functionsProvider);
   return fns.httpsCallable('reserveUsername');
 });
-
-

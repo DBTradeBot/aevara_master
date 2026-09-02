@@ -14,14 +14,14 @@ class AevaraBaseColors {
   // Light text/background
   static const textPrimaryLight = Color(0xFF1B1B1B);
   static const textSecondaryLight = Color(0xFF575C6C);
-  static const backgroundLight = Color(0xFFFFFFFF);
-  static const backgroundAltLight = Color(0xFFF7F7F7);
+  static const backgroundLight = Color(0xFFFDFCF9); // Ivory Tint (main background)
+  static const backgroundAltLight = Color(0xFFF5F7F9); // Cloud Gray (cards/surfaces)
 
   // Dark text/background
   static const textPrimaryDark = Color(0xFFFFFFFF);
   static const textSecondaryDark = Color(0xFFC8CCD4);
-  static const backgroundDark = Color(0xFF1A2428); // Charcoal Slate
-  static const backgroundAltDark = Color(0xFF141B1F); // Near Black
+  static const backgroundDark = Color(0xFF1B263B); // Indigo Slate
+  static const backgroundAltDark = Color(0xFF141B1F); // Near Black (kept)
 
   // Accents (shared)
   static const accent1 = Color(0xFF3B91A3); // Pacific Mist

@@ -1,16 +1,8 @@
 // lib/charts/segment_ring_gauge.dart
 //
 // Segmented circular gauge with REAL gaps and crisp rectangular bars.
-// New in this build:
-//  • Head (last filled) segment emphasis: thicker bar, stronger shadow, bolder border
-//  • NEW: headColorOverride to force the head segment's fill color (for exact center-disc match)
-//  • Everything else unchanged and backward-compatible
-//
-// Notes:
-//  - We render a full-circle "totalSegmentsFull", then define a "usable"
-//    prefix (1 - unfilledTailFraction). Only usable segments can be filled.
-//  - Borders use StrokeCap.butt and match the ring radius so they don't
-//    bulge into gaps.
+// Direction is controlled via `counterClockwise`.
+// Head segment emphasis and optional headColorOverride are supported.
 
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
@@ -18,7 +10,7 @@ import 'package:flutter/material.dart';
 class SegmentRingGauge extends StatelessWidget {
   const SegmentRingGauge({
     super.key,
-    required this.progress01,           // 0..1
+    required this.progress01,           // 0..1 magnitude of fill on the usable arc
     this.size = 180,
     this.ringThickness = 20,
     this.segments = 36,                 // ≈ segments on the usable arc
@@ -30,6 +22,9 @@ class SegmentRingGauge extends StatelessWidget {
     this.trackColor = const Color(0xFFE8EBF0),
     this.trackColorDark,
     this.shadow = true,
+
+    // Direction
+    this.counterClockwise = false,
 
     // Edges (subtle underlay under ACTIVE segments only)
     this.showEdges = true,
@@ -51,7 +46,7 @@ class SegmentRingGauge extends StatelessWidget {
     this.headShadowBoost = 0.05,        // extra shadow opacity added on head
     this.headBorderColorActive,         // optional: override active border color for head
     this.headEdgeDarken,                // optional: override edge color for head
-    this.headColorOverride,             // NEW: exact color for head fill (keeps gradient for others)
+    this.headColorOverride,             // exact color for head fill
 
     this.center,
   });
@@ -69,6 +64,9 @@ class SegmentRingGauge extends StatelessWidget {
   final Color trackColor;
   final Color? trackColorDark;
   final bool shadow;
+
+  // Direction
+  final bool counterClockwise;
 
   // Edge (active only)
   final bool showEdges;
@@ -91,15 +89,17 @@ class SegmentRingGauge extends StatelessWidget {
   final Color? headBorderColorActive;
   final Color? headEdgeDarken;
 
-  /// NEW: exact color to use for the head (last active) segment's fill.
-  /// Useful when another widget (e.g., the center disc) must exactly match the head color.
+  /// exact color to use for the head (last active) segment's fill.
   final Color? headColorOverride;
 
   final Widget? center;
 
+  // Default band: Deep Orange → Soft Amber → Light Green → Clean Green.
   static const List<Color> _defaultBand = <Color>[
-    Color(0xFFBF4A4A), Color(0xFFF08048), Color(0xFFF6B56B),
-    Color(0xFF6FA6B2), Color(0xFF24A699),
+    Color(0xFFD9822B),
+    Color(0xFFF6B56B),
+    Color(0xFFA3D9A5),
+    Color(0xFF2FA36B),
   ];
 
   @override
@@ -124,7 +124,7 @@ class SegmentRingGauge extends StatelessWidget {
             painter: _SegmentRingPainter(
               progress01: p,
               ringThickness: ringThickness,
-              segmentsUsable: segments.clamp(6, 144),   // legacy meaning preserved
+              segmentsUsable: segments.clamp(6, 144),
               gapFraction: gapFraction.clamp(0.0, 0.45),
               gapPadRadians: gapPadRadians.clamp(0.0, 0.05),
               unfilledTailFraction: unfilledTailFraction.clamp(0.0, 0.45),
@@ -132,6 +132,8 @@ class SegmentRingGauge extends StatelessWidget {
               palette: palette,
               trackColor: effectiveTrack,
               shadow: shadow,
+              // Direction
+              counterClockwise: counterClockwise,
               showEdges: showEdges,
               edgeDarken: edgeDarken,
               boldBorders: boldBorders,
@@ -139,14 +141,13 @@ class SegmentRingGauge extends StatelessWidget {
               borderColorActive: borderColorActive,
               borderColorInactive: borderColorInactive,
               showTailSegments: showTailSegments,
-              // head emphasis
               emphasizeHead: emphasizeHead,
               headThicknessBoost: headThicknessBoost,
               headBorderBoost: headBorderBoost,
               headShadowBoost: headShadowBoost,
               headBorderColorActive: headBorderColorActive,
               headEdgeDarken: headEdgeDarken,
-              headColorOverride: headColorOverride, // NEW: pass down to painter
+              headColorOverride: headColorOverride,
             ),
           ),
           if (center != null) Center(child: center!),
@@ -168,6 +169,8 @@ class _SegmentRingPainter extends CustomPainter {
     required this.palette,
     required this.trackColor,
     required this.shadow,
+    // Direction
+    required this.counterClockwise,
     required this.showEdges,
     required this.edgeDarken,
     required this.boldBorders,
@@ -175,7 +178,6 @@ class _SegmentRingPainter extends CustomPainter {
     required this.borderColorActive,
     required this.borderColorInactive,
     required this.showTailSegments,
-    // head
     required this.emphasizeHead,
     required this.headThicknessBoost,
     required this.headBorderBoost,
@@ -195,6 +197,10 @@ class _SegmentRingPainter extends CustomPainter {
   final List<Color> palette;
   final Color trackColor;
   final bool shadow;
+
+  // Direction
+  final bool counterClockwise;
+
   final bool showEdges;
   final Color edgeDarken;
 
@@ -213,7 +219,6 @@ class _SegmentRingPainter extends CustomPainter {
   final Color? headBorderColorActive;
   final Color? headEdgeDarken;
 
-  /// NEW: exact color for the head segment's fill (overrides gradient color for head only).
   final Color? headColorOverride;
 
   @override
@@ -221,13 +226,12 @@ class _SegmentRingPainter extends CustomPainter {
     final cx = size.width / 2, cy = size.height / 2;
     final radius = math.min(cx, cy) - ringThickness / 2;
 
-    // Build full-circle segmentation so tail shows pills too.
     final usableFrac = 1.0 - unfilledTailFraction;
     final totalSegmentsFull =
     math.max(segmentsUsable, (segmentsUsable / usableFrac).round());
     final usableSegments = (totalSegmentsFull * usableFrac).round();
 
-    const startAngle = -math.pi / 2; // top
+    const baseStart = -math.pi / 2; // top/North
     final rawSegAngle = (2 * math.pi) / totalSegmentsFull;
     final gapAngle = rawSegAngle * gapFraction;
     final baseSweep = math.max(0.0, rawSegAngle - gapAngle);
@@ -236,7 +240,6 @@ class _SegmentRingPainter extends CustomPainter {
     final arcRect = Rect.fromCircle(center: Offset(cx, cy), radius: radius);
 
     Color colorForIndex(int i) {
-      // Color gradient only across the usable arc; tail stays trackColor
       if (i >= usableSegments) return trackColor;
       if (palette.length == 1) return palette.first;
       final t = i / math.max(1, usableSegments - 1);
@@ -247,7 +250,7 @@ class _SegmentRingPainter extends CustomPainter {
       return Color.lerp(palette[lo], palette[hi], k) ?? palette.last;
     }
 
-    // Base paints
+    // Paint defs
     final trackPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = ringThickness
@@ -276,7 +279,6 @@ class _SegmentRingPainter extends CustomPainter {
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4)
       ..color = Colors.black.withOpacity(0.10);
 
-    // Borders go slightly wider than the ring (inside+outside evenly)
     final borderPaintActive = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = ringThickness + borderWidth
@@ -291,7 +293,6 @@ class _SegmentRingPainter extends CustomPainter {
       ..isAntiAlias = true
       ..color = borderColorInactive;
 
-    // Head paints (thicker/bolder)
     final double headRingThickness = ringThickness + headThicknessBoost;
     final headFillPaint = Paint()
       ..style = PaintingStyle.stroke
@@ -321,24 +322,22 @@ class _SegmentRingPainter extends CustomPainter {
       ..isAntiAlias = true
       ..color = (headBorderColorActive ?? borderColorActive);
 
-    // 1) Draw track pills around FULL circle
+    // 1) Track around FULL circle (background ring)
     for (int i = 0; i < totalSegmentsFull; i++) {
-      final a0 = startAngle + i * rawSegAngle + gapAngle / 2;
+      final a0 = baseStart + (i * rawSegAngle) + (gapAngle / 2);
       final sweep = showTailSegments ? baseSweep : (i < usableSegments ? baseSweep : 0.0);
       if (sweep > 0) {
         canvas.drawArc(arcRect, a0, sweep, false, trackPaint);
       }
     }
 
-    // 2) Determine active segments within usable arc
+    // 2) Active segments within usable arc
     final rawActive = (progress01 * usableSegments).clamp(0.0, usableSegments.toDouble());
     final whole = rawActive.floor();
     final feather = rawActive - whole;
     final activeWhole = math.max(whole, minActiveSegments).clamp(0, usableSegments);
 
-    // Head index (last filled segment):
-    //  - if fractional progress -> head is the feather index
-    //  - else -> head is the last whole active segment
+    // Head index
     int headIndex;
     if (feather > 1e-6 && activeWhole < usableSegments) {
       headIndex = activeWhole;
@@ -346,17 +345,27 @@ class _SegmentRingPainter extends CustomPainter {
       headIndex = math.max(0, activeWhole - 1);
     }
 
-    // 3) Draw borders (all segments) with head emphasis
+    // Start angle helper honoring direction.
+    double segStartFor(int i) {
+      if (!counterClockwise) {
+        // Clockwise: grow from North → right side
+        return baseStart + (i * rawSegAngle) + (gapAngle / 2) + gapPadRadians;
+      } else {
+        // Counter-clockwise: grow from North → left side
+        return baseStart - ((i + 1) * rawSegAngle) + (gapAngle / 2) + gapPadRadians;
+      }
+    }
+
+    // 3) Borders (full ring), with head emphasis on active side
     if (boldBorders) {
       for (int i = 0; i < totalSegmentsFull; i++) {
-        final a0 = startAngle + i * rawSegAngle + gapAngle / 2 + gapPadRadians;
+        final a0 = segStartFor(i);
         final sweep = math.max(0.0, baseSweep - 2 * gapPadRadians);
         final isActiveish = i < activeWhole || (i == activeWhole && feather > 1e-6);
         final bool isHead = emphasizeHead && (i == headIndex) && i < usableSegments;
 
         if (i < usableSegments || showTailSegments) {
           if (isActiveish) {
-            // Active segments get active border; head gets a bolder stroke
             final paint = isHead ? headBorderPaintActive : borderPaintActive;
             canvas.drawArc(arcRect, a0, sweep, false, paint);
           } else {
@@ -366,31 +375,28 @@ class _SegmentRingPainter extends CustomPainter {
       }
     }
 
-    // 4) Draw active fills (edges → shadow → fill) inside usable arc only
+    // 4) Active fills (edges → shadow → fill) inside usable arc only
     for (int i = 0; i < usableSegments; i++) {
       if (i > activeWhole) break;
 
-      final segStart = startAngle + i * rawSegAngle + gapAngle / 2 + gapPadRadians;
+      final segStart = segStartFor(i);
       final paletteColor = colorForIndex(i);
 
       final isWhole = i < activeWhole;
       final isFeather = i == activeWhole && feather > 1e-6 && activeWhole < usableSegments;
-
       final bool isHead = emphasizeHead &&
           ((isFeather && i == headIndex) || (isWhole && i == headIndex));
 
-      // choose paints based on head or normal
       final Paint ePaint = isHead ? headEdgePaint : edgePaint;
       final Paint sPaint = isHead ? headShadowPaint : shadowPaint;
 
-      // NEW: headColorOverride for head fill; other segments keep gradient color
       final Color baseFillColor =
       isHead && headColorOverride != null ? headColorOverride! : paletteColor;
 
       if (isWhole) {
         if (showEdges) canvas.drawArc(arcRect, segStart, sweepAngle, false, ePaint);
         if (shadow) {
-          final sp = sPaint..color = sPaint.color; // already has boosted opacity for head
+          final sp = sPaint..color = sPaint.color;
           canvas.drawArc(arcRect, segStart, sweepAngle, false, sp);
         }
         final fPaint = (isHead ? headFillPaint : fillPaint)..color = baseFillColor;
@@ -404,7 +410,8 @@ class _SegmentRingPainter extends CustomPainter {
           canvas.drawArc(arcRect, segStart, sweepFeather, false, ep);
         }
         if (shadow) {
-          final sp = sPaint..color = sPaint.color.withOpacity((sPaint.color.opacity) * alpha);
+          final sp = sPaint..color =
+          sPaint.color.withOpacity((sPaint.color.opacity) * alpha);
           canvas.drawArc(arcRect, segStart, sweepFeather, false, sp);
         }
         final Color featherColor = baseFillColor.withOpacity(alpha);
@@ -426,6 +433,7 @@ class _SegmentRingPainter extends CustomPainter {
         palette != old.palette ||
         trackColor != old.trackColor ||
         shadow != old.shadow ||
+        counterClockwise != old.counterClockwise ||
         showEdges != old.showEdges ||
         edgeDarken != old.edgeDarken ||
         boldBorders != old.boldBorders ||
@@ -439,6 +447,6 @@ class _SegmentRingPainter extends CustomPainter {
         headShadowBoost != old.headShadowBoost ||
         headBorderColorActive != old.headBorderColorActive ||
         headEdgeDarken != old.headEdgeDarken ||
-        headColorOverride != old.headColorOverride; // NEW
+        headColorOverride != old.headColorOverride;
   }
 }

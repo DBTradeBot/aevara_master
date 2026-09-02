@@ -2,34 +2,49 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../services/auth_service.dart';
 
+/// FirebaseAuth-backed AuthService.
 class AuthServiceFs implements AuthService {
+  AuthServiceFs({FirebaseAuth? auth}) : _auth = auth ?? FirebaseAuth.instance;
+
   final FirebaseAuth _auth;
-  AuthServiceFs(this._auth);
 
   @override
-  Future<UserCredential> signIn(String email, String password) =>
-      _auth.signInWithEmailAndPassword(email: email, password: password);
+  Stream<User?> authStateChanges() => _auth.authStateChanges();
 
   @override
-  Future<UserCredential> signUp(String email, String password) =>
-      _auth.createUserWithEmailAndPassword(email: email, password: password);
-
-  @override
-  Future<void> sendEmailVerification() async {
-    final user = _auth.currentUser;
-    if (user != null && !user.emailVerified) await user.sendEmailVerification();
+  Future<UserCredential> signInWithEmail({
+    required String email,
+    required String password,
+  }) {
+    return _auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
   @override
-  Future<void> sendPasswordReset(String email) =>
-      _auth.sendPasswordResetEmail(email: email);
+  Future<UserCredential> signUpWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    final cred = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    // Optional: send email verification automatically
+    try {
+      await cred.user?.sendEmailVerification();
+    } catch (_) {}
+
+    return cred;
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail({required String email}) {
+    return _auth.sendPasswordResetEmail(email: email);
+  }
 
   @override
   Future<void> signOut() => _auth.signOut();
 
   @override
-  Future<UserCredential> signInWithGoogle() async {
-    // You can wire google_sign_in or firebase_auth_oauth here as per platform.
-    throw UnimplementedError('Google OAuth not wired on this build yet.');
-  }
+  User? get currentUser => _auth.currentUser;
 }

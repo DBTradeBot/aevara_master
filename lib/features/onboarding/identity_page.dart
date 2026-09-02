@@ -7,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../routing/route_paths.dart';
 import '../../data/adapters/firestore/user_profile_service_fs.dart';
 import '../../data/services/user_profile_service.dart';
-import '../../data/models/user_profile.dart'; // NEW: to evaluate profile fields
+import '../../data/models/user_profile.dart'; // to evaluate profile fields
 
 class IdentityPage extends StatefulWidget {
   const IdentityPage({super.key});
@@ -22,7 +22,7 @@ class _IdentityPageState extends State<IdentityPage> {
 
   // Firestore-backed profile service
   late final UserProfileService _profiles =
-      UserProfileServiceFs(FirebaseFirestore.instance);
+  UserProfileServiceFs(FirebaseFirestore.instance);
 
   bool _checking = false;
   bool? _available;
@@ -38,18 +38,17 @@ class _IdentityPageState extends State<IdentityPage> {
     _rerouteIfDemographicsIncomplete();
   }
 
-  // If demographics are missing, force the Demographics page first
+  /// NEW: Only require first_name (>=2) + dob — matches your new minimum.
   Future<void> _rerouteIfDemographicsIncomplete() async {
     final user = _auth.currentUser;
     if (user == null) return;
     try {
       final UserProfile? p = await _profiles.watchProfile(user.uid).first;
-      final missingDemo = (p == null) ||
-          (p.dob == null) ||
-          (p.gender == null) ||
-          ((p.heightCm == null) && (p.weightKg == null));
+      final firstOk = (p?.firstName?.trim().length ?? 0) >= 2;
+      final dobOk = p?.dob != null;
+      final missingDemo = !(firstOk && dobOk);
+
       if (missingDemo && mounted) {
-        // Use replacement so Back doesn't return here first
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
             Navigator.of(context).pushReplacementNamed(RoutePaths.demographics);
@@ -142,8 +141,8 @@ class _IdentityPageState extends State<IdentityPage> {
         },
       });
       if (!mounted) return;
-      // New order: go to Connect next
-      Navigator.of(context).pushNamed(RoutePaths.home);
+      // NEXT STEP: go to Consent (then to Connect)
+      Navigator.of(context).pushReplacementNamed(RoutePaths.consent);
     } catch (e) {
       setState(() => _statusMsg = e.toString());
     } finally {
@@ -182,22 +181,22 @@ class _IdentityPageState extends State<IdentityPage> {
                   child: Text('@', style: TextStyle(fontSize: 18)),
                 ),
                 prefixIconConstraints:
-                    const BoxConstraints(minWidth: 0, minHeight: 0),
+                const BoxConstraints(minWidth: 0, minHeight: 0),
                 border: const OutlineInputBorder(),
                 hintText: 'yourhandle',
                 suffixIcon: _checking
                     ? const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2)),
-                      )
+                  padding: EdgeInsets.all(12),
+                  child: SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2)),
+                )
                     : (_available == true
-                        ? const Icon(Icons.check_circle, color: Colors.green)
-                        : (_available == false
-                            ? const Icon(Icons.error, color: Colors.red)
-                            : null)),
+                    ? const Icon(Icons.check_circle, color: Colors.green)
+                    : (_available == false
+                    ? const Icon(Icons.error, color: Colors.red)
+                    : null)),
               ),
             ),
             if (_statusMsg != null) ...[
@@ -208,8 +207,8 @@ class _IdentityPageState extends State<IdentityPage> {
                   color: _available == false
                       ? Colors.red
                       : (_available == true
-                          ? Colors.green
-                          : Theme.of(context).colorScheme.onSurface),
+                      ? Colors.green
+                      : Theme.of(context).colorScheme.onSurface),
                 ),
               ),
             ],

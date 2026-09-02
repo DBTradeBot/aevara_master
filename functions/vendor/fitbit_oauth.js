@@ -1,3 +1,4 @@
+﻿import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
 /**
  * Fitbit OAuth (start handled client-side via WebView) + token exchange + refresh
  * Node 20 / ESM / Firebase Functions v2
@@ -9,12 +10,6 @@
 
 import { onRequest } from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import { initializeApp, getApps, applicationDefault } from "firebase-admin/app";
-import { getFirestore, FieldValue } from "firebase-admin/firestore";
-
-if (!getApps().length) initializeApp({ credential: applicationDefault() });
-
-
 const TOKEN_URL = "https://api.fitbit.com/oauth2/token";
 const AUTH_URL  = "https://www.fitbit.com/oauth2/authorize";
 
@@ -38,7 +33,7 @@ function b64urlDecode(s) {
     const pad = s.length % 4 ? "=".repeat(4 - (s.length % 4)) : "";
     const str = s.replace(/-/g, "+").replace(/_/g, "/") + pad;
     return Buffer.from(str, "base64").toString("utf8");
-  } catch {
+  } catch (e) {
     return null;
   }
 }
@@ -135,7 +130,7 @@ export const fitbitCallback = onRequest(
           const decoded = b64urlDecode(stateRaw);
           const obj = decoded ? JSON.parse(decoded) : null;
           uid = obj?.uid || null;
-        } catch {}
+        } catch (e) {}
       }
       uid = uid || String(req.query.uid || "");
       if (!uid) return res.status(400).send("Missing uid in state");
@@ -153,10 +148,10 @@ export const fitbitCallback = onRequest(
         .status(200)
         .set("Content-Type", "text/html")
         .send(`<!doctype html>
-<html><head><meta charset="utf-8"><title>Aevara • Fitbit Connected</title>
+<html><head><meta charset="utf-8"><title>Aevara "¢ Fitbit Connected</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"></head>
 <body style="font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial; padding:24px;">
-  <h2>Fitbit Connected ✅</h2>
+  <h2>Fitbit Connected âœ...</h2>
   <p>You can close this window and return to the app.</p>
 </body></html>`);
     } catch (e) {
@@ -254,4 +249,6 @@ export const fitbitRefresh = onRequest(
     }
   }
 );
+
+
 

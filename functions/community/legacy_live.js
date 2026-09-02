@@ -1,11 +1,11 @@
-import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
+﻿import { db, FieldValue, Timestamp } from "../core/firebase_admin.js";
 // functions/community/legacy_live.js
 // Real, minimal implementations for critical legacy names.
 // Node 20 / Gen 2 / ESM
 
 import { onCall } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions/v2";
-/* ───────────────────────────── Helpers ───────────────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ Helpers â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 
 function assertAuthed(req) {
   const uid = req.auth?.uid;
@@ -20,7 +20,7 @@ function assertString(val, name, min = 1, max = 80) {
   return v;
 }
 
-/* ───────────────────────────── Usernames ─────────────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ Usernames â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 /**
  * Legacy callable: reserveUsername
  * Input: { handle: string }
@@ -53,7 +53,7 @@ export const reserveUsername = onCall(async (req) => {
   return { ok: true, handle };
 });
 
-/* ───────────────────────────── Friends counters ──────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ Friends counters â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 /**
  * Legacy callable: friendsCounters
  * Input: { uid?: string } (defaults to caller)
@@ -87,7 +87,7 @@ export const friendsCounters = onCall(async (req) => {
   return { ok: true };
 });
 
-/* ───────────────────────────── Groups counter ────────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ Groups counter â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 /**
  * Legacy callable: groupMembersCounter
  * Input: { groupId: string }
@@ -105,7 +105,7 @@ export const groupMembersCounter = onCall(async (req) => {
   return { ok: true };
 });
 
-/* ───────────────────────────── Challenges counter ────────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ Challenges counter â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 /**
  * Legacy callable: challengeParticipantsCounter
  * Input: { challengeId: string }
@@ -122,7 +122,7 @@ export const challengeParticipantsCounter = onCall(async (req) => {
   return { ok: true };
 });
 
-/* ───────────────────────────── Community events RSVPs ────────────── */
+/* â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ Community events RSVPs â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
 /**
  * Legacy callable: eventRsvpsCounter
  * Input: { eventId: string }
@@ -138,3 +138,6 @@ export const eventRsvpsCounter = onCall(async (req) => {
   }, { merge: true });
   return { ok: true };
 });
+
+
+

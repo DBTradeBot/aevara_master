@@ -27,7 +27,6 @@ class HeroHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    ref.watch(autoComputeKickProvider);
     final vmAsync = ref.watch(vitalityGaugeVMProvider);
 
     final Color heroBgColor = theme.scaffoldBackgroundColor;

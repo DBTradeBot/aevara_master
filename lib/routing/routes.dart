@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+﻿// lib/routing/routes.dart
+import 'package:flutter/material.dart';
 
 import '../routing/route_paths.dart';
 
@@ -38,9 +39,10 @@ import '../features/profile/delete_account_page.dart';
 // Methods & transparency (existing docs page)
 import '../features/insights/methods_doc_page.dart';
 
-// App shell + guard
+// App shell + guards
 import '../shell/app_shell.dart';
 import '../core/guards/auth_guard.dart';
+import '../core/guards/onboarding_guard.dart';
 
 final Map<String, WidgetBuilder> appRoutes = <String, WidgetBuilder>{
   // Auth
@@ -79,8 +81,11 @@ final Map<String, WidgetBuilder> appRoutes = <String, WidgetBuilder>{
   // Methods & transparency
   RoutePaths.methodsDoc: (_) => const MethodsDocPage(),
 
-  // APP HOME → wrap the shell with AuthGuard so signed-out users go to /auth/signin
-  RoutePaths.home: (_) => AuthGuard(child: const AppShell()),
+  // APP HOME → wrap the shell with both guards:
+  //   - AuthGuard ensures user is signed in.
+  //   - OnboardingGuard ensures onboarding is finished before letting user in.
+  RoutePaths.home: (_) =>
+      AuthGuard(child: OnboardingGuard(child: const AppShell())),
 };
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -90,7 +95,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
   }
   // Fallback to home if unknown
   return MaterialPageRoute<void>(
-    builder: (_) => AuthGuard(child: const AppShell()),
+    builder: (_) => AuthGuard(child: OnboardingGuard(child: const AppShell())),
     settings: const RouteSettings(name: RoutePaths.home),
   );
 }
